@@ -17,9 +17,9 @@ import { VideoModule } from './video/video.module';
   imports: [ConfigModule.forRoot({isGlobal:true}),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '34.171.187.22',
+      host: 'sniperpro.c2ayyv3boanv.us-west-2.rds.amazonaws.com',
       port: 3306,
-      username: 'gercel',
+      username: 'admin',
       password: 'Gllv1992..',
       database: 'sniperpro',
       entities: [__dirname + '/**/*.entity{.ts,.js}' ],
