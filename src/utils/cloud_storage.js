@@ -7,11 +7,11 @@ const uuid = uuidv4();
 
 
 const storage = new Storage({
-    projectId: "sniperpro-a9151",
+    projectId: "sniperpro-eaa57",
     keyFilename: './serviceAccountKey.json'
 });
 
-const bucket = storage.bucket("gs://sniperpro-a9151.appspot.com/");
+const bucket = storage.bucket("gs://sniperpro-eaa57.appspot.com/");
 
 /**
  * Subir el archivo a Firebase Storage
