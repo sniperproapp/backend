@@ -43,7 +43,7 @@ findAllCategory(id_category:number,estado:dataestadoDto){
 }
 
 
-findAllCategorycoun(id_category:number,estado:dataestadoDto){
+findAllCategorycoun(id_category:number ){
      
     return this.producRepository.count({ where: { 
         id_category: id_category,
