@@ -1,5 +1,5 @@
 
-
+ 
 module.exports = ( data) => {
 
     var admin = require("firebase-admin");
@@ -24,17 +24,21 @@ admin.initializeApp({
 }
 
 
-admin.messaging().sendMulticast({
-    tokens:data.tokens,
-    data:{
-        title:data.title,
-        body:data.body
-    }
-        }).then((response)=>{
+
+  
+
+  admin.messaging().sendEachForMulticast({
+      tokens:data.tokens
+       ,notification:{
+          title:data.title,
+          body:data.body
+      }
+
+          }).then((response)=>{
     
-            console.log('ok')
-        }).catch((error)=>{
-            console.log('error') 
-        })
+              console.log('ok')
+          }).catch((error)=>{
+              console.log('error') 
+          })
 
 }
