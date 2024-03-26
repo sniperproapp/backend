@@ -22,6 +22,8 @@ export class CategoriesService {
 
     async create(file: Express.Multer.File,category:CreateCategoryDto){
        let newcategory = this.categoriesRepository.create(category);
+       newcategory.notification=0;
+       newcategory.numero_senales=0;
       const url = await  storage(file,file.originalname);
       if(url ===undefined && url === null)
       {

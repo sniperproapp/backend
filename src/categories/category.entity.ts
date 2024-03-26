@@ -10,6 +10,14 @@ id: number
 @Column({unique:true})
 name: string;
 
+
+@Column()
+numero_senales: number
+
+@Column()
+notification: number
+
+
 @Column()
 description: string;
 
