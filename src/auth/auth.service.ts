@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Rol } from 'src/roles/rol.entity';
 import { MailsService } from 'src/mails/mails.service';
+import  PUSH = require('../utils/firebase_message') ;
 
 
 @Injectable()
@@ -117,11 +118,7 @@ export class AuthService {
         {
               throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
          } 
-        
-          
-       
-        
-       
+ 
      
    const isPasswordValid = await compare(password,userFound.password)
    if(!isPasswordValid)
@@ -177,4 +174,13 @@ export class AuthService {
          
    return true;
     }
+
 }
+
+function dosDecimales(n) {
+    let t=n.toString();
+    let regex=/(\d*.\d{0,4})/;
+    return t.match(regex)[0];
+  }
+
+ 
