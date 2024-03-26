@@ -53,6 +53,18 @@ finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() est
   return this.producservices.findAllCategory(id_category,estado);
 }
 
+
+
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Post('categorycount/:id_category')
+finAllCategorycoun(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadoDto) {
+ 
+  return this.producservices.findAllCategorycoun(id_category,estado);
+}
+
+
+
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get('id/:id')
