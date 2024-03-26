@@ -58,9 +58,9 @@ finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() est
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Post('categorycount/:id_category')
-finAllCategorycoun(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadoDto) {
+finAllCategorycoun(@Param('id_category',ParseIntPipe) id_category:number) {
  
-  return this.producservices.findAllCategorycoun(id_category,estado);
+  return this.producservices.findAllCategorycoun(id_category );
 }
 
 
