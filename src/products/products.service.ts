@@ -15,6 +15,7 @@ import { stripVTControlCharacters } from 'util';
 import { count } from 'console';
 import  PUSH = require('../utils/firebase_message') ;
 import { dataestadoDto } from './dto/dataestado.dto';
+import { dataestadolikeDto } from './dto/dataestadolike.dto';
 
 function dosDecimales(n) {
     let t=n.toString();
@@ -34,6 +35,32 @@ findAll(){
 
 
 findAllCategory(id_category:number,estado:dataestadoDto){
+     
+    return this.producRepository.find({relations:['user'],where: { 
+        id_category: id_category,
+        estad: estado.estado
+      }});
+    
+}
+
+
+
+    async findAllCategorylike(id_category:number,estado:dataestadolikeDto ){
+
+
+    const productsFound = await this.producRepository.findOneBy({id:estado.id})
+    if (!productsFound ){
+     throw new HttpException("producto no encontrado",HttpStatus.NOT_FOUND);
+ 
+    }
+
+
+   
+    productsFound.like=productsFound.like+1;
+      this.producRepository.save(productsFound);
+
+
+    
      
     return this.producRepository.find({relations:['user'],where: { 
         id_category: id_category,
