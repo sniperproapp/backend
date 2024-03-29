@@ -11,6 +11,7 @@ import { dataidDto } from './dto/dataid.dto';
 import { activatetpDto } from './dto/activatetp.dto';
 import { datalikeDto } from './dto/datalike.dto';
 import { dataestadoDto } from './dto/dataestado.dto';
+import { dataestadolikeDto } from './dto/dataestadolike.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -53,6 +54,15 @@ finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() est
   return this.producservices.findAllCategory(id_category,estado);
 }
 
+
+
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Post('category/like/:id_category')
+finAllCategorylike(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadolikeDto) {
+ 
+  return this.producservices.findAllCategorylike(id_category,estado);
+}
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
