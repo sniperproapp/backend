@@ -111,7 +111,7 @@ export class AuthService {
 
        if(userFound.estado==0)
        {
-             throw new HttpException('Usuario Desactivado',HttpStatus.FORBIDDEN);
+             throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
         } 
    
         if(userFound.duplicatesesion==1)
