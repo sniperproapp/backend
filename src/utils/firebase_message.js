@@ -28,16 +28,14 @@ admin.initializeApp({
   
 
   admin.messaging().sendEachForMulticast({
-      tokens:data.tokens
+      tokens:data.token
+      ,title:'se;al'
+      ,body:'newse'
        ,notification:{
         
           title:data.title,
           body:data.body
-      },data:{
-        
-        title:data.title,
-        body:data.body
-    }
+      } 
 
           }).then((response)=>{
     
