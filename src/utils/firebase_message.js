@@ -29,8 +29,6 @@ admin.initializeApp({
 
   admin.messaging().sendEachForMulticast({
       tokens:data.token
-      ,title:'se;al'
-      ,body:'newse'
        ,notification:{
         
           title:data.title,
