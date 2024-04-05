@@ -30,17 +30,20 @@ constructor (@InjectRepository(Products) private producRepository: Repository<Pr
 
 
 findAll(){
-    return this.producRepository.find({relations:['user']})          
+    return this.producRepository.find({relations:['user'],order: {
+        id: "DESC" // "DESC"
+    }})          
 }
 
 
 findAllCategory(id_category:number,estado:dataestadoDto){
      
+    
     return this.producRepository.find({relations:['user'],where: { 
         id_category: id_category,
         estad: estado.estado
       },order: {
-        id_category: "ASC" // "DESC"
+        id: "DESC" // "DESC"
     }});
     
 }
