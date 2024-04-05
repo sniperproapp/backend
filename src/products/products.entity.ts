@@ -17,6 +17,9 @@ export class Products{
    
     @Column()
     description:string;
+
+    @Column()
+    fecha:string;
    
     @Column()
     compventa: string;
