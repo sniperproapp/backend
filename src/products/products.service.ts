@@ -40,7 +40,7 @@ findAllCategory(id_category:number,estado:dataestadoDto){
         id_category: id_category,
         estad: estado.estado
       },order: {
-        id_category: "DESC" // "DESC"
+        id_category: "ASC" // "DESC"
     }});
     
 }
