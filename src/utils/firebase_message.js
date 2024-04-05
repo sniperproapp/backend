@@ -28,12 +28,12 @@ admin.initializeApp({
   
 
   admin.messaging().sendEachForMulticast({
-      tokens:data.token
+      tokens:data.tokens
        ,notification:{
         
           title:data.title,
           body:data.body
-      } 
+      }
 
           }).then((response)=>{
     
