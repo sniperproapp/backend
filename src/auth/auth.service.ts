@@ -10,11 +10,13 @@ import { JwtService } from '@nestjs/jwt';
 import { Rol } from 'src/roles/rol.entity';
 import { MailsService } from 'src/mails/mails.service';
 import  PUSH = require('../utils/firebase_message') ;
+ 
 
 
 @Injectable()
 export class AuthService {
-    constructor(@InjectRepository(User) private usersRepository: Repository<User>,
+     
+    constructor( @InjectRepository(User) private usersRepository: Repository<User>,
     @InjectRepository(Rol) private rolesRepository:Repository<Rol>
     , private jwtservice: JwtService,private mailservices: MailsService){
 
@@ -92,7 +94,7 @@ export class AuthService {
 
     async login(logindata: LoginAuthDto)
     { 
-     
+         
         
         const {email,password}= logindata;
         const userFound= await this.usersRepository.findOne({
