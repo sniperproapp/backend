@@ -10,11 +10,10 @@ import { ProductsModule } from './products/products.module';
 import { MailsModule } from './mails/mails.module';
 import { ConfigModule } from '@nestjs/config';
 import { VideoModule } from './video/video.module';
-
-
  
+
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal:true}),
+  imports: [ConfigModule.forRoot({envFilePath: '.env',isGlobal:true}), 
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'sniperpro.c2ayyv3boanv.us-west-2.rds.amazonaws.com',
@@ -35,6 +34,7 @@ import { VideoModule } from './video/video.module';
    
     
   ],
+  exports: [ConfigModule],
   controllers: [AppController],
   providers: [AppService],
 })
