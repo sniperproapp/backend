@@ -49,6 +49,18 @@ findAllCategory(id_category:number,estado:dataestadoDto){
 }
 
 
+findAllproduct(id_product:number){
+     
+    
+    return this.producRepository.find({relations:['user'],where: { 
+        id_category: id_product,
+        
+      }});
+    
+}
+
+
+
 
     async findAllCategorylike(id_category:number,estado:dataestadolikeDto ){
 
