@@ -53,7 +53,7 @@ findAllproduct(id_product:number){
      
     
     return this.producRepository.find({relations:['user'],where: { 
-        id_category: id_product,
+        id: id_product,
         
       }});
     
