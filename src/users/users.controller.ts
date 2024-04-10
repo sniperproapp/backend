@@ -40,7 +40,7 @@ updateactivate(@Param('id',ParseIntPipe) id: number   ){
 }
 
 
-@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@HasRoles(JwtRole.ADMIN,JwtRole.CLIENT,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put('descargo/:id')
 updatedescargo(@Param('id',ParseIntPipe) id: number   ){
