@@ -52,7 +52,7 @@ findAllCategory(id_category:number,estado:dataestadoDto){
 findAllproduct(id_product:number){
      
     
-    return this.producRepository.find({relations:['user'],where: { 
+    return this.producRepository.findOne({relations:['user'],where: { 
         id: id_product,
         
       }});
