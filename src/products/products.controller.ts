@@ -55,6 +55,15 @@ finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() est
 }
 
 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Get(':id_product')
+finAllproduct(@Param('id_product',ParseIntPipe) id_product:number ) {
+ 
+  return this.producservices.findAllproduct(id_product );
+}
+
+
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
