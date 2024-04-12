@@ -16,6 +16,8 @@ export class CategoriesService {
     ){}
 
     async findall(idclient){
+
+      
       const userfound= await this.usersRepository.findOneBy({id: idclient});
     
       if(userfound.estado==0)

@@ -17,14 +17,13 @@ export class CategoriesController {
 
     }
 
- @HasRoles(JwtRole.CLIENT,JwtRole.ADMIN,JwtRole.PROF
- )
+ @HasRoles(JwtRole.CLIENT,JwtRole.ADMIN,JwtRole.PROF )
  @UseGuards(JwtAuthGuard ,JwtRolesGuard)
  @Get()
  findall(@Headers() headers){
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
   
-    return this.CategoryServices.findall(idclient);
+    return this.CategoryServices.findall(idclient['id']);
 
  }
 
