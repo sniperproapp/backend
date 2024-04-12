@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body,Headers, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -8,11 +8,12 @@ import { JwtRolesGuard } from 'src/auth/jwt/jwt-roles.guard';
 import { CreateCategoryDto } from './dto/create-categoryDto';
 import { get } from 'http';
 import { updatecategoryDto } from './dto/update-categoryDto';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('categories')
 export class CategoriesController {
 
-    constructor(private CategoryServices: CategoriesService){
+    constructor(private CategoryServices: CategoriesService,private jwtservice: JwtService){
 
     }
 
@@ -20,8 +21,10 @@ export class CategoriesController {
  )
  @UseGuards(JwtAuthGuard ,JwtRolesGuard)
  @Get()
- findall(){
-    return this.CategoryServices.findall();
+ findall(@Headers() headers){
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  
+    return this.CategoryServices.findall(idclient);
 
  }
 

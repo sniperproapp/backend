@@ -67,7 +67,7 @@ constructor (@InjectRepository(Products) private producRepository: Repository<Pr
     async findAllproduct(id_product:number,idclient){
      
     const userfound= await this.usersRepository.findOneBy({id: idclient});
-    console.log (userfound.estado) 
+    
      if(userfound.estado==0)
      {
          
