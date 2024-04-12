@@ -24,7 +24,7 @@ constructor(private producservices: ProductsService,private jwtservice: JwtServi
 finAll(@Headers() headers) {
   
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.producservices.findAll(idclient);
+  return this.producservices.findAll(idclient['id']);
 }
 
 
@@ -41,7 +41,7 @@ finAllcount() {
 @Get('ranking')
 finAllranking(@Headers() headers) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.producservices.finAllranking(idclient);
+  return this.producservices.finAllranking(idclient['id']);
 }
 
 
@@ -65,7 +65,7 @@ finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() est
 @Get(':id_product')
 finAllproduct(@Param('id_product',ParseIntPipe) id_product:number,@Headers() headers ) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.producservices.findAllproduct(id_product ,idclient);
+  return this.producservices.findAllproduct(id_product ,idclient['id']);
 }
 
 
@@ -75,7 +75,7 @@ finAllproduct(@Param('id_product',ParseIntPipe) id_product:number,@Headers() hea
 @Post('category/like/:id_category')
 finAllCategorylike(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadolikeDto,@Headers() headers) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.producservices.findAllCategorylike(id_category,estado,idclient);
+  return this.producservices.findAllCategorylike(id_category,estado,idclient['id']);
 }
 
 
