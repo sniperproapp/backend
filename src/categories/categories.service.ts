@@ -5,16 +5,25 @@ import  storage = require( '../utils/cloud_storage');
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { updatecategoryDto } from './dto/update-categoryDto';
+import { User } from 'src/users/user.entity';
 
 
 
 @Injectable()
 export class CategoriesService {
     constructor(
-        @InjectRepository(Category) private categoriesRepository: Repository<Category>
+        @InjectRepository(Category) private categoriesRepository: Repository<Category>,@InjectRepository(User) private usersRepository: Repository<User>
     ){}
 
-    findall(){
+    async findall(idclient){
+      const userfound= await this.usersRepository.findOneBy({id: idclient});
+    
+      if(userfound.estado==0)
+      {
+          
+             throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+          
+      }
         return this.categoriesRepository.find();
     }
 
