@@ -7,6 +7,7 @@ async function bootstrap() {
   const cors = require('cors');
   app.use(cors()); 
   app.useGlobalPipes(new ValidationPipe({forbidUnknownValues: false}));
+   
   await app.listen(4000,'0.0.0.0' || 'localhost');
 }
 bootstrap();

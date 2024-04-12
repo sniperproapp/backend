@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body,Headers, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { HasRoles } from 'src/auth/jwt/has-roles';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -12,18 +12,19 @@ import { activatetpDto } from './dto/activatetp.dto';
 import { datalikeDto } from './dto/datalike.dto';
 import { dataestadoDto } from './dto/dataestado.dto';
 import { dataestadolikeDto } from './dto/dataestadolike.dto';
-
+import { JwtService } from '@nestjs/jwt';
 @Controller('products')
 export class ProductsController {
 
-constructor(private producservices: ProductsService){}
+constructor(private producservices: ProductsService,private jwtservice: JwtService){}
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get()
-finAll() {
- 
-  return this.producservices.findAll();
+finAll(@Headers() headers) {
+  
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.producservices.findAll(idclient);
 }
 
 
@@ -38,9 +39,9 @@ finAllcount() {
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get('ranking')
-finAllranking() {
- 
-  return this.producservices.finAllranking();
+finAllranking(@Headers() headers) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.producservices.finAllranking(idclient);
 }
 
 
@@ -49,18 +50,22 @@ finAllranking() {
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Post('category/:id_category')
-finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadoDto) {
+finAllCategory(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadoDto,@Headers() headers) {
+
+   
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  
  
-  return this.producservices.findAllCategory(id_category,estado);
+  return this.producservices.findAllCategory(id_category,estado,idclient['id']);
 }
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get(':id_product')
-finAllproduct(@Param('id_product',ParseIntPipe) id_product:number ) {
- 
-  return this.producservices.findAllproduct(id_product );
+finAllproduct(@Param('id_product',ParseIntPipe) id_product:number,@Headers() headers ) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.producservices.findAllproduct(id_product ,idclient);
 }
 
 
@@ -68,9 +73,9 @@ finAllproduct(@Param('id_product',ParseIntPipe) id_product:number ) {
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Post('category/like/:id_category')
-finAllCategorylike(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadolikeDto) {
- 
-  return this.producservices.findAllCategorylike(id_category,estado);
+finAllCategorylike(@Param('id_category',ParseIntPipe) id_category:number,@Body() estado:dataestadolikeDto,@Headers() headers) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.producservices.findAllCategorylike(id_category,estado,idclient);
 }
 
 
