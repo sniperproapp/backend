@@ -29,15 +29,30 @@ export class ProductsService {
 constructor (@InjectRepository(Products) private producRepository: Repository<Products>,@InjectRepository(User) private usersRepository: Repository<User>){}
 
 
-findAll(){
+    async findAll(idclient){
+    const userfound= await this.usersRepository.findOneBy({id: idclient});
+    console.log (userfound.estado) 
+     if(userfound.estado==0)
+     {
+         
+            throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+         
+     }
     return this.producRepository.find({relations:['user'],order: {
         id: "DESC" // "DESC"
     }})          
 }
 
 
-findAllCategory(id_category:number,estado:dataestadoDto){
-     
+    async findAllCategory(id_category:number,estado:dataestadoDto,idclient:number){
+    const userfound= await this.usersRepository.findOneBy({id: idclient});
+    
+     if(userfound.estado==0)
+     {
+         
+            throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+         
+     }
     
     return this.producRepository.find({relations:['user'],where: { 
         id_category: id_category,
@@ -49,9 +64,16 @@ findAllCategory(id_category:number,estado:dataestadoDto){
 }
 
 
-findAllproduct(id_product:number){
+    async findAllproduct(id_product:number,idclient){
      
-    
+    const userfound= await this.usersRepository.findOneBy({id: idclient});
+    console.log (userfound.estado) 
+     if(userfound.estado==0)
+     {
+         
+            throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+         
+     }
     return this.producRepository.findOne({relations:['user'],where: { 
         id: id_product,
         
@@ -62,8 +84,15 @@ findAllproduct(id_product:number){
 
 
 
-    async findAllCategorylike(id_category:number,estado:dataestadolikeDto ){
-
+    async findAllCategorylike(id_category:number,estado:dataestadolikeDto,idclient ){
+        const userfound= await this.usersRepository.findOneBy({id: idclient});
+        console.log (userfound.estado) 
+         if(userfound.estado==0)
+         {
+             
+                throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+             
+         }
 
     const productsFound = await this.producRepository.findOneBy({id:estado.id})
     if (!productsFound ){
@@ -159,8 +188,15 @@ return listarespuesta
 
 
 
-async finAllranking (){
-
+async finAllranking (idclient){
+    const userfound= await this.usersRepository.findOneBy({id: idclient});
+    console.log (userfound.estado) 
+     if(userfound.estado==0)
+     {
+         
+            throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
+         
+     }
  
     let listarespuesta: Array< RespuesDtotaranking> =[]
      
