@@ -11,7 +11,7 @@ import { User } from 'src/users/user.entity';
 @Module({
   imports:[TypeOrmModule.forFeature([Category,User]),JwtModule.register({
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '100h' },
+    signOptions: { expiresIn: '10000h' },
   })],
   providers: [CategoriesService,JwtStrategy],
   controllers: [CategoriesController]
