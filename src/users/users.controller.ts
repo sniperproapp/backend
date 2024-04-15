@@ -15,9 +15,9 @@ constructor(private UsersService:UsersService){}
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
-@Get()
-findall(){
-  return this.UsersService.findAll();
+@Get(':busqueda')
+findall(@Param('busqueda') busqueda: string){
+  return this.UsersService.findAll(busqueda);
 }
 
 @Post()
