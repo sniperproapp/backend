@@ -12,7 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports:[TypeOrmModule.forFeature([Products,User,Category ]),JwtModule.register({
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '100h' },
+    signOptions: { expiresIn: '10000h' },
   })],
   controllers: [ProductsController],
   providers: [ProductsService,JwtStrategy]

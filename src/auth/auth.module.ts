@@ -16,7 +16,7 @@ import { MailsService } from 'src/mails/mails.service';
   imports:[TypeOrmModule.forFeature([User, Rol]),
   JwtModule.register({
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '100h' },
+    signOptions: { expiresIn: '10000h' },
   })
 ],
  
