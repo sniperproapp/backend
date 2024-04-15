@@ -20,8 +20,8 @@ const newUser=this.usersRepository.create(user);
 return this.usersRepository.save(newUser)
     }
 
-    findAll(){
-        return this.usersRepository.find({relations:['roles'],where:{email:Like("%gercel%")}});
+    findAll(busqueda: string){
+        return this.usersRepository.find({relations:['roles'],where:{email:Like('%'+busqueda+'%')}});
     }
 
 
