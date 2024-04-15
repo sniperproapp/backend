@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Like } from "typeorm";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -20,7 +21,7 @@ return this.usersRepository.save(newUser)
     }
 
     findAll(){
-        return this.usersRepository.find({relations:['roles']});
+        return this.usersRepository.find({relations:['roles'],where:{email:Like("%gercel%")}});
     }
 
 
