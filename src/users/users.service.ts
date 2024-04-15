@@ -21,7 +21,13 @@ return this.usersRepository.save(newUser)
     }
 
     findAll(busqueda: string){
-        return this.usersRepository.find({relations:['roles'],where:{email:Like('%'+busqueda+'%')}});
+        if(busqueda=='allusers'){
+            return this.usersRepository.find({relations:['roles']});
+        }
+        else{
+            return this.usersRepository.find({relations:['roles'],where:{email:Like('%'+busqueda+'%')}});
+        }
+        
     }
 
 
