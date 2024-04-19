@@ -11,4 +11,8 @@ email: string;
 @IsString()
 password:string;
 
+
+
+token:string
+
 }
