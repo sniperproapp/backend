@@ -297,12 +297,14 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
          let listuser= await this.usersRepository.find({relations:['roles']});
           
 
-
+         let i =0;
          listuser.forEach((element) => {
-        
+           
+        i++;
+        if(i<500){
             if(element.notification_token != null){
                 listastrintoken.push(element.notification_token);
-            }
+            }}
        
 
          })
