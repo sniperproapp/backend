@@ -280,6 +280,9 @@ findid(id:number){
     return this.producRepository.find({relations:['user'],where:{id:id}});
 }
 
+     enviarpush(data1){
+     PUSH(data1);
+}
 
 async create(files: Array<Express.Multer.File>,product: CreateProductsDto){   
     if (files.length===0 ){
@@ -302,7 +305,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
            
         i++;
        
-            if(element.notification_token != null){
+            if(element.notification_token.length>30){
                 listastrintoken.push(element.notification_token);
             }
        
@@ -314,9 +317,10 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                     title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
                     body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
                  }
-                 await PUSH(data1);
                  listastrintoken =[] ;
                  i=0;
+                 this.enviarpush(data1);
+               
             }
 
          })
@@ -325,7 +329,8 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
             title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
-         await PUSH(data1)
+         this.enviarpush(data1);
+
 
        
        }

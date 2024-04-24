@@ -31,7 +31,7 @@ admin.initializeApp({
     
               console.log('ok')
           }).catch((error)=>{
-              console.log('error') 
+              console.log(error) 
           })
 
 }
