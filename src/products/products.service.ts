@@ -296,25 +296,38 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         let listastrintoken: Array<string> =[]   
          let listuser= await this.usersRepository.find({relations:['roles']});
           
-
+         let data1={};
          let i =0;
-         listuser.forEach((element) => {
+         listuser.forEach(async (element) => {
            
         i++;
-        if(i<500){
+       
             if(element.notification_token != null){
                 listastrintoken.push(element.notification_token);
-            }}
+            }
        
+            if(i==499)
+            {
+
+                 data1 ={
+                    tokens:listastrintoken,
+                    title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
+                    body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
+                 }
+                 await PUSH(data1);
+                 listastrintoken =[] ;
+                 i=0;
+            }
 
          })
-
-        const data1 ={
+         data1 ={
             tokens:listastrintoken,
             title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
-         await PUSH(data1);
+         await PUSH(data1)
+
+       
        }
     
     const startforeach=async () => {
