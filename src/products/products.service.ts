@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, UploadedFile } from '@nestjs/com
 import { UpdateProductsDto } from './dto/update-Products.dto copy';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Products } from './products.entity';
-import { Any, Repository } from 'typeorm';
+import { Any, IsNull, Repository } from 'typeorm';
 import { CreateProductsDto } from './dto/Create-Products.dto';
 import { dataidDto } from './dto/dataid.dto';
  
@@ -301,17 +301,23 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
           
          let data1={};
          let i =0;
+          
+
          listuser.forEach(async (element) => {
            
         i++;
        
-            if(element.notification_token.length>30){
-                listastrintoken.push(element.notification_token);
+            if(  element.notification_token!== null  ){
+                if(element.notification_token.length>30 ){
+                    listastrintoken.push(element.notification_token);
+                     
+                       
+                 }
             }
        
             if(i==499)
             {
-
+               
                  data1 ={
                     tokens:listastrintoken,
                     title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
@@ -319,7 +325,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                 this.enviarpush(data1);
+                  this.enviarpush(data1);
                
             }
 
@@ -330,7 +336,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
          this.enviarpush(data1);
-
+        
 
        
        }
