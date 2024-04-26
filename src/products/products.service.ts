@@ -320,7 +320,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                
                  data1 ={
                     tokens:listastrintoken,
-                    title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
+                    title:newproduct.name,
                     body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
                  }
                  listastrintoken =[] ;
@@ -332,7 +332,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
          })
          data1 ={
             tokens:listastrintoken,
-            title:"NUEVA SEÑAL: "+newproduct.name+" CREADA",
+            title:newproduct.name,
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
          this.enviarpush(data1);
