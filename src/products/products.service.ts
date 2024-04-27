@@ -463,6 +463,12 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
        if(Number(data.numero)==5){
         productsFound.tpactivate5=true;
        }
+       if(Number(data.numero)==6){
+        productsFound.slactivate=true;
+       }
+       if(Number(data.numero)==7){
+        productsFound.descarte=true;
+       }
     
  
        const respu= this.producRepository.save(productsFound);
