@@ -71,6 +71,11 @@ export class Products{
     @Column({type: 'boolean' ,default: false})
     tpactivate5:boolean=false;
 
+    @Column({ type: 'boolean', default: false})
+    slactivate:boolean=false;
+    @Column({ type: 'boolean', default: false})
+    descarte:boolean=false;
+
 
     @Column()
     id_category:number;
