@@ -8,6 +8,7 @@ imagen: string;
 
  
 ganadas:number;
+perdidas:number;
 total:number;
 
 }

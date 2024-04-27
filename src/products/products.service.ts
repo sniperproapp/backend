@@ -216,6 +216,7 @@ async finAllranking (idclient){
     let coun=0;
     let  iduser;
     let  numeroaux=0;
+    let  numeroauxperdidas=0;
     let  numerototalaux=0;
     let  nombreaux='';
     let  imagenaux='';
@@ -233,6 +234,10 @@ async finAllranking (idclient){
                         {
                             numeroaux=1;
                         }
+            if(element.slactivate)
+                        {
+                            numeroauxperdidas=1;
+                        }
             
          }else{
                     if(iduser==Number(element.user.id)){
@@ -242,16 +247,24 @@ async finAllranking (idclient){
                         {
                             numeroaux+=1;
                         } 
+                        if(element.slactivate)
+                        {
+                            numeroauxperdidas+=1;
+                        } 
                     }else{
                         
 
-                        listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux});
+                        listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
                         if(!element.descarte){ numerototalaux=1;}else{numerototalaux=0;}
                         numeroaux=0;
                         if(element.tpactivate1)
                         {
                             numeroaux=1;
                         } 
+                        if(element.slactivate)
+                        {
+                            numeroauxperdidas=1;
+                        }
                         nombreaux=element.user.name
                         imagenaux=element.user.imagen;
 
@@ -268,7 +281,7 @@ async finAllranking (idclient){
     
     
     );
-    listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux});
+    listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
      
      
 
