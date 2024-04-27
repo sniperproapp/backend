@@ -257,6 +257,7 @@ async finAllranking (idclient){
                         listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
                         if(!element.descarte){ numerototalaux=1;}else{numerototalaux=0;}
                         numeroaux=0;
+                        numeroauxperdidas=0;
                         if(element.tpactivate1)
                         {
                             numeroaux=1;
