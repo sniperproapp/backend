@@ -227,7 +227,8 @@ async finAllranking (idclient){
             iduser=element.user.id;
             nombreaux=element.user.name
             imagenaux=element.user.imagen;
-            numerototalaux=1;
+            if(!element.descarte){
+            numerototalaux=1;}
             if(element.tpactivate1)
                         {
                             numeroaux=1;
@@ -235,7 +236,8 @@ async finAllranking (idclient){
             
          }else{
                     if(iduser==Number(element.user.id)){
-                        numerototalaux+=1;
+                        if(!element.descarte){
+                        numerototalaux+=1;}
                         if(element.tpactivate1)
                         {
                             numeroaux+=1;
@@ -244,7 +246,7 @@ async finAllranking (idclient){
                         
 
                         listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux});
-                        numerototalaux=1;
+                        if(!element.descarte){ numerototalaux=1;}else{numerototalaux=0;}
                         numeroaux=0;
                         if(element.tpactivate1)
                         {
