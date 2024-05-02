@@ -22,7 +22,11 @@ return this.usersRepository.save(newUser)
 
     findAll(busqueda: string){
         if(busqueda=='allusers'){
-            return this.usersRepository.find({relations:['roles']});
+            return this.usersRepository.find({relations:['roles'],order: {
+                estado: {
+                    direction: "ASC"
+                }
+            }});
         }
         else{
             return this.usersRepository.find({relations:['roles'],where:{email:Like('%'+busqueda+'%')}});
