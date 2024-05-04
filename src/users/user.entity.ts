@@ -20,6 +20,10 @@ export class User{
     @Column({default:0})
     descargo: number;
 
+    
+    @Column({default:0})
+    mensaje: number;
+
     @Column({default: 0})
     estado: number;
 
