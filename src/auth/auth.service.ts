@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Rol } from 'src/roles/rol.entity';
 import { MailsService } from 'src/mails/mails.service';
 import  PUSH = require('../utils/firebase_message') ;
+import { LoginidAuthDto } from './dto/loginid-auth.dto';
  
 
 
@@ -154,7 +155,36 @@ console.log(logindata.token);
    return data;
     }
 
+    async loginid(logindata: LoginidAuthDto)
+    { 
+         
+        
+        const {id}= logindata;
+        const userFound= await this.usersRepository.findOne({
+            where:{ id: id},
+            relations:['roles']
+            })
 
+    
+     
+     if(!userFound)
+      {
+            throw new HttpException('EL EMAIL NO EXISTE',HttpStatus.NOT_FOUND);
+       }
+
+  
+
+    const rolesIds = userFound.roles.map(rol=>rol.id) ;
+    
+    
+   
+   const token = logindata.token;
+
+   const data= {
+    user:userFound,
+    token:  token}
+   return data;
+    }
 
 
 

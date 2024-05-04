@@ -341,7 +341,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                  this.enviarpush(data1);
+                 this.enviarpush(data1);
                
             }
 
