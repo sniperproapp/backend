@@ -343,7 +343,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                // this.enviarpush(data1);
+                 this.enviarpush(data1);
                
             }
 
@@ -353,7 +353,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
             title:newproduct.name,
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
-        // this.enviarpush(data1);
+        this.enviarpush(data1);
         
 
        
