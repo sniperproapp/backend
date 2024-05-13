@@ -10,6 +10,11 @@ id: number
 @Column({unique:true})
 name: string;
 
+@Column({default: 0})
+activas: number
+
+@Column({default: 0})
+pendientes: number
 
 @Column()
 numero_senales: number

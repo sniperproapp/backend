@@ -16,6 +16,7 @@ import { count } from 'console';
 import  PUSH = require('../utils/firebase_message') ;
 import { dataestadoDto } from './dto/dataestado.dto';
 import { dataestadolikeDto } from './dto/dataestadolike.dto';
+import { Category } from '../categories/category.entity';
 
 function dosDecimales(n) {
     let t=n.toString();
@@ -26,7 +27,7 @@ function dosDecimales(n) {
 @Injectable()
 export class ProductsService {
 
-constructor (@InjectRepository(Products) private producRepository: Repository<Products>,@InjectRepository(User) private usersRepository: Repository<User>){}
+constructor (@InjectRepository(Products) private producRepository: Repository<Products>,@InjectRepository(User) private usersRepository: Repository<User>,@InjectRepository(Category) private categoryRepository: Repository<Category>){}
 
 
     async findAll(idclient){
@@ -38,6 +39,7 @@ constructor (@InjectRepository(Products) private producRepository: Repository<Pr
             throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
          
      }
+     
     return this.producRepository.find({relations:['user'],order: {
         id: "DESC" // "DESC"
     }})          
@@ -341,7 +343,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                 this.enviarpush(data1);
+                // this.enviarpush(data1);
                
             }
 
@@ -351,7 +353,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
             title:newproduct.name,
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
-         this.enviarpush(data1);
+        // this.enviarpush(data1);
         
 
        
@@ -386,7 +388,23 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
     await startforeach();
 
     const valor = await this.producRepository.findOne({relations:['user'],where:{id:saveProduct.id}})
+    const productsFound = await this.categoryRepository.findOneBy({id:product.id_category});
+     
+    if (!productsFound)
+        {
+            throw new HttpException('categoria no existe',HttpStatus.NOT_FOUND);
+        }
+    if(valor?.estad=="ACTIVO"){
+        
+         productsFound!.activas=productsFound!.activas+1;
+       
     
+    }
+    if(valor?.estad=="PENDIENTE"){
+        
+        productsFound!.pendientes=productsFound!.pendientes+1; 
+    }
+    this.categoryRepository.save(productsFound);
     return  valor;
 
    }
@@ -401,6 +419,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         throw new HttpException("las imagenes son obligatorias",HttpStatus.NOT_FOUND);
      
        }
+       
        let counter =0;
        let imagentoupdatelist = JSON.parse(product.image_To_update);
        let uploadedFile=imagentoupdatelist[counter];
@@ -444,17 +463,72 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
     
 
      const productsFound = await this.producRepository.findOneBy({id:id})
+    
    if (!productsFound ){
     throw new HttpException("producto no encontrado",HttpStatus.NOT_FOUND);
 
    }
+   const estadoproductanterior=productsFound.estad;
+
 
    const updateproducts= Object.assign(productsFound, product);
       
-   const valor = await this.producRepository.findOne({relations:['user'],where:{id:updateproducts.id}})
+   
      this.producRepository.save(updateproducts);
+     const valor = await this.producRepository.findOne({relations:['user'],where:{id:updateproducts.id}})
+
+     const categoryFound = await this.categoryRepository.findOneBy({id:product.id_category});
+     
+     if (!categoryFound)
+         {
+             throw new HttpException('categoria no existe',HttpStatus.NOT_FOUND);
+         }
+
+  
+     if(product.estad=="ACTIVO"){
+         if(estadoproductanterior=="PENDIENTE"){
+
+          categoryFound!.activas=categoryFound!.activas+1;
+          categoryFound!.pendientes=categoryFound!.pendientes-1;
+        }
+
+        
+     
+     }
+     if(product.estad=="PENDIENTE"){
+         
+        if(estadoproductanterior=="ACTIVO"){
+
+            categoryFound!.activas=categoryFound!.activas-1;
+            categoryFound!.pendientes=categoryFound!.pendientes+1;
+          }
+         
+     }
+
+     if(product.estad=="CERRADA"){
+         
+        if(estadoproductanterior=="ACTIVO"){
+
+            categoryFound!.activas=categoryFound!.activas-1;
+             
+          }
+          if(estadoproductanterior=="PENDIENTE"){
+
+           
+            categoryFound!.pendientes=categoryFound!.pendientes-1;
+          }
+         
+     }
+
+
+
+     this.categoryRepository.save(categoryFound);
       return valor
     }
+
+
+
+
 
     async activatetp(data:activatetpDto){
          
@@ -487,8 +561,8 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
        }
     
  
-       const respu= this.producRepository.save(productsFound);
-       if(respu){ return true;}else{return false}
+       const respu= await this.producRepository.save(productsFound);
+       if( respu){ return true;}else{return false}
     
         }
 
@@ -496,8 +570,21 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         const productsFound = await this.producRepository.findOneBy({id:id})
       if (!productsFound ){
        throw new HttpException("producto no encontrado",HttpStatus.NOT_FOUND);
-   
-      }
+
+ }
+
+ const categoryFound = await this.categoryRepository.findOneBy({id:productsFound.id_category});
+     
+ if (!categoryFound)
+     {
+         throw new HttpException('categoria no existe',HttpStatus.NOT_FOUND);
+     }
+
+  
+ if(productsFound.estad=="ACTIVO"){  categoryFound!.activas=categoryFound!.activas-1; }
+ if(productsFound.estad=="PENDIENTE"){  categoryFound!.pendientes=categoryFound!.pendientes-1;  }
+ 
+ this.categoryRepository.save(categoryFound);
    
     
       return this.producRepository.delete(id);
@@ -516,7 +603,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
 
       if(datalike.numero==0){return productsFound.like;}
       productsFound.like=productsFound.like+1;
-      const respu= this.producRepository.save(productsFound);
+      const respu=await this.producRepository.save(productsFound);
 
 
       if(respu){ return productsFound.like;}else{return 0;}

@@ -1,7 +1,7 @@
 import { Double } from "typeorm";
 
 export class UpdateProductsDto{
-
+  
 
     name?: string;
     description?: string;
