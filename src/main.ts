@@ -8,6 +8,6 @@ async function bootstrap() {
   app.use(cors()); 
   app.useGlobalPipes(new ValidationPipe({forbidUnknownValues: false}));
    
-  await app.listen(4000,'192.168.5.106' || 'localhost');
+  await app.listen(4000,'0.0.0.0' || 'localhost');
 }
 bootstrap();
