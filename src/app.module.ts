@@ -10,6 +10,7 @@ import { ProductsModule } from './products/products.module';
 import { MailsModule } from './mails/mails.module';
 import { ConfigModule } from '@nestjs/config';
 import { VideoModule } from './video/video.module';
+import { ZoomModule } from './ZOOM/zoom.module';
  
 
 @Module({
@@ -28,6 +29,7 @@ import { VideoModule } from './video/video.module';
     AuthModule,
     RolesModule,
     VideoModule,
+    ZoomModule,
     CategoriesModule,
     ProductsModule,
     MailsModule,
