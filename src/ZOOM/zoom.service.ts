@@ -47,7 +47,7 @@ export class ZoomService {
         }
         
        
-       zoom.imagen=url;
+       zoom.image=url;
        const updatezoom = Object.assign(zoomfound,zoom);
         return this.zoomRepository.save(updatezoom);
       }

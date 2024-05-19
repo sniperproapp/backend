@@ -8,6 +8,6 @@ export class updateZoomDto{
     link?: string ;
     description?: string ;
  
-    imagen?: string ;
+    image?: string ;
 
 }
