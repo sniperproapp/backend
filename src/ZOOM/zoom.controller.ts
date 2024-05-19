@@ -1,5 +1,5 @@
-import { Body, Controller, Get,   UseGuards } from '@nestjs/common';
- 
+import { Body,Headers, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+
  
  
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
@@ -10,6 +10,7 @@ import { JwtRolesGuard } from 'src/auth/jwt/jwt-roles.guard';
  
 import { ZoomService } from './zoom.service';
 import { updateZoomDto } from './dto/update-ZoomDto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('zoom')
 export class ZoomController {
@@ -31,7 +32,7 @@ constructor(private  zoomservices:ZoomService){}
 update(@Param('id',ParseIntPipe) id:number,
 @Body() zoom:updateZoomDto){
 
-return this.zoomServices.update(id,zoom);
+return this.zoomservices.update(id,zoom);
 }
 
 
@@ -51,9 +52,11 @@ updateWithImage(@UploadedFile(
 @Param('id',ParseIntPipe) id:number,
  @Body() zoom:updateZoomDto) {
  
-  return this.zoomServices.updateWithImage(file,id,zoom);
+  return this.zoomservices.updateWithImage(file,id,zoom);
 }
  
 
 }
+
+ 
  
