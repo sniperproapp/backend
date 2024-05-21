@@ -192,7 +192,7 @@ return listarespuesta
 
 async finAllranking (idclient){
     const userfound= await this.usersRepository.findOneBy({id: idclient});
-    console.log (userfound.estado) 
+  //  console.log (userfound.estado) 
      if(userfound.estado==0)
      {
          
@@ -343,7 +343,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                 this.enviarpush(data1);
+                  this.enviarpush(data1);
                
             }
 
@@ -613,7 +613,9 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
 
 
        async getproductiduseridcategory(data: dataidDto){
-        return await this.producRepository.find({relations:['user'],where:{id_category:Number(data.id_category),id_user:Number(data.id_user)}});
+        return await this.producRepository.find({relations:['user'],where:{id_category:Number(data.id_category),id_user:Number(data.id_user)},order: {
+            id: "DESC" // "DESC"
+        }});
        }
 
        
