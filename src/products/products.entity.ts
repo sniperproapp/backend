@@ -86,6 +86,13 @@ export class Products{
     like:number;
     
     
+    @Column({ type: 'boolean', default: false})
+    priceactivate1:boolean=false;
+    @Column({type: 'boolean' ,default: false})
+    priceactivate2:boolean=false;
+    @Column({type: 'boolean' ,default: false})
+    priceactivate3:boolean=false;
+    
     @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
     created_at: Date;
 
