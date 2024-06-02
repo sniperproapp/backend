@@ -288,10 +288,10 @@ async finAllranking (idclient){
      
     listarespuesta.sort(function (a, b) {
         // A va primero que B
-        if (a.ganadas < b.ganadas)
+        if (a.ganadas > b.ganadas)
             return -1;
         // B va primero que A
-        else if (a.ganadas > b.ganadas)
+        else if (a.ganadas < b.ganadas)
             return 1;
         // A y B son iguales
         else 
