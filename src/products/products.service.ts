@@ -286,7 +286,17 @@ async finAllranking (idclient){
     );
     listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
      
-     
+    listarespuesta.sort(function (a, b) {
+        // A va primero que B
+        if (a.ganadas < b.ganadas)
+            return -1;
+        // B va primero que A
+        else if (a.ganadas > b.ganadas)
+            return 1;
+        // A y B son iguales
+        else 
+            return 0;
+    });
 
 return listarespuesta
 }
