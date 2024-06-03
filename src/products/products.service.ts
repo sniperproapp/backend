@@ -570,13 +570,28 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         productsFound.descarte=true;
        }
        if(Number(data.numero)==8){
-        productsFound.priceactivate1=true;
+        if( productsFound.priceactivate1){
+            productsFound.priceactivate1=false;
+        }else{
+            productsFound.priceactivate1=true;
+        }
+       
        }
        if(Number(data.numero)==9){
-        productsFound.priceactivate2=true;
+        if( productsFound.priceactivate2){
+            productsFound.priceactivate2=false;
+        }else{
+            productsFound.priceactivate2=true;
+        }
+       
        }
        if(Number(data.numero)==10){
-        productsFound.priceactivate3=true;
+        if( productsFound.priceactivate3){
+            productsFound.priceactivate3=false;
+        }else{
+            productsFound.priceactivate3=true;
+        }
+        
        }
     
  
