@@ -187,7 +187,28 @@ return listarespuesta
 
 
 
+calcularpriceactivate(element){
+ 
+    let puntosganadosaux=0;
+    if(element.priceactivate3)
+        {
+              puntosganadosaux= element.price2 ;  
+        }else{
+            if(element.priceactivate2)
+                {
+                    puntosganadosaux= element.price1;
+                }else{
+                    if(element.priceactivate)
+                        {
+                            puntosganadosaux= element.price; 
+                        }
+                }
 
+
+        }
+        return puntosganadosaux;
+
+}
 
 
 async finAllranking (idclient){
@@ -220,6 +241,8 @@ async finAllranking (idclient){
     let  numeroaux=0;
     let  numeroauxperdidas=0;
     let  numerototalaux=0;
+    let  puntosganadosaux=0;
+    let puntosperdidosaux=0;
     let  nombreaux='';
     let  imagenaux='';
 
@@ -235,10 +258,58 @@ async finAllranking (idclient){
             if(element.tpactivate1)
                         {
                             numeroaux=1;
+                            //calcular los puntos dependiendo el tp que llego
+                            if(element.tpactivate5)
+                                { 
+                                    puntosganadosaux=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                }else{
+
+                                    if(element.tpactivate4)
+                                        {
+                                            puntosganadosaux=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                        }else{
+                                            if(element.tpactivate3)
+                                                {
+                                                    puntosganadosaux=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                }else{
+                                                    if(element.tpactivate2)
+                                                        {
+                                                            puntosganadosaux=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                        }else{
+                                                            if(element.tpactivate1)
+                                                                {
+                                                                    puntosganadosaux=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                }
+                                                            
+                                                        }
+                                                    
+                                                }
+                                        }
+
+
+                                }
+
+
                         }
             if(element.slactivate)
                         {
                             numeroauxperdidas=1;
+                            if(element.priceactivate3)
+                                {
+                                      puntosperdidosaux=Math.abs(element.price2-element.sl)     
+                                }else{
+                                    if(element.priceactivate2)
+                                        {
+                                             puntosperdidosaux=Math.abs(element.price1-element.sl)   
+                                        }
+
+
+                                }
+
+
+
+ 
+
                         }
             
          }else{
@@ -248,25 +319,113 @@ async finAllranking (idclient){
                         if(element.tpactivate1)
                         {
                             numeroaux+=1;
+                             //calcular los puntos dependiendo el tp que llego
+                             if(element.tpactivate5)
+                                { 
+                                    puntosganadosaux+=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                }else{
+
+                                    if(element.tpactivate4)
+                                        {
+                                            puntosganadosaux+=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                        }else{
+                                            if(element.tpactivate3)
+                                                {
+                                                    puntosganadosaux+=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                }else{
+                                                    if(element.tpactivate2)
+                                                        {
+                                                            puntosganadosaux+=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                        }else{
+                                                            if(element.tpactivate1)
+                                                                {
+                                                                    puntosganadosaux+=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                }
+                                                            
+                                                        }
+                                                    
+                                                }
+                                        }
+
+
+                                }
                         } 
                         if(element.slactivate)
                         {
                             numeroauxperdidas+=1;
+                            if(element.priceactivate3)
+                                {
+                                      puntosperdidosaux+=Math.abs(element.price2-element.sl)     
+                                }else{
+                                    if(element.priceactivate2)
+                                        {
+                                             puntosperdidosaux+=Math.abs(element.price1-element.sl)   
+                                        }
+
+
+                                }
+
+
                         } 
                     }else{
                         
 
-                        listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
+                        listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas,puntosperdidas:puntosperdidosaux,puntosganadas:puntosganadosaux});
                         if(!element.descarte){ numerototalaux=1;}else{numerototalaux=0;}
                         numeroaux=0;
                         numeroauxperdidas=0;
                         if(element.tpactivate1)
                         {
                             numeroaux=1;
+                             //calcular los puntos dependiendo el tp que llego
+                             if(element.tpactivate5)
+                                { 
+                                    puntosganadosaux=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                }else{
+
+                                    if(element.tpactivate4)
+                                        {
+                                            puntosganadosaux=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                        }else{
+                                            if(element.tpactivate3)
+                                                {
+                                                    puntosganadosaux=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                }else{
+                                                    if(element.tpactivate2)
+                                                        {
+                                                            puntosganadosaux=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                        }else{
+                                                            if(element.tpactivate1)
+                                                                {
+                                                                    puntosganadosaux=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                }
+                                                            
+                                                        }
+                                                    
+                                                }
+                                        }
+
+
+                                }
                         } 
                         if(element.slactivate)
                         {
                             numeroauxperdidas=1;
+                            //calcular la perdida en puntos si el sl es activado 
+                            if(element.priceactivate3)
+                                {
+                                      puntosperdidosaux=Math.abs(element.price2-element.sl)     
+                                }else{
+                                    if(element.priceactivate2)
+                                        {
+                                             puntosperdidosaux=Math.abs(element.price1-element.sl)   
+                                        }
+
+
+                                }
+
+
+
                         }
                         nombreaux=element.user.name
                         imagenaux=element.user.imagen;
@@ -284,7 +443,7 @@ async finAllranking (idclient){
     
     
     );
-    listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas});
+    listarespuesta.push({nombre:nombreaux,ganadas:numeroaux,total:numerototalaux,imagen:imagenaux,perdidas:numeroauxperdidas,puntosperdidas:puntosperdidosaux,puntosganadas:puntosganadosaux});
      
     listarespuesta.sort(function (a, b) {
         // A va primero que B
