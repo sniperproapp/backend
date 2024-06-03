@@ -569,6 +569,15 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
        if(Number(data.numero)==7){
         productsFound.descarte=true;
        }
+       if(Number(data.numero)==8){
+        productsFound.priceactivate1=true;
+       }
+       if(Number(data.numero)==9){
+        productsFound.priceactivate2=true;
+       }
+       if(Number(data.numero)==10){
+        productsFound.priceactivate3=true;
+       }
     
  
        const respu= await this.producRepository.save(productsFound);
