@@ -261,24 +261,24 @@ async finAllranking (idclient){
                             //calcular los puntos dependiendo el tp que llego
                             if(element.tpactivate5)
                                 { 
-                                    puntosganadosaux=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                    puntosganadosaux=Math.abs(element.tp5-(this.calcularpriceactivate(element ) == 0?element.tp5:this.calcularpriceactivate(element )))  ; 
                                 }else{
 
                                     if(element.tpactivate4)
                                         {
-                                            puntosganadosaux=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                            puntosganadosaux=Math.abs(element.tp4-(this.calcularpriceactivate(element ) == 0?element.tp4:this.calcularpriceactivate(element )))  ;  
                                         }else{
                                             if(element.tpactivate3)
                                                 {
-                                                    puntosganadosaux=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                    puntosganadosaux=Math.abs(element.tp3-(this.calcularpriceactivate(element ) == 0?element.tp3:this.calcularpriceactivate(element )))  ;  
                                                 }else{
                                                     if(element.tpactivate2)
                                                         {
-                                                            puntosganadosaux=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                            puntosganadosaux=Math.abs(element.tp2-(this.calcularpriceactivate(element ) == 0?element.tp2:this.calcularpriceactivate(element )))  ;  
                                                         }else{
                                                             if(element.tpactivate1)
                                                                 {
-                                                                    puntosganadosaux=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                    puntosganadosaux=Math.abs(element.tp1-(this.calcularpriceactivate(element ) == 0?element.tp1:this.calcularpriceactivate(element )))  ;  
                                                                 }
                                                             
                                                         }
@@ -322,24 +322,24 @@ async finAllranking (idclient){
                              //calcular los puntos dependiendo el tp que llego
                              if(element.tpactivate5)
                                 { 
-                                    puntosganadosaux+=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                    puntosganadosaux+=Math.abs(element.tp5-(this.calcularpriceactivate(element ) == 0?element.tp5:this.calcularpriceactivate(element )))  ; 
                                 }else{
 
                                     if(element.tpactivate4)
                                         {
-                                            puntosganadosaux+=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                            puntosganadosaux+=Math.abs(element.tp4-(this.calcularpriceactivate(element ) == 0?element.tp4:this.calcularpriceactivate(element )))  ;  
                                         }else{
                                             if(element.tpactivate3)
                                                 {
-                                                    puntosganadosaux+=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                    puntosganadosaux+=Math.abs(element.tp3-(this.calcularpriceactivate(element ) == 0?element.tp3:this.calcularpriceactivate(element )))  ;  
                                                 }else{
                                                     if(element.tpactivate2)
                                                         {
-                                                            puntosganadosaux+=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                            puntosganadosaux+=Math.abs(element.tp2-(this.calcularpriceactivate(element ) == 0?element.tp2:this.calcularpriceactivate(element )))  ;  
                                                         }else{
                                                             if(element.tpactivate1)
                                                                 {
-                                                                    puntosganadosaux+=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                    puntosganadosaux+=Math.abs(element.tp1-(this.calcularpriceactivate(element ) == 0?element.tp1:this.calcularpriceactivate(element )))  ;  
                                                                 }
                                                             
                                                         }
@@ -380,24 +380,24 @@ async finAllranking (idclient){
                              //calcular los puntos dependiendo el tp que llego
                              if(element.tpactivate5)
                                 { 
-                                    puntosganadosaux=Math.abs(element.tp5-this.calcularpriceactivate(element ))  ; 
+                                    puntosganadosaux=Math.abs(element.tp5-(this.calcularpriceactivate(element ) == 0?element.tp5:this.calcularpriceactivate(element )))  ; 
                                 }else{
 
                                     if(element.tpactivate4)
                                         {
-                                            puntosganadosaux=Math.abs(element.tp4-this.calcularpriceactivate(element ))  ;  
+                                            puntosganadosaux=Math.abs(element.tp4-(this.calcularpriceactivate(element ) == 0?element.tp4:this.calcularpriceactivate(element )))  ;  
                                         }else{
                                             if(element.tpactivate3)
                                                 {
-                                                    puntosganadosaux=Math.abs(element.tp3-this.calcularpriceactivate(element ))  ;  
+                                                    puntosganadosaux=Math.abs(element.tp3-(this.calcularpriceactivate(element ) == 0?element.tp3:this.calcularpriceactivate(element )))  ;  
                                                 }else{
                                                     if(element.tpactivate2)
                                                         {
-                                                            puntosganadosaux=Math.abs(element.tp2-this.calcularpriceactivate(element ))  ;  
+                                                            puntosganadosaux=Math.abs(element.tp2-(this.calcularpriceactivate(element ) == 0?element.tp2:this.calcularpriceactivate(element )))  ;  
                                                         }else{
                                                             if(element.tpactivate1)
                                                                 {
-                                                                    puntosganadosaux=Math.abs(element.tp1-this.calcularpriceactivate(element ))  ;  
+                                                                    puntosganadosaux=Math.abs(element.tp1-(this.calcularpriceactivate(element ) == 0?element.tp1:this.calcularpriceactivate(element )))  ;  
                                                                 }
                                                             
                                                         }
@@ -512,7 +512,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
                  }
                  listastrintoken =[] ;
                  i=0;
-                  //this.enviarpush(data1);
+                   this.enviarpush(data1);
                
             }
 
@@ -522,7 +522,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
             title:newproduct.name,
             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
          }
-      //  this.enviarpush(data1);
+         this.enviarpush(data1);
         
 
        
