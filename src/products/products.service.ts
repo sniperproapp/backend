@@ -549,25 +549,62 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
     
        }
        if(Number(data.numero)==1){
-        productsFound.tpactivate1=true;
+        if(  productsFound.tpactivate1){
+             productsFound.tpactivate1=false;
+        }else{
+             productsFound.tpactivate1=true;
+        }
+        
        }
        if(Number(data.numero)==2){
-        productsFound.tpactivate2=true;
+
+        if(   productsFound.tpactivate2){
+             productsFound.tpactivate2=false;
+       }else{
+             productsFound.tpactivate2=true;
+       }
+      
        }
        if(Number(data.numero)==3){
-        productsFound.tpactivate3=true;
+        if(   productsFound.tpactivate3){
+            productsFound.tpactivate3=false;
+      }else{
+            productsFound.tpactivate3=true;
+      }
+      
        }
        if(Number(data.numero)==4){
-        productsFound.tpactivate4=true;
+        if(    productsFound.tpactivate4){
+             productsFound.tpactivate4=false;
+      }else{
+             productsFound.tpactivate4=true;
+      }
+    
        }
        if(Number(data.numero)==5){
-        productsFound.tpactivate5=true;
+        if(    productsFound.tpactivate5){
+            productsFound.tpactivate5=false;
+     }else{
+            productsFound.tpactivate5=true;
+     }
+    
        }
        if(Number(data.numero)==6){
-        productsFound.slactivate=true;
+        if(     productsFound.slactivate){
+             productsFound.slactivate=false;
+     }else{
+             productsFound.slactivate=true;
+     }
+     
        }
        if(Number(data.numero)==7){
-        productsFound.descarte=true;
+
+        if(       productsFound.descarte){
+              productsFound.descarte=false;
+    }else{
+              productsFound.descarte=true;
+    }
+     
        }
        if(Number(data.numero)==8){
         if( productsFound.priceactivate1){
