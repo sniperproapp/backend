@@ -60,8 +60,8 @@ return this.usersRepository.save(newUser)
     }
 
     async desactivateall(){
-        const usersfound= await this.usersRepository.find({relations:['roles']});
-
+        const usersfound= await this.usersRepository.find({relations:['roles'],where:{duplicatesesion:1}});
+         console.log(usersfound.length)
         if (!usersfound)
         {
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
