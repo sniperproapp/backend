@@ -42,7 +42,7 @@ updateactivate(@Param('id',ParseIntPipe) id: number   ){
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
-@Put('desactivateall')
+@Put('desactivateall/all')
 updatedesactivate( @Headers() headers){
     return this.UsersService.desactivateall();
 }
