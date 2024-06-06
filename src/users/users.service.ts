@@ -60,7 +60,7 @@ return this.usersRepository.save(newUser)
     }
 
     async desactivateall(){
-        const usersfound= await this.usersRepository.find();
+        const usersfound= await this.usersRepository.find({relations:['roles']});
 
         if (!usersfound)
         {
