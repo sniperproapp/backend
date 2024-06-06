@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller,Headers, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { JwtStrategy } from 'src/auth/jwt/jwt.strategy';
@@ -43,7 +43,7 @@ updateactivate(@Param('id',ParseIntPipe) id: number   ){
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put('desactivateall')
-updatedesactivate( ){
+updatedesactivate( @Headers() headers){
     return this.UsersService.desactivateall();
 }
 
