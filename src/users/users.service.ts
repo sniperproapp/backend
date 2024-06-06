@@ -59,6 +59,24 @@ return this.usersRepository.save(newUser)
 
     }
 
+    async desactivateall(){
+        const usersfound= await this.usersRepository.find();
+
+        if (!usersfound)
+        {
+            throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
+        }
+        usersfound.forEach((element) => {
+            element.duplicatesesion=0;
+        })
+
+        
+         this.usersRepository.save(usersfound);
+        return true;
+
+    }
+
+
 
     async descargo(id: number){
         const userfound= await this.usersRepository.findOneBy({id: id});
