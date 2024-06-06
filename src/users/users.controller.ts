@@ -25,6 +25,13 @@ create(@Body() user:CreateUserDto){
     return this.UsersService.create(user);
 }
 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard,JwtRolesGuard)
+@Put('desactivate/all')
+updatedesactivate( ){
+    return this.UsersService.desactivateall();
+}
+
 
 @HasRoles(JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
@@ -40,12 +47,7 @@ updateactivate(@Param('id',ParseIntPipe) id: number   ){
 }
 
 
-@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
-@UseGuards(JwtAuthGuard,JwtRolesGuard)
-@Put('desactivateall/all')
-updatedesactivate( @Headers() headers){
-    return this.UsersService.desactivateall();
-}
+
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.CLIENT,JwtRole.PROF)
