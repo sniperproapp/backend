@@ -40,6 +40,14 @@ updateactivate(@Param('id',ParseIntPipe) id: number   ){
 }
 
 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard,JwtRolesGuard)
+@Put('desactivateall')
+updatedesactivate( ){
+    return this.UsersService.desactivateall();
+}
+
+
 @HasRoles(JwtRole.ADMIN,JwtRole.CLIENT,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put('descargo/:id')
