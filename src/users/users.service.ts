@@ -67,7 +67,8 @@ return this.usersRepository.save(newUser)
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
         usersfound.forEach((element) => {
-            element.duplicatesesion=0;
+            if(element.roles.length==1)
+          {  element.duplicatesesion=0;}
         })
 
         
