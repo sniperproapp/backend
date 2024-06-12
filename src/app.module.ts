@@ -17,7 +17,7 @@ import { ZoomModule } from './ZOOM/zoom.module';
   imports: [ConfigModule.forRoot({envFilePath: '.env',isGlobal:true}), 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'sniperpro.c2ayyv3boanv.us-west-2.rds.amazonaws.com',
+      host: 'sniperpro.cpqme4wayqxv.us-west-2.rds.amazonaws.com',
       port: 3306,
       username: 'admin',
       password: 'Gllv1992..',
