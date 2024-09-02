@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { Rol } from '../roles/rol.entity';
 import  storage = require( '../utils/cloud_storage');
+import { UpdateTimeLimitUserDto } from './dto/update_time_limit-user';
 
 @Injectable()
 export class UsersService {
@@ -46,7 +47,8 @@ return this.usersRepository.save(newUser)
         return this.usersRepository.save(updatedUser);
 
     }
-    async activate(id: number){
+    async activate(id: number, timelimit: UpdateTimeLimitUserDto){
+       // console.log(timelimit.timelimit);
         const userfound= await this.usersRepository.findOneBy({id: id});
 
         if (!userfound)
@@ -54,12 +56,18 @@ return this.usersRepository.save(newUser)
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
          userfound.estado=1;
+        
+          
+         userfound.time_limit=  new Date( timelimit.timelimit);
          this.usersRepository.save(userfound);
         return true;
 
     }
 
     async desactivateall(){
+        let currentDate: Date = new Date();
+        
+        //console.log(currentDate.toLocaleString().split('/')[0]+currentDate.toLocaleString().split('/')[2].split(',')[0])
         const usersfound= await this.usersRepository.find({relations:['roles'],where:{estado:1}});
           
         if (!usersfound)
@@ -67,8 +75,21 @@ return this.usersRepository.save(newUser)
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
         usersfound.forEach((element) => {
+            //console.log(  element.time_limit.toLocaleString().split('/')[0]+ element.time_limit.toLocaleString().split('/')[2].split(',')[0])
+           
             if(element.roles.length==1)
-          {  element.estado=0;}
+          {  
+            if(element.time_limit.toLocaleString().split('/')[2].split(',')[0]==currentDate.toLocaleString().split('/')[2].split(',')[0])
+            {
+                if(Number(element.time_limit.toLocaleString().split('/')[0])<=Number(currentDate.toLocaleString().split('/')[0]))
+                    {
+                        element.estado=0;
+                        
+                    }
+
+            }
+           
+            }
         })
 
         

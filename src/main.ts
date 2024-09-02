@@ -9,5 +9,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({forbidUnknownValues: false}));
    
   await app.listen(4000,'0.0.0.0' || 'localhost');
+  //await app.listen(4000,'0.0.0.0' || 'localhost');
 }
 bootstrap();
