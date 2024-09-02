@@ -8,6 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { HasRoles } from 'src/auth/jwt/has-roles';
 import { JwtRole } from 'src/auth/jwt/jwt-Rol';
 import { JwtRolesGuard } from 'src/auth/jwt/jwt-roles.guard';
+import { UpdateTimeLimitUserDto } from './dto/update_time_limit-user';
 
 @Controller('users')
 export class UsersController {
@@ -39,11 +40,17 @@ updatedesactivate( ){
 update(@Param('id',ParseIntPipe) id: number,   @Body() user:UpdateUserDto){
     return this.UsersService.update(id, user);
 }
+
+
+
+
+
+
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put('activate/:id')
-updateactivate(@Param('id',ParseIntPipe) id: number   ){
-    return this.UsersService.activate(id);
+updateactivate(@Param('id',ParseIntPipe) id: number,@Body() timelimit:UpdateTimeLimitUserDto   ){
+    return this.UsersService.activate(id,timelimit);
 }
 
 

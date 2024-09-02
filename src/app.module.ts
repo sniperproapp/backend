@@ -17,10 +17,12 @@ import { ZoomModule } from './ZOOM/zoom.module';
   imports: [ConfigModule.forRoot({envFilePath: '.env',isGlobal:true}), 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'sniperpro.cpqme4wayqxv.us-west-2.rds.amazonaws.com',
+      host: 'sniperpro.cpqme4wayqxv.us-west-2.rds.amazonaws.com', //produccion
+     // host: 'sniperpro-dev.cpqme4wayqxv.us-west-2.rds.amazonaws.com',//developer
       port: 3306,
       username: 'admin',
-      password: 'Gllv1992..',
+      password: 'Gllv1992..', //producction
+     // password: 'gllv1992..', // developer
       database: 'sniperpro',
       entities: [__dirname + '/**/*.entity{.ts,.js}' ],
       synchronize: true,

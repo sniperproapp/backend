@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { Products } from "src/products/products.entity";
 import { Rol } from "src/roles/rol.entity";
-import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
 export class User{
@@ -50,6 +50,10 @@ export class User{
 
     @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
     updated_at: Date;
+
+    @Column({type:'datetime'})
+     time_limit: Date;
+
 
     @JoinTable(
         {name:'user_has_roles',
