@@ -8,4 +8,5 @@ export class CreateUserDto{
     password:string;
     image?:string;
     notification_token:string;
+    timelimit:Date;
 }
