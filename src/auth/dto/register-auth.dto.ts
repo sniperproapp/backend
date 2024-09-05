@@ -28,5 +28,6 @@ export class RegisterauthDto{
 
 
     rolesIds: string[];
+    timelimit:Date;
     
 }
