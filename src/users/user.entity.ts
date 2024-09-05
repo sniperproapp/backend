@@ -51,7 +51,7 @@ export class User{
     @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
     updated_at: Date;
 
-    @Column({type:'datetime'})
+    @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
      time_limit: Date;
 
 
