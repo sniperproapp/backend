@@ -38,7 +38,7 @@ export class AuthService {
             throw new HttpException('el telefono ya existe',HttpStatus.CONFLICT);
         }
         user.descargo=0;
-        user.timelimit= new Date();
+        user.time_limit= new Date();
          
         const newUser=this.usersRepository.create(user);
         let rolesIds = [];
