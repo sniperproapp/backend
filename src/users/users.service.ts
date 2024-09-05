@@ -19,8 +19,8 @@ export class UsersService {
     {
         user.time_limit= new Date();
         console.log(user.time_limit);
-const newUser=this.usersRepository.create(user);
-return this.usersRepository.save(newUser)
+//const newUser=this.usersRepository.create(user);
+return //this.usersRepository.save(newUser)
     }
 
     findAll(busqueda: string){
