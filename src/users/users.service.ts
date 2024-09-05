@@ -17,8 +17,8 @@ export class UsersService {
     ){}
     create(user:CreateUserDto)
     {
-        user.timelimit= new Date();
-        console.log(user.timelimit);
+        user.time_limit= new Date();
+        console.log(user.time_limit);
 const newUser=this.usersRepository.create(user);
 return this.usersRepository.save(newUser)
     }
