@@ -14,12 +14,12 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     MailerModule.forRootAsync({
      useFactory: async (config:ConfigService)=>({
       transport:{
-        host:'sniperprotrading.com',
+        host:'tusoporteweb.cl',
         secure: true,
         port:465,
-        auth:{user:'info@sniperprotrading.com',pass:'+Info-Sniper*.',}
+        auth:{user:'sniperproapp@tusoporteweb.cl',pass:'gllv1992..',}
       },
-      defaults:{from: `"NO REPLY" <info@sniperprotrading.com>`,},
+      defaults:{from: `"NO REPLY" <sniperproapp@tusoporteweb.cl>`,},
       template:{dir: join(__dirname,'templates'),
     adapter: new HandlebarsAdapter(),
     options: {
