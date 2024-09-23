@@ -11,6 +11,7 @@ async function bootstrap() {
   app.use(cors()); 
   app.useGlobalPipes(new ValidationPipe({forbidUnknownValues: false}));
    const port = app.get(ConfigService)
+   console.log(port)
   await app.listen(port.get('PORT'),'0.0.0.0' || 'localhost');
   console.log(`Aplication running on: ${await app.getUrl()}`)
    
