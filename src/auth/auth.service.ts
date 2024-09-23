@@ -131,7 +131,7 @@ export class AuthService {
     throw new HttpException('passwoed incorrecto',HttpStatus.FORBIDDEN);
 
        }
-console.log(logindata.token);
+   
 
        if(userFound.notification_token!=logindata.token)
        {userFound.notification_token=logindata.token;}

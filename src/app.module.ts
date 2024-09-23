@@ -11,21 +11,13 @@ import { MailsModule } from './mails/mails.module';
 import { ConfigModule } from '@nestjs/config';
 import { VideoModule } from './video/video.module';
 import { ZoomModule } from './ZOOM/zoom.module';
+import { DataSourceConfig } from './config/data.source';
+import { PagosModule } from './pagos/pagos.module';
  
 
 @Module({
-  imports: [ConfigModule.forRoot({envFilePath: '.env',isGlobal:true}), 
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'sniperpro.cpqme4wayqxv.us-west-2.rds.amazonaws.com', //produccion
-     // host: 'sniperpro-dev.cpqme4wayqxv.us-west-2.rds.amazonaws.com',//developer
-      port: 3306,
-      username: 'admin',
-      password: 'Gllv1992..', //producction
-     // password: 'gllv1992..', // developer
-      database: 'sniperpro',
-      entities: [__dirname + '/**/*.entity{.ts,.js}' ],
-      synchronize: true,
+  imports: [ConfigModule.forRoot({envFilePath: `.env` ,isGlobal:true}), 
+    TypeOrmModule.forRoot({  ...DataSourceConfig
     }),
     UsersModule,
     AuthModule,
@@ -35,6 +27,7 @@ import { ZoomModule } from './ZOOM/zoom.module';
     CategoriesModule,
     ProductsModule,
     MailsModule,
+    PagosModule,
    
     
   ],
