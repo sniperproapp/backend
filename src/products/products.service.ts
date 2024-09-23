@@ -481,54 +481,8 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
        const newproduct = this.producRepository.create(product);
        const saveProduct= await this.producRepository.save(newproduct);
 
-       if(saveProduct!=null )
-       {
-        let listastrintoken: Array<string> =[]   
-         let listuser= await this.usersRepository.find({relations:['roles']});
-          
-         let data1={};
-         let i =0;
-          
-
-         listuser.forEach(async (element) => {
-           
-        i++;
-       
-            if(  element.notification_token!== null  ){
-                if(element.notification_token.length>30 ){
-                    if(element.estado==1){
-                    listastrintoken.push(element.notification_token);}
-                     
-                       
-                 }
-            }
-       
-            if(i==499)
-            {
-               
-                 data1 ={
-                    tokens:listastrintoken,
-                    title:newproduct.name,
-                    body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
-                 }
-                 listastrintoken =[] ;
-                 i=0;
-                   this.enviarpush(data1);
-               
-            }
-
-         })
-         data1 ={
-            tokens:listastrintoken,
-            title:newproduct.name,
-            body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
-         }
-         this.enviarpush(data1);
-        
-
-       
-       }
-    
+      
+    // guardar las imagenes
     const startforeach=async () => {
         await async_foreach(files,async(file:Express.Multer.File)=>{
 
@@ -575,8 +529,59 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         productsFound!.pendientes=productsFound!.pendientes+1; 
     }
     this.categoryRepository.save(productsFound);
-    return  valor;
+ 
 
+     //enviar msj firebase
+    if(saveProduct!=null )
+        {
+         let listastrintoken: Array<string> =[]   
+          let listuser= await this.usersRepository.find({relations:['roles']});
+           
+          let data1={};
+          let i =0;
+           
+ 
+          listuser.forEach(async (element) => {
+            
+         i++;
+        
+             if(  element.notification_token!== null  ){
+                 if(element.notification_token.length>30 ){
+                     if(element.estado==1){
+                     listastrintoken.push(element.notification_token);}
+                      
+                        
+                  }
+             }
+        
+             if(i==499)
+             {
+                
+                  data1 ={
+                     tokens:listastrintoken,
+                     title:newproduct.name,
+                     body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
+                  }
+                  listastrintoken =[] ;
+                  i=0;
+                    this.enviarpush(data1);
+                
+             }
+ 
+          })
+          data1 ={
+             tokens:listastrintoken,
+             title:newproduct.name,
+             body:"PUNTO 1:"+dosDecimales(newproduct.price)   +"SL:"+dosDecimales(newproduct.sl)
+          }
+          this.enviarpush(data1);
+         
+ 
+        
+        }
+
+
+        return  valor;
    }
 
 
