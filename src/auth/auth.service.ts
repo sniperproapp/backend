@@ -11,6 +11,8 @@ import { Rol } from 'src/roles/rol.entity';
 import { MailsService } from 'src/mails/mails.service';
 import  PUSH = require('../utils/firebase_message') ;
 import { LoginidAuthDto } from './dto/loginid-auth.dto';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import  storage = require( '../utils/cloud_storage');
  
 
 
@@ -29,14 +31,14 @@ export class AuthService {
         const emailexist= await this.usersRepository.findOneBy({email:email})
         if(emailexist){
             //409
-            throw new HttpException('el email ya existe',HttpStatus.CONFLICT);
+            throw new HttpException('el email ya existe',HttpStatus.FORBIDDEN);
         }
 
-        const phoneexist= await this.usersRepository.findOneBy({phone:phone})
-        if(phoneexist){
-            //409
-            throw new HttpException('el telefono ya existe',HttpStatus.CONFLICT);
-        }
+        // const phoneexist= await this.usersRepository.findOneBy({phone:phone})
+        // if(phoneexist){
+        //     //409
+        //     throw new HttpException('el telefono ya existe',HttpStatus.CONFLICT);
+        // }
         user.descargo=0;
         user.time_limit= new Date();
          
@@ -68,6 +70,59 @@ export class AuthService {
       return data
       
     }
+
+
+
+
+//register admin de metronic
+    async register_admin(file: Express.Multer.File, user: RegisterauthDto)
+    {
+
+      
+        const {email,phone} = user;
+        const emailexist= await this.usersRepository.findOneBy({email:email})
+        if(emailexist){
+            //409
+            throw new HttpException('el email ya existe',HttpStatus.FORBIDDEN);
+        }
+
+        // const phoneexist= await this.usersRepository.findOneBy({phone:phone})
+        // if(phoneexist){
+        //     //409
+        //     throw new HttpException('el telefono ya existe',HttpStatus.CONFLICT);
+        // }
+        user.descargo=0;
+        user.time_limit= new Date();
+        const url =await storage(file,file.originalname);
+       
+        if(url ===undefined && url === null)
+        {
+          throw new HttpException('La imagen no se pudo guardar ',HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        const newUser=this.usersRepository.create(user);
+        let rolesIds = [];
+        if(user.rol =='1' )
+        {
+            rolesIds.push('CLIENT');
+            rolesIds.push('ADMIN');
+        }else{
+            rolesIds.push('CLIENT');
+            rolesIds.push('PROF');
+        }
+         
+        const roles =await this.rolesRepository.findBy({id: In(rolesIds)});
+        newUser.roles= roles;
+        newUser.imagen=url;
+        const usersave= await this.usersRepository.save(newUser);
+         
+         
+        
+     
+        delete usersave.password;
+      return usersave
+      
+    }
+
 
      
     
@@ -156,6 +211,75 @@ export class AuthService {
  delete data.user.password;
    return data;
     }
+
+
+
+
+     
+    async login_admin(logindata: LoginAuthDto){ 
+        
+    const {email,password}= logindata;
+    const userFound= await this.usersRepository.findOne({
+        where:{ email: email},
+        relations:['roles']
+        })
+
+
+ 
+ if(!userFound)
+  {
+        throw new HttpException('EL EMAIL NO EXISTE',HttpStatus.NOT_FOUND);
+   }
+
+   const rolesIdstest = userFound.roles.map(rol=>rol.id) ;
+   
+ 
+if(!rolesIdstest.find(x => x == 'ADMIN'))
+    {
+          throw new HttpException('Solo administrador pueden ingresar',HttpStatus.FORBIDDEN);
+     }
+   if(userFound.estado==0)
+   {
+         throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
+    } 
+
+    // if(userFound.duplicatesesion==1)
+    // {
+    //       throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
+    //  } 
+
+ 
+const isPasswordValid = await compare(password,userFound.password)
+if(!isPasswordValid)
+{
+throw new HttpException('passwoed incorrecto',HttpStatus.FORBIDDEN);
+
+   }
+
+
+   if(userFound.notification_token!=logindata.token)
+   {userFound.notification_token=logindata.token;}
+
+
+//this.mailservices.welcome(email );
+
+const rolesIds = userFound.roles.map(rol=>rol.id) ;
+userFound.duplicatesesion=1;
+this.usersRepository.save(userFound);
+const payload={
+id:userFound.id
+,name:userFound.name,
+roles: rolesIds
+};
+const token = this.jwtservice.sign(payload);
+const data= {
+user:userFound,
+token:'Bearer ' + token
+}
+
+delete data.user.password;
+return data;
+}
 
     async loginid(logindata: LoginidAuthDto)
     { 

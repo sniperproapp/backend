@@ -13,6 +13,7 @@ import { VideoModule } from './video/video.module';
 import { ZoomModule } from './ZOOM/zoom.module';
 import { DataSourceConfig } from './config/data.source';
 import { PagosModule } from './pagos/pagos.module';
+import { MensajeModule } from './mensaje/mensaje.module';
  
 
 @Module({
@@ -28,6 +29,7 @@ import { PagosModule } from './pagos/pagos.module';
     ProductsModule,
     MailsModule,
     PagosModule,
+    MensajeModule,
    
     
   ],

@@ -1,4 +1,4 @@
-import { Body, Controller,Headers, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller,Headers, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors, Search } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { JwtStrategy } from 'src/auth/jwt/jwt.strategy';
@@ -21,6 +21,14 @@ findall(@Param('busqueda') busqueda: string){
   return this.UsersService.findAll(busqueda);
 }
 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard,JwtRolesGuard)
+@Get('list/admin/:search')
+findalladmin(@Param('search') busqueda: string){
+  console.log(busqueda)
+  return this.UsersService.findAlladmin(busqueda);
+}
+
 @Post()
 create(@Body() user:CreateUserDto){
     return this.UsersService.create(user);
@@ -34,7 +42,7 @@ updatedesactivate( ){
 }
 
 
-@HasRoles(JwtRole.CLIENT)
+@HasRoles(JwtRole.CLIENT,JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put(':id')
 update(@Param('id',ParseIntPipe) id: number,   @Body() user:UpdateUserDto){

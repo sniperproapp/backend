@@ -16,6 +16,7 @@ export class CreateProductsDto{
     tp4?: number;
     tp5?: number; 
      image1?: string;
+     fecha:string;
     id_category: number;
     id_user: number;
     estad: string;
