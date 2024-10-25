@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { Products } from "src/products/products.entity";
 import { Rol } from "src/roles/rol.entity";
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
 export class User{
@@ -32,7 +32,7 @@ export class User{
     email: string;
 
 
-    @Column({unique:true})
+    @Column({default: 0})
     phone: string;
 
 
@@ -72,6 +72,11 @@ export class User{
 async hashPassword(){
     this.password=await hash(this.password,Number(process.env.HASH_SALT))
 }
+// @BeforeUpdate()
+// async hashPasswordupdate(){
+//     if(this.password!=''){
+//     this.password=await hash(this.password,Number(process.env.HASH_SALT))}
+// }
 @OneToMany(()=>Products,products=>products.id)
 products: Products
 

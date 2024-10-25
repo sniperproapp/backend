@@ -17,15 +17,16 @@ export class RegisterauthDto{
     @IsEmail()
     email:string;
 
-    @IsNotEmpty()
-    @IsString()
+    
+    
     phone:string;
 
     @IsNotEmpty()
     @IsString()
     @MinLength(6, {message:'debe tener al menos 6 caracteres'})
     password:string;
-
+   
+    rol:string;
 
     rolesIds: string[];
     time_limit:Date;

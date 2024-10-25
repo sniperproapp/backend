@@ -9,6 +9,7 @@ export class UpdateUserDto{
 
      
     phone?: string;
+    password?: string;
     
     notification_token?: string;
     imagen?: string;

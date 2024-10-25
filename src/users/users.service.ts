@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Search } from '@nestjs/common';
 import { Like } from "typeorm";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -8,6 +8,7 @@ import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { Rol } from '../roles/rol.entity';
 import  storage = require( '../utils/cloud_storage');
 import { UpdateTimeLimitUserDto } from './dto/update_time_limit-user';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,18 @@ return  this.usersRepository.save(newUser)
         }
         
     }
+    findAlladmin(busqueda: string){
+       
+            
+       console.log(busqueda)
+       if(busqueda==null){
+        return this.usersRepository.find({relations:['roles'],where:[{email: Like('%'+busqueda+'%')  },{name: Like('%'+busqueda+'%')  },{lastname: Like('%'+busqueda+'%')  }]});
+       }
+            
+       return this.usersRepository.find({relations:['roles']  });
+         
+        
+    }
 
 
     async update(id: number, user: UpdateUserDto){
@@ -45,10 +58,14 @@ return  this.usersRepository.save(newUser)
         {
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
+         
         const updatedUser = Object.assign(userfound,user);
         return this.usersRepository.save(updatedUser);
 
     }
+
+
+
     async activate(id: number, timelimit: UpdateTimeLimitUserDto){
        // console.log(timelimit.timelimit);
         const userfound= await this.usersRepository.findOneBy({id: id});
@@ -143,6 +160,10 @@ return  this.usersRepository.save(newUser)
         throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
        }
        user.imagen=url;
+       console.log('user.password')
+       console.log(user.password)
+       console.log('user.password')
+       
        const updatedUser = Object.assign(userfound,user);
        return this.usersRepository.save(updatedUser);
        
