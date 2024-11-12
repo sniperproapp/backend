@@ -12,7 +12,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({forbidUnknownValues: false}));
    const port = app.get(ConfigService)
    
-  await app.listen(port.get('PORT'),'0.0.0.0' || 'localhost');
+  const newLocal = "0.0.0.0";
+  await app.listen(port.get('PORT'),newLocal || 'localhost');
   console.log(`Aplication running on: ${await app.getUrl()}`)
    
 }

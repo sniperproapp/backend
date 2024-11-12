@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable, Search } from '@nestjs/common';
-import { Like } from "typeorm";
+import { ArrayContains, Like } from "typeorm";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -8,7 +8,7 @@ import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { Rol } from '../roles/rol.entity';
 import  storage = require( '../utils/cloud_storage');
 import { UpdateTimeLimitUserDto } from './dto/update_time_limit-user';
-import { hash } from 'bcrypt';
+
 
 @Injectable()
 export class UsersService {
@@ -41,7 +41,7 @@ return  this.usersRepository.save(newUser)
        
             
        console.log(busqueda)
-       if(busqueda==null){
+       if(busqueda!="alluserlist"){
         return this.usersRepository.find({relations:['roles'],where:[{email: Like('%'+busqueda+'%')  },{name: Like('%'+busqueda+'%')  },{lastname: Like('%'+busqueda+'%')  }]});
        }
             
@@ -49,6 +49,20 @@ return  this.usersRepository.save(newUser)
          
         
     }
+
+    findAlladminpro(busqueda: string){
+       
+             
+   
+         return this.usersRepository.find({ where: {
+           roles:{id:"PROF"}
+    },relations:['roles'],}  );
+      
+             
+       
+          
+         
+     }
 
 
     async update(id: number, user: UpdateUserDto){
