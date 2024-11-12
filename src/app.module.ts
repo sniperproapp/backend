@@ -14,6 +14,13 @@ import { ZoomModule } from './ZOOM/zoom.module';
 import { DataSourceConfig } from './config/data.source';
 import { PagosModule } from './pagos/pagos.module';
 import { MensajeModule } from './mensaje/mensaje.module';
+import { CategoriesCursosModule } from './categoriesCursos/categoriesCursos.module';
+import { CursosModule } from './cursos/Cursos.module';
+import { SectionCursosModule } from './section/SectionCursos.module';
+import { ClaseCursosModule } from './clase/ClaseCursos.module';
+import { FileCursosModule } from './files/FileCursos.module';
+import { cuponCursosModule } from './cupones/cuponCursos.module';
+import { descuentoCursosModule } from './descuento/descuentoCursos.module';
  
 
 @Module({
@@ -25,11 +32,18 @@ import { MensajeModule } from './mensaje/mensaje.module';
     RolesModule,
     VideoModule,
     ZoomModule,
-    CategoriesModule,
+    CategoriesModule, 
+    CategoriesCursosModule,
     ProductsModule,
     MailsModule,
     PagosModule,
     MensajeModule,
+    CursosModule,
+    SectionCursosModule,
+    ClaseCursosModule,
+    FileCursosModule,
+    cuponCursosModule,
+    descuentoCursosModule,
    
     
   ],

@@ -21,12 +21,24 @@ findall(@Param('busqueda') busqueda: string){
   return this.UsersService.findAll(busqueda);
 }
 
+
+
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Get('list/admin/:search')
 findalladmin(@Param('search') busqueda: string){
   console.log(busqueda)
   return this.UsersService.findAlladmin(busqueda);
+}
+
+
+
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard,JwtRolesGuard)
+@Get('list/admin/prof/:search')
+findalladminpro(@Param('search') busqueda: string){
+  console.log(busqueda)
+  return this.UsersService.findAlladminpro(busqueda);
 }
 
 @Post()
@@ -47,6 +59,14 @@ updatedesactivate( ){
 @Put(':id')
 update(@Param('id',ParseIntPipe) id: number,   @Body() user:UpdateUserDto){
     return this.UsersService.update(id, user);
+}
+
+
+@HasRoles( JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard,JwtRolesGuard)
+@Put('delete/:id')
+updatedelete(@Param('id',ParseIntPipe) id: number,   @Body() user:UpdateUserDto){
+    return this.UsersService.inactivate(id);
 }
 
 

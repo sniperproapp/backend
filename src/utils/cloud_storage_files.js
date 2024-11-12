@@ -24,10 +24,9 @@ module.exports = (file, pathImage) => {
             if (pathImage != null || pathImage != undefined) {
 
                 let fileUpload = bucket.file(`${pathImage}`);
-             
                 const blobStream = fileUpload.createWriteStream({
                     metadata: {
-                        contentType: 'image/png',
+                        contentType: file.mimetype,
                         metadata: {
                             firebaseStorageDownloadTokens: uuid,
                         }

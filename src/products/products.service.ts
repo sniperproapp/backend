@@ -463,13 +463,12 @@ return listarespuesta
 
 
 
-findid(id:number){
-    return this.producRepository.find({relations:['user'],where:{id:id}});
-}
+findid(id:number){ return this.producRepository.find({relations:['user'],where:{id:id}}); }
 
-     enviarpush(data1){
-     PUSH(data1);
-}
+enviarpush(data1){  PUSH(data1); }
+
+
+
 
 async create(files: Array<Express.Multer.File>,product: CreateProductsDto){   
     if (files.length===0 ){
