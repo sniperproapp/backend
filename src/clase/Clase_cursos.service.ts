@@ -11,10 +11,14 @@ import { updateclaseCursosDto } from './dto/update-claseCursosDto';
 import { CreateClaseCursosDto } from './dto/create-ClaseCursosDto';
 import { ClaseCursos    } from './ClaseCursos.entity';
 import { CreateclasevideoDto } from './dto/Create-Clase-video.dto';
-
+import { ConfigService } from '@nestjs/config';
+ 
+ 
+const configService = new ConfigService();
 
 const fs=require('fs')
-let client = new Vimeo("9de59c71c4509177f7a98b46f856a34a862065a6", "tZPFcw1Z2/z60i3kcP4jQt5fqUw4szgGG6P+7TZmOO4qLrEtuBwvfkQEsBe9qTZ5lsCtqZXdyuzYxbAnQGZqXxRqVAJxt80fcwqiGsl3PrAbQ/M/llXHYbcopHXIDwXV", "889f192e0d994122eee55e2a43a334d1");
+let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.get('CLIENT_SECRET'),configService.get('SECRE_KEY_VIMEO'));
+ 
 
 @Injectable()
 export class ClaseCursosService {
