@@ -21,9 +21,11 @@ import { Vimeo } from '@vimeo/vimeo';
 import { CreatecursovideoDto } from './dto/Create-Curso-video.dto';
 import { SectionCursos } from 'src/section/SectionCursos.entity';
 import { Cursoresouce } from './dto/Cursoresouce.dto';
+import { ConfigService } from '@nestjs/config';
+import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
  const fs=require('fs')
-let client = new Vimeo("9de59c71c4509177f7a98b46f856a34a862065a6", "tZPFcw1Z2/z60i3kcP4jQt5fqUw4szgGG6P+7TZmOO4qLrEtuBwvfkQEsBe9qTZ5lsCtqZXdyuzYxbAnQGZqXxRqVAJxt80fcwqiGsl3PrAbQ/M/llXHYbcopHXIDwXV", "889f192e0d994122eee55e2a43a334d1");
- 
+ const configService = new ConfigService();
+ let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.get('CLIENT_SECRET'),configService.get('SECRE_KEY_VIMEO'));
 
 @Injectable()
 export class CursosService {
@@ -32,7 +34,8 @@ export class CursosService {
 
 constructor (@InjectRepository(Cursos) private cursoRepository: Repository<Cursos>,@InjectRepository(User) private usersRepository: Repository<User>,
  @InjectRepository(CategoryCursos) private categorycursoRepository: Repository<CategoryCursos>,
- @InjectRepository(SectionCursos) private seccioncursoRepository: Repository<SectionCursos>){}
+ @InjectRepository(SectionCursos) private seccioncursoRepository: Repository<SectionCursos>,
+ @InjectRepository(DescuentoCursos) private descuentocursoRepository: Repository<DescuentoCursos>){}
 
 
 
@@ -54,7 +57,44 @@ constructor (@InjectRepository(Cursos) private cursoRepository: Repository<Curso
 
 async findAlltienda( ){
     
-    return this.cursoRepository.find({relations:['user','categorycurso'],take: 3})          
+    let cursosresp:Cursoresouce
+    let cursosrespretu:any[]=[]
+    let descuento_g:any
+    let descuetos= await this.descuentocursoRepository.find({ });
+   let cursos= await this.cursoRepository.find({relations:['user','categorycurso'],take: 3}) 
+  console.log(cursos)
+   cursos.forEach((curso) => {
+     descuetos.forEach((descuento) => {
+        if(descuento.type_segment==1){
+            descuento.courses.forEach((id) => {
+                  if(id==curso.id)
+                  {
+                    descuento_g=descuento;
+                  }
+            })
+        }else {
+            descuento.categories.forEach((id) => {
+                if(id==curso.id)
+                    { descuento_g=descuento;}
+            })
+        }
+     })
+      
+     const updatecurso= Object.assign(curso, cursosresp);
+     if(descuento_g.id>0){
+        updatecurso.discount_g=descuento_g
+    }
+
+    
+    cursosrespretu.push(updatecurso)
+
+   })
+    
+    return cursosrespretu        
+
+
+
+            
 }
 
 
@@ -66,14 +106,80 @@ async findAlltiendabaner( ){
 
 
 async findAlltiendacategory(id_category:number ){
+    let cursosresp:Cursoresouce
+    let cursosrespretu:any[]=[]
+    let descuento_g:any
+    let descuetos= await this.descuentocursoRepository.find({ });
+   let cursos= await this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_category_curso:id_category}}) 
+  console.log(cursos)
+   cursos.forEach((curso) => {
+     descuetos.forEach((descuento) => {
+        if(descuento.type_segment==1){
+            descuento.courses.forEach((id) => {
+                  if(id==curso.id)
+                  {
+                    descuento_g=descuento;
+                  }
+            })
+        }else {
+            descuento.categories.forEach((id) => {
+                if(id==curso.id)
+                    { descuento_g=descuento;}
+            })
+        }
+     })
+      
+     const updatecurso= Object.assign(curso, cursosresp);
+     if(descuento_g.id>0){
+        updatecurso.discount_g=descuento_g
+    }
+
     
-    return this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_category_curso:id_category}})          
+    cursosrespretu.push(updatecurso)
+
+   })
+    
+    return cursosrespretu         
 }
 
 
 async findAlltiendauser(id_user:number ){
+    let cursosresp:Cursoresouce
+    let cursosrespretu:any[]=[]
+    let descuento_g:any
+    let descuetos= await this.descuentocursoRepository.find({ });
+     let cursos = await this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_user:id_user}})        
+  console.log(cursos)
+   cursos.forEach((curso) => {
+     descuetos.forEach((descuento) => {
+        if(descuento.type_segment==1){
+            descuento.courses.forEach((id) => {
+                  if(id==curso.id)
+                  {
+                    descuento_g=descuento;
+                  }
+            })
+        }else {
+            descuento.categories.forEach((id) => {
+                if(id==curso.id)
+                    { descuento_g=descuento;}
+            })
+        }
+     })
+      
+     const updatecurso= Object.assign(curso, cursosresp);
+     if(descuento_g.id>0){
+        updatecurso.discount_g=descuento_g
+    }
+
     
-    return this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_user:id_user}})          
+    cursosrespretu.push(updatecurso)
+
+   })
+    
+    return cursosrespretu    
+    
+      
 }
 
  
@@ -144,7 +250,25 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
 
     async findAllcurso(id_curso:number ){
      
-   
+        let descuento_g:any=''
+        let descuetos= await this.descuentocursoRepository.find({ });
+         descuetos.forEach((descuento) => {
+            if(descuento.type_segment==1){
+                descuento.courses.forEach((id) => {
+                      if(id==id_curso)
+                      {
+                        descuento_g=descuento;
+                      }
+                })
+            }else {
+                descuento.categories.forEach((id) => {
+                    if(id==id_curso)
+                        { descuento_g=descuento;}
+                })
+            }
+    
+         
+        })
     
     let cursosresp: Cursoresouce;
     
@@ -169,7 +293,9 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
         
         i++
       })
- 
+      if(descuento_g.id>0){
+        updatecurso.discount_g=descuento_g
+    }
       updatecurso.time_parse= this.sumarTiempos(...timecurso)
       updatecurso.num_clases=numeroclase;
     return updatecurso
@@ -180,7 +306,66 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
     
 }
 
+async findAllcursolanding(id_curso:number ){
+     
+   
+    let descuento_g:any=''
+    let descuetos= await this.descuentocursoRepository.find({ });
+     descuetos.forEach((descuento) => {
+        if(descuento.type_segment==1){
+            descuento.courses.forEach((id) => {
+                  if(id==id_curso)
+                  {
+                    descuento_g=descuento;
+                  }
+            })
+        }else {
+            descuento.categories.forEach((id) => {
+                if(id==id_curso)
+                    { descuento_g=descuento;}
+            })
+        }
 
+     
+    })
+     
+    let cursosresp: Cursoresouce;
+ 
+   
+   let cursos= await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { 
+        id: id_curso,
+        
+      }});
+
+      const updatecurso= Object.assign(cursos, cursosresp);
+     
+      let i=0;
+      let numeroclase=0;
+      let timecurso:any[]=[]
+      updatecurso.seciones.forEach((secione) => {
+        let timeseccion:any[]=[]
+        numeroclase+= secione.clases.length
+        secione.clases.forEach((clase) => {
+            timeseccion.push(clase.time)
+            timecurso.push(clase.time)
+        })
+      
+        updatecurso.seciones[i].time_parse= this.sumarTiempos(...timeseccion)
+        
+        i++
+      })
+      if(descuento_g.id>0){
+        updatecurso.discount_g=descuento_g
+    }
+      updatecurso.time_parse= this.sumarTiempos(...timecurso)
+      updatecurso.num_clases=numeroclase;
+    return updatecurso
+
+
+
+       
+    
+}
 
 
    

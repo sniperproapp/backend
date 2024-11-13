@@ -46,6 +46,6 @@ export class Cursoresouce{
 
     seciones:any[]
     categorycurso:any;
-     
+    discount_g:any
     user:any;
 }
