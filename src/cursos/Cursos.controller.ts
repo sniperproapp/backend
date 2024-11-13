@@ -83,7 +83,7 @@ finAllproduct(@Param('id_curso',ParseIntPipe) id_curso:number ) {
 @Get('landingcurso/:id_curso')
 finAllproductlandingcurso(@Param('id_curso',ParseIntPipe) id_curso:number, ) {
  
-  return this.cursoservices.findAllcurso(id_curso );
+  return this.cursoservices.findAllcursolanding(id_curso );
 }
 
 

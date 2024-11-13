@@ -10,9 +10,10 @@ import { CursosController } from './Cursos.controller';
 import { CursosService } from './Cursos.service';
 import { CategoryCursos } from 'src/categoriesCursos/categoryCursos.entity';
 import { SectionCursos } from 'src/section/SectionCursos.entity';
+import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Cursos,User,CategoryCursos,SectionCursos ]),JwtModule.register({
+  imports:[TypeOrmModule.forFeature([Cursos,User,CategoryCursos,SectionCursos,DescuentoCursos ]),JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
   })],
