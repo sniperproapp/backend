@@ -49,7 +49,7 @@ constructor (@InjectRepository(Cursos) private cursoRepository: Repository<Curso
 
     async findAll( ){
     
-    return this.cursoRepository.find({relations:['user','categorycurso'],order: {
+    return this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],order: {
         id: "DESC" // "DESC"
     }})          
 }
@@ -61,9 +61,17 @@ async findAlltienda( ){
     let cursosrespretu:any[]=[]
     let descuento_g:any
     let descuetos= await this.descuentocursoRepository.find({ });
-   let cursos= await this.cursoRepository.find({relations:['user','categorycurso'],take: 3}) 
-  console.log(cursos)
-   cursos.forEach((curso) => {
+   let cursos= await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3}) 
+   
+   cursos.forEach((curso) => { 
+
+    let i=0;
+    curso.seciones.forEach((seccion) => {
+       
+     i=i+ seccion.clases.length;
+      
+
+    })
      descuetos.forEach((descuento) => {
         if(descuento.type_segment==1){
             descuento.courses.forEach((id) => {
@@ -84,7 +92,7 @@ async findAlltienda( ){
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
-
+    updatecurso.num_clases=i;
     
     cursosrespretu.push(updatecurso)
 
@@ -101,7 +109,7 @@ async findAlltienda( ){
 
 async findAlltiendabaner( ){
     
-    return this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{}})          
+    return this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{}})          
 }
 
 
@@ -110,8 +118,8 @@ async findAlltiendacategory(id_category:number ){
     let cursosrespretu:any[]=[]
     let descuento_g:any
     let descuetos= await this.descuentocursoRepository.find({ });
-   let cursos= await this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_category_curso:id_category}}) 
-  console.log(cursos)
+   let cursos= await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{id_category_curso:id_category}}) 
+  
    cursos.forEach((curso) => {
      descuetos.forEach((descuento) => {
         if(descuento.type_segment==1){
@@ -128,13 +136,21 @@ async findAlltiendacategory(id_category:number ){
             })
         }
      })
+
+     let i=0;
+     curso.seciones.forEach((seccion) => {
+        
+      i=i+ seccion.clases.length;
+       
+ 
+     })
       
      const updatecurso= Object.assign(curso, cursosresp);
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
 
-    
+    updatecurso.num_clases=i;
     cursosrespretu.push(updatecurso)
 
    })
@@ -148,8 +164,8 @@ async findAlltiendauser(id_user:number ){
     let cursosrespretu:any[]=[]
     let descuento_g:any
     let descuetos= await this.descuentocursoRepository.find({ });
-     let cursos = await this.cursoRepository.find({relations:['user','categorycurso'],take: 3,where:{id_user:id_user}})        
-  console.log(cursos)
+     let cursos = await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{id_user:id_user}})        
+ 
    cursos.forEach((curso) => {
      descuetos.forEach((descuento) => {
         if(descuento.type_segment==1){
@@ -166,12 +182,20 @@ async findAlltiendauser(id_user:number ){
             })
         }
      })
+
+     let i=0;
+     curso.seciones.forEach((seccion) => {
+        
+      i=i+ seccion.clases.length;
+       
+ 
+     })
       
      const updatecurso= Object.assign(curso, cursosresp);
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
-
+    updatecurso.num_clases=i;
     
     cursosrespretu.push(updatecurso)
 
@@ -413,9 +437,9 @@ async create(file: Express.Multer.File,curso: CreatecursoDto){
 
       
        const newcurso = this.cursoRepository.create(curso);
-        console.log(curso)
+         
        const url =await storage(file,file.originalname);
-       console.log(url)
+      
        if(url ===undefined && url === null)
        {
          throw new HttpException('La imagen no se pudo guardar ',HttpStatus.INTERNAL_SERVER_ERROR);
@@ -425,7 +449,7 @@ async create(file: Express.Multer.File,curso: CreatecursoDto){
         newcurso.slug=newcurso.title
         newcurso.estado=1
          
-        console.log(newcurso)
+        
       
        const savecurso= await this.cursoRepository.save(newcurso);
    
@@ -439,7 +463,7 @@ async create(file: Express.Multer.File,curso: CreatecursoDto){
    async updateWithImage( file: Express.Multer.File,curso: UpdateCursoDto){   
  
     const url =await storage(file,file.originalname);
-    console.log(url)
+     
     if(url ===undefined && url === null)
     {
       throw new HttpException('La imagen no se pudo guardar ',HttpStatus.INTERNAL_SERVER_ERROR);

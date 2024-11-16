@@ -1,21 +1,36 @@
-import { Body, Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body,Headers,Get, Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterauthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { LoginidAuthDto } from './dto/loginid-auth.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+import { JwtRole } from './jwt/jwt-Rol';
+import { JwtRolesGuard } from './jwt/jwt-roles.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-    constructor( private authServices: AuthService){
+    
+    constructor( private authServices: AuthService,private jwtservice: JwtService){
 
     }
 
-    @Post('register')
-    create(@Body() user: RegisterauthDto){
+
+
+ 
+ 
+@Get('informacionuser')
+finAll( @Headers() headers,  ) {
+  
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.authServices.informacionuser(idclient.id );
+}
+
+@Post('register')
+create(@Body() user: RegisterauthDto){
         return this.authServices.register(user);
-
-    }
+}
 
 
     
@@ -78,3 +93,5 @@ updateWithImage(@UploadedFile(
 
     }
 }
+ 
+

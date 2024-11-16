@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMailDto } from './dto/create-mail.dto';
-import { UpdateMailDto } from './dto/update-mail.dto';
+ 
 import { MailerService } from '@nestjs-modules/mailer';
+ 
+ 
 
 @Injectable()
 export class MailsService {
    
-  constructor( private mailerservices: MailerService){}
+  constructor( 
+   
+private mailerservices: MailerService
+
+  ){}
 
   async senUserConfirmation( email:string){
     await this.mailerservices.sendMail({
@@ -27,4 +32,41 @@ export class MailsService {
       
     })
   }
+
+
+
+  async sendmail(Orden:any,OrdenDetail:any){
+
+    
+    try {
+        
+       
+
+       
+       
+       
+
+    console.log(Orden)
+    console.log('Orden')
+
+
+    console.log(OrdenDetail)
+
+    
+      await this.mailerservices.sendMail({
+        to:'gercelluciano@gmail.com',
+        subject:"Bienvenido a SNIPER PRO ",
+        template:'./html',
+        context:{Orden:Orden,Orden_detail:OrdenDetail,}
+        
+      })
+      
+    
+
+  } catch (error) {
+      console.log(error);
+  }
+ 
+  
+}
 }

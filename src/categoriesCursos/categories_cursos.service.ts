@@ -12,6 +12,8 @@ import { Cursos } from 'src/cursos/Cursos.entity';
 import { CreateCategoryCursosDto } from './dto/create-categoryCursosDto copy';
 import { CategoryCursosDto } from './dto/categoryCursosDto';
 import { CategoryCursosResouceDto } from './dto/categoryCursosresouceDto';
+import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
+import { Cursoresoucecategori } from './dto/Cursoresoucecategori.dto';
 
 
 
@@ -21,6 +23,7 @@ export class CategoriesCursosService {
       @InjectRepository(CategoryCursos) private categoriesRepository: Repository<CategoryCursos>,
        @InjectRepository(Cursos) private cursosRepository: Repository<Cursos>
        ,@InjectRepository(User) private usersRepository: Repository<User>
+       ,@InjectRepository(DescuentoCursos) private descuentocursoRepository: Repository<DescuentoCursos>
     ){}
 
     async findall(busqueda:string){
@@ -58,19 +61,74 @@ export class CategoriesCursosService {
 
      
   async findalltiendacategoriacursos(){
-     
-       let categoriasresul:CategoryCursosResouceDto[]=[];
-       let categories=await this.categoriesRepository.find({relations:['cursos'],where:{estado:1}});
+    let cursosresp:Cursoresoucecategori
+    
+    let descuento_g:any
+    let categoriasresul:CategoryCursosResouceDto[]=[];
+    let categories=await this.categoriesRepository.find({relations:['cursos.seciones.clases.files'],where:{estado:1}});
+    let descuetos= await this.descuentocursoRepository.find({ });
+
+    for(let categoria of  categories ){
+      let cursosrespretu:any[]=[]     
+      categoria.cursos.forEach((curso) => {
+        descuetos.forEach((descuento) => {
+           if(descuento.type_segment==1){
+               descuento.courses.forEach((id) => {
+                     if(id==curso.id)
+                     {
+                       descuento_g=descuento;
+                     }
+               })
+           }else {
+               descuento.categories.forEach((id) => {
+                   if(id==curso.id)
+                       { descuento_g=descuento;}
+               })
+           }
+        })
+
+        let i=0;
+        curso.seciones.forEach((seccion) => {
+           
+         i=i+ seccion.clases.length;
+          
+    
+        })
+         
+        const updatecurso= Object.assign(curso, cursosresp);
+        if(descuento_g){
+          updatecurso.discount_g=descuento_g
+       }
+       updatecurso.num_clases=i;
+   
        
-          for(let categoria of  categories ){
-             
+       cursosrespretu.push(updatecurso)
+   
+      })
 
-            categoriasresul.push({ id: categoria.id,titulo: categoria.titulo,estado: categoria.estado
-              ,count_curso:categoria.cursos.length ,image:categoria.image,
-              created_at: categoria.created_at,updated_at: categoria.updated_at,cursos:categoria.cursos,titulosinespacio:categoria.titulo.replace(/\s+/g,"") })
-          }
 
-      return categoriasresul;
+
+
+      categoriasresul.push({ id: categoria.id,titulo: categoria.titulo,estado: categoria.estado
+        ,count_curso:categoria.cursos.length ,image:categoria.image,
+        created_at: categoria.created_at,
+        updated_at: categoria.updated_at,cursos:cursosrespretu
+        ,titulosinespacio:categoria.titulo.replace(/\s+/g,"") })
+    }
+
+return categoriasresul;
+
+   
+    
+    
+ 
+  
+  
+    
+    
+     
+     
+       
   
   
       
