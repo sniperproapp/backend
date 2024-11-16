@@ -9,7 +9,7 @@ export class SectionCursos{
 @PrimaryGeneratedColumn()
 id: number
 
-@Column({unique:true})
+@Column()
 title: string;
  
 

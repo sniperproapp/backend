@@ -3,7 +3,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
  
 
 ConfigModule.forRoot({
-  envFilePath: `.develop.env`,
+  envFilePath: `.env`,
 });
 
 const configService = new ConfigService();

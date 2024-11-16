@@ -10,10 +10,14 @@ import { JwtStrategy } from './jwt/jwt.strategy';
 import { RolesService } from '../roles/roles.service';
 import { Rol } from 'src/roles/rol.entity';
 import { MailsService } from 'src/mails/mails.service';
+import { Cursos } from 'src/cursos/Cursos.entity';
+import { Sale } from 'src/sale/sale.entity';
+import { Saledetail } from 'src/saledetail/saledetail.entity';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User, Rol]),
+  imports:[TypeOrmModule.forFeature([User, Rol,Cursos,Sale,Saledetail,Cursostudent]),
   JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },

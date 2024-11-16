@@ -21,6 +21,10 @@ import { ClaseCursosModule } from './clase/ClaseCursos.module';
 import { FileCursosModule } from './files/FileCursos.module';
 import { cuponCursosModule } from './cupones/cuponCursos.module';
 import { descuentoCursosModule } from './descuento/descuentoCursos.module';
+import { CarritoModule } from './carrito_de_compras/Carrito.module';
+import { CursostudentModule } from './studentcurso/Cursostudent.module';
+import { saleModule } from './sale/sale.module';
+import { SaledetailModule } from './saledetail/Saledetail.module';
  
 
 @Module({
@@ -29,6 +33,8 @@ import { descuentoCursosModule } from './descuento/descuentoCursos.module';
     }),
     UsersModule,
     AuthModule,
+    saleModule,
+    SaledetailModule,
     RolesModule,
     VideoModule,
     ZoomModule,
@@ -39,6 +45,8 @@ import { descuentoCursosModule } from './descuento/descuentoCursos.module';
     PagosModule,
     MensajeModule,
     CursosModule,
+    CarritoModule,
+    CursostudentModule,
     SectionCursosModule,
     ClaseCursosModule,
     FileCursosModule,

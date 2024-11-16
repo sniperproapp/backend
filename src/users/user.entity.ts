@@ -1,6 +1,8 @@
 import { hash } from "bcrypt";
+import { Cursos } from "src/cursos/Cursos.entity";
 import { Products } from "src/products/products.entity";
 import { Rol } from "src/roles/rol.entity";
+import { Sale } from "src/sale/sale.entity";
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
@@ -65,9 +67,19 @@ export class User{
         }
         }
     )
+
+
+
+    
     @ManyToMany(()=>Rol,(rol)=>rol.users)
     roles: Rol[];
 
+    @OneToMany(()=>Products,products=>products.id)
+    products: Products
+
+    @OneToMany(()=>Sale,sale=>sale.user)
+    sales: Sale[]
+    
 @BeforeInsert()
 async hashPassword(){
     this.password=await hash(this.password,Number(process.env.HASH_SALT))
@@ -77,8 +89,6 @@ async hashPassword(){
 //     if(this.password!=''){
 //     this.password=await hash(this.password,Number(process.env.HASH_SALT))}
 // }
-@OneToMany(()=>Products,products=>products.id)
-products: Products
-
+ 
 
 }

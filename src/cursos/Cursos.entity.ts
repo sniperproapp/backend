@@ -1,5 +1,6 @@
 import { Category } from "src/categories/category.entity";
 import { CategoryCursos } from "src/categoriesCursos/categoryCursos.entity";
+import { Saledetail } from "src/saledetail/saledetail.entity";
 import { SectionCursos } from "src/section/SectionCursos.entity";
 import { User } from "src/users/user.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -63,6 +64,9 @@ export class Cursos{
 
     @OneToMany(()=>SectionCursos,sectionCursos=>sectionCursos.cursos)
     seciones: SectionCursos[]
+
+    @OneToMany(()=>Saledetail,saledetail=>saledetail.cursos)
+    saledetail: Saledetail[]
     
     @ManyToOne(()=>CategoryCursos,(categorycurso)=> categorycurso.cursos)
     @JoinColumn(  {name: 'id_category_curso' })
@@ -75,5 +79,5 @@ export class Cursos{
     user: User
 
 
-  
+   
 }

@@ -10,7 +10,7 @@ export class ClaseCursos{
 @PrimaryGeneratedColumn()
 id: number
 
-@Column({unique:true})
+@Column( )
 title: string;
 
 @Column()

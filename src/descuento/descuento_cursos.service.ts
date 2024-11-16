@@ -9,6 +9,7 @@ import { CreatedescuentoCursosDto } from './dto/create-descuentoCursosDto';
 import { updatedescuentoCursosDto } from './dto/update-descuentoCursosDto';
 import { Cursos } from 'src/cursos/Cursos.entity';
 import { DescuentoCursosDto } from './dto/descuentoCursosDto';
+import { Cursoresouceseccion } from './dto/Cursoresouceseccion.dto';
  
  
  
@@ -51,6 +52,7 @@ export class descuentoCursosService {
         
        let discountresul:DescuentoCursosDto ;
        let cursos:any[]=[];
+        let curso:Cursoresouceseccion;
        
 
        if(!descueto){
@@ -59,8 +61,23 @@ export class descuentoCursosService {
       
       const updateddescuento = Object.assign(descueto,discountresul);
         for(let cursoid of  descueto.courses ){
-            let curso=await this.cursosRepository.findOneBy({ id:cursoid});
-            cursos.push(curso)
+              let cursoresp=await this.cursosRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where:{ id:cursoid}});
+               let i=0;
+              cursoresp.seciones.forEach((seccion) => {
+                 
+               i=i+ seccion.clases.length;
+                
+
+              })
+
+             
+            
+
+               const updatecurso= Object.assign(cursoresp,curso );
+              
+               updatecurso.num_clases=i;
+               
+              cursos.push(updatecurso)
           }
         
           
@@ -73,7 +90,8 @@ export class descuentoCursosService {
 
 
     async findAlltiendaflash(  ){
-       
+      
+       let curso:Cursoresouceseccion;
       const  descueto= await this.descuentoRepository.findOneBy( { type_campaign:2} );
         
        let discountresul:DescuentoCursosDto ;
@@ -86,8 +104,23 @@ export class descuentoCursosService {
       
       const updateddescuento = Object.assign(descueto,discountresul);
         for(let cursoid of  descueto.courses ){
-            let curso=await this.cursosRepository.findOneBy({ id:cursoid});
-            cursos.push(curso)
+            let cursoresp=await this.cursosRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where:{ id:cursoid}});
+           
+
+            let i=0;
+            cursoresp.seciones.forEach((seccion) => {
+               
+             i=i+ seccion.clases.length;
+              
+
+            })
+
+            
+            const updatecurso= Object.assign(cursoresp,curso );
+             
+            updatecurso.num_clases=i;
+            
+           cursos.push(updatecurso)
           }
         
           
@@ -218,10 +251,7 @@ export class descuentoCursosService {
          throw new HttpException('la categoria no se encuentra ',HttpStatus.OK);
  
         }
-         console.log(descuento);
-         console.log(categorifound
-          
-         );
+        
 
          delete descuento.id;
          const updateddescuento = Object.assign(categorifound,descuento);

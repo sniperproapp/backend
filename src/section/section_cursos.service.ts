@@ -35,10 +35,10 @@ export class SectionCursosService {
     async create(  section:CreateSectionCursosDto){
 
       const categorifound= await this.SectionRepository.findOneBy({title:section.title})
-      if(categorifound){
-       throw new HttpException('la seccion ya se encuentra registrada ',HttpStatus.OK);
+      // if(categorifound){
+      //  throw new HttpException('la seccion ya se encuentra registrada ',HttpStatus.OK);
 
-      }
+      // }
        let newsection = this.SectionRepository.create( section);
  
      

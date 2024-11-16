@@ -52,10 +52,10 @@ export class ClaseCursosService {
     async create(  clase:CreateClaseCursosDto){
 
       const categorifound= await this.ClaseRepository.findOneBy({title:clase.title})
-      if(categorifound){
-       throw new HttpException('la seccion ya se encuentra registrada ',HttpStatus.OK);
+      // if(categorifound){
+      //  throw new HttpException('la seccion ya se encuentra registrada ',HttpStatus.OK);
 
-      }
+      // }
        let newclase = this.ClaseRepository.create( clase);
  
      
