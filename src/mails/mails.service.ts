@@ -35,7 +35,7 @@ private mailerservices: MailerService
 
 
 
-  async sendmail(Orden:any,OrdenDetail:any){
+  async sendmail(Orden:any,OrdenDetail:any,email:any){
 
     
     try {
@@ -54,8 +54,8 @@ private mailerservices: MailerService
 
     
       await this.mailerservices.sendMail({
-        to:'gercelluciano@gmail.com',
-        subject:"Bienvenido a SNIPER PRO ",
+        to:email,
+        subject:"FACTURA SNIPER PRO ",
         template:'./html',
         context:{Orden:Orden,Orden_detail:OrdenDetail,}
         
