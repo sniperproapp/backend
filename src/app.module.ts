@@ -25,6 +25,7 @@ import { CarritoModule } from './carrito_de_compras/Carrito.module';
 import { CursostudentModule } from './studentcurso/Cursostudent.module';
 import { saleModule } from './sale/sale.module';
 import { SaledetailModule } from './saledetail/Saledetail.module';
+import { ReviewsModule } from './reviews/reviews.module';
  
 
 @Module({
@@ -35,6 +36,7 @@ import { SaledetailModule } from './saledetail/Saledetail.module';
     AuthModule,
     saleModule,
     SaledetailModule,
+    ReviewsModule,
     RolesModule,
     VideoModule,
     ZoomModule,

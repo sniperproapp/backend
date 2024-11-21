@@ -18,6 +18,7 @@ import { Cursos } from 'src/cursos/Cursos.entity';
 import { Sale } from 'src/sale/sale.entity';
 import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { Cursoauthresouce } from './dto/Cursoauthresouce.dto';
+import { Reviews } from 'src/reviews/reviews.entity';
  
 
 function formDateToYMD(date,type=1) {
@@ -38,6 +39,7 @@ export class AuthService {
          @InjectRepository(User) private usersRepository: Repository<User>,
          @InjectRepository(Sale) private salesRepository: Repository<Sale>,
          @InjectRepository(Saledetail) private saledetailsRepository: Repository<Saledetail>,
+         @InjectRepository(Reviews) private reviewssRepository: Repository<Reviews>,
          @InjectRepository(Cursostudent) private cursostudentsRepository: Repository<Cursostudent>,
          @InjectRepository(Cursos) private cursossRepository: Repository<Cursos>,
     @InjectRepository(Rol) private rolesRepository:Repository<Rol>
@@ -373,7 +375,7 @@ return data;
             let actived_course_count = await this.cursostudentsRepository.count({where:{id_user: user,state: 1,clases_checked:Not(IsNull())}});
             let termined_course_count = await this.cursostudentsRepository.count({where:{id_user: user,state: 2}});
              
-console.log(await this.cursostudentsRepository.find({where:{id_user: user,state: 1,clases_checked:Not(IsNull())}}))
+
             let Student = await this.usersRepository.findOne({where:{id: user}});
 
             let enrolled_course_news = [];
@@ -457,7 +459,7 @@ console.log(await this.cursostudentsRepository.find({where:{id_user: user,state:
                     
                     sales_detail_collection.push({
                         course: {
-                            _id: sale_detail.cursos.id,
+                            id: sale_detail.cursos.id,
                             title: sale_detail.cursos.title,
                             imagen: sale_detail.cursos.imagen,
                             categorie: sale_detail.cursos.categorycurso,
@@ -471,7 +473,7 @@ console.log(await this.cursostudentsRepository.find({where:{id_user: user,state:
                         subtotal: sale_detail.subtotal,
                         total: sale_detail.total,
                     });
-                    let review = ''// await models.Review.findOne({sale_detail: sale_detail._id});
+                    let review =  await this.reviewssRepository.findOne({where:{id_saledetail: sale_detail.id}});
                     sales_details_collection.push({
                         course: {
                             id: sale_detail.cursos.id,
@@ -487,7 +489,7 @@ console.log(await this.cursostudentsRepository.find({where:{id_user: user,state:
                         price_unit: sale_detail.price_unit,
                         subtotal: sale_detail.subtotal,
                         total: sale_detail.total,
-                        _id: sale_detail.id,
+                        id: sale_detail.id,
                         review: review,
                     });
                 }
@@ -509,6 +511,7 @@ console.log(await this.cursostudentsRepository.find({where:{id_user: user,state:
                 actived_course_count: actived_course_count,
                 termined_course_count: termined_course_count,
                 profile: {
+                    id: Student.id,
                     name: Student.name,
                     surname: Student.lastname,
                     email: Student.email,

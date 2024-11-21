@@ -13,7 +13,7 @@ import  PUSH = require('../utils/firebase_message') ;
 import { dataestadoDto } from './dto/dataestado.dto';
  
 import { Cursos } from './Cursos.entity';
-import { Repository } from 'typeorm';
+import { Any, ArrayContains, Between, In, Like, Repository } from 'typeorm';
  
 import { CategoryCursos } from 'src/categoriesCursos/categoryCursos.entity';
 import { UpdateCursoDto } from './dto/update-Curso.dto';
@@ -23,6 +23,14 @@ import { SectionCursos } from 'src/section/SectionCursos.entity';
 import { Cursoresouce } from './dto/Cursoresouce.dto';
 import { ConfigService } from '@nestjs/config';
 import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
+import { filtroDto } from './dto/filtro.dto';
+import { Cursoauthresouce } from 'src/auth/dto/Cursoauthresouce.dto';
+import { contains } from 'class-validator';
+import { title } from 'process';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
+import { Updatecheck } from './dto/updatecheck.dto';
+import { CursostudenresourceDto } from './dto/cursostuden.dto';
+import { Reviews } from 'src/reviews/reviews.entity';
  const fs=require('fs')
  const configService = new ConfigService();
  let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.get('CLIENT_SECRET'),configService.get('SECRE_KEY_VIMEO'));
@@ -35,6 +43,8 @@ export class CursosService {
 constructor (@InjectRepository(Cursos) private cursoRepository: Repository<Cursos>,@InjectRepository(User) private usersRepository: Repository<User>,
  @InjectRepository(CategoryCursos) private categorycursoRepository: Repository<CategoryCursos>,
  @InjectRepository(SectionCursos) private seccioncursoRepository: Repository<SectionCursos>,
+ @InjectRepository(Reviews) private reviewsRepository: Repository<Reviews>,
+ @InjectRepository(Cursostudent) private cursostudentRepository: Repository<Cursostudent>,
  @InjectRepository(DescuentoCursos) private descuentocursoRepository: Repository<DescuentoCursos>){}
 
 
@@ -392,6 +402,143 @@ async findAllcursolanding(id_curso:number ){
 }
 
 
+async updatecheck(updatecheck:Updatecheck ){
+
+console.log(updatecheck)
+  let COURSE_STUDENT_ID =  updatecheck.id
+
+  let course_student = await this.cursostudentRepository.findOne({where:{id: COURSE_STUDENT_ID} })
+     
+   
+  course_student.clases_checked=updatecheck.clases_checked
+  
+
+  
+return await  this.cursostudentRepository.save(course_student); 
+  
+}
+
+
+
+
+async findAllvercursolanding(id_curso:number,iduser:number ){
+     
+
+              
+
+            let COURSE = await this.cursoRepository.findOne({where:{id: id_curso}}) 
+            if(!COURSE){
+              throw new HttpException('el curso no se encuentra registrado ',HttpStatus.OK);
+
+            }
+
+            let course_student = await this.cursostudentRepository.findOne({where:{id_curso: COURSE.id,id_user: iduser}});
+
+            if(!course_student){
+              throw new HttpException('El curso no lo tienes registrado',HttpStatus.OK);
+            }
+   
+  let descuento_g:any=''
+  let descuetos= await this.descuentocursoRepository.find({ });
+   descuetos.forEach((descuento) => {
+      if(descuento.type_segment==1){
+          descuento.courses.forEach((id) => {
+                if(id==id_curso)
+                {
+                  descuento_g=descuento;
+                }
+          })
+      }else {
+          descuento.categories.forEach((id) => {
+              if(id==id_curso)
+                  { descuento_g=descuento;}
+          })
+      }
+
+   
+  })
+   
+  let cursosresp: Cursoresouce;
+
+ 
+ let cursos= await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { 
+      id: id_curso,
+      
+    }});
+
+    const updatecurso= Object.assign(cursos, cursosresp);
+    
+    let i=0;
+    let numeroclase=0;
+    let timecurso:any[]=[]
+    updatecurso.seciones.forEach((secione) => {
+      let timeseccion:any[]=[]
+      numeroclase+= secione.clases.length
+      secione.clases.forEach((clase) => {
+          timeseccion.push(clase.time)
+          timecurso.push(clase.time)
+      })
+    
+      updatecurso.seciones[i].time_parse= this.sumarTiempos(...timeseccion)
+      
+      i++
+    })
+    if(descuento_g.id>0){
+      updatecurso.discount_g=descuento_g
+  }
+    
+    
+    updatecurso.time_parse= this.sumarTiempos(...timecurso)
+  
+    console.log(updatecurso.id)
+    console.log(updatecurso.id_user)
+   
+    let cursosprofesor = await this.cursoRepository.find({where:{id_user:updatecurso.id_user}})
+    
+    
+    
+    let N_STUDENTS_SUM_TOTAL = 0;
+    let AVG_RATING_SUM_TOTAL = 0;
+    let NUM_REVIEW_SUM_TOTAL = 0;
+    let AVG_RATING_INSTRUCTOR = 0;// 5 4 3  = 12 / 3 = 4
+             
+      let numerodeestudiante_suma=0;
+      let numerodereviews_suma=0;
+      console.log(cursosprofesor)
+      cursosprofesor.forEach(async (curso) => {
+        let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+        let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+        let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+        let NUM_REVIEW_C = REVIEWS_C.length;
+       
+        N_STUDENTS_SUM_TOTAL += N_STUDENTS_C;
+        NUM_REVIEW_SUM_TOTAL += NUM_REVIEW_C;
+        AVG_RATING_SUM_TOTAL += AVG_RATING_C;
+      })
+    updatecurso.coursestudent= await this.cursostudentRepository.findOneBy( {id_curso:updatecurso.id,id_user:iduser})
+     
+    updatecurso.num_clases=numeroclase;
+    
+   updatecurso.n_students=N_STUDENTS_SUM_TOTAL
+   updatecurso.num_review=NUM_REVIEW_SUM_TOTAL
+   updatecurso.avg_rating=(AVG_RATING_SUM_TOTAL / NUM_REVIEW_SUM_TOTAL).toFixed(2);
+  
+   
+    console.log(N_STUDENTS_SUM_TOTAL)
+    console.log(NUM_REVIEW_SUM_TOTAL)
+    
+    
+ 
+    return updatecurso
+
+
+
+     
+  
+}
+
+
+
    
 sumarTiempos(...tiempos) {
     // Convierte cada tiempo en formato "hh:mm:ss" a segundos y suma todos los segundos.
@@ -516,8 +663,167 @@ async create(file: Express.Multer.File,curso: CreatecursoDto){
        }
 
 
- 
+ async config_filtro(){
+  
 
+  let categories = await this.categorycursoRepository.find({where:{estado: 1}});
+  let N_CATEGORIES = [];
+  for (let categorie of categories) {
+      let categorie1:any=categorie
+      categorie1.count_course = await this.cursoRepository.count({where:{id_category_curso: categorie.id}});
+      N_CATEGORIES.push(categorie);
+  }
+  let instructores = await this.usersRepository.find({where:{roles:{id:"PROF"},estado: 1}});
+  let N_INSTRUCTORS = [];
+  for (let instructor of instructores) {
+      let instructor1:any=instructor
+      instructor1.count_course = await this.cursoRepository.count({where:{id_user:instructor.id}});
+      N_INSTRUCTORS.push(instructor);
+  }
+  let levels = ['Basico',
+      'Intermedio',
+      'Avanzado'];
+  let N_LEVELS = [];
+  for (const level of levels) {
+      let count_course = await this.cursoRepository.count({where:{level: level}});
+      N_LEVELS.push({
+          name: level,
+          count_course: count_course,
+      });
+  }
+  let idiomas = ['Ingles',
+      'Español',
+      'Portugues',
+      'Aleman'];
+  let N_IDIOMAS = [];
+  for (const idioma of idiomas) {
+      let count_course = await this.cursoRepository.count({where:{idioma: idioma}});
+      N_IDIOMAS.push({
+          name: idioma,
+          count_course: count_course,
+      });
+  }
+ 
+return await{
+      categories: N_CATEGORIES,
+      instructores: N_INSTRUCTORS,
+      levels: N_LEVELS,
+      idiomas: N_IDIOMAS,
+  }
+
+ }
+
+async search_curso(filtro:filtroDto)
+{
+  console.log(filtro)
+  let TIME_NOW = 'req.query.TIME_NOW';
+  let search_course = filtro.search;
+
+  let selected_categories:any =filtro.selected_categories;
+  
+  let selected_instructors:any =filtro.selected_instructors;
+   
+
+  let selected_levels:any = filtro.selected_levels;//["Basico","Intermedio"]
+  let selected_idiomas:any =filtro.selected_idiomas
+
+  let min_price = filtro.min_price
+  let max_price = filtro.max_price
+  let rating_selected = filtro.rating_selected//2
+
+  let filters:any =  {
+    estado:2,
+    id_user:In(selected_instructors),
+    idioma:In(selected_idiomas),
+    level:In(selected_levels),
+    id_category_curso:In(selected_categories),
+    title:Like(`%${search_course}%`),
+    price_usd:Between(min_price, max_price)
+     };
+  if(!search_course ){
+    delete filters.title
+  } 
+  if(!selected_categories || !selected_categories.length  ){
+      delete filters.id_category_curso
+        
+
+  }
+
+  if(!selected_idiomas || !selected_idiomas.length   ){
+    delete filters.idioma
+}
+
+if(!selected_instructors || !selected_instructors.length   ){
+  delete filters.id_user
+}
+
+
+  
+  if(!selected_levels || !selected_levels.length   ){
+    delete filters.level
+  }
+
+  
+  if(!min_price    && !max_price ){
+    delete filters.price_usd
+    
+  }
+  
+  console.log(filters)
+   
+ 
+  
+ 
+  let Courses = await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],where:filters}
+      
+       
+  );
+
+  // CAMPAING NORMAL
+
+
+  
+    let descuetos= await this.descuentocursoRepository.find({ });
+              
+  let COURSES = [];
+  for (const Course of Courses) {
+      let DISCOUNT_G = null;
+
+      descuetos.forEach((descuento) => {
+        if(descuento.type_segment==1){
+            descuento.courses.forEach((id) => {
+                  if(id==Course.id)
+                  {
+                    DISCOUNT_G=descuento;
+                  }
+            })
+        }else {
+            descuento.categories.forEach((id) => {
+                if(id==Course.id)
+                    { DISCOUNT_G=descuento;}
+            })
+        }
+
+     
+    })
+       
+     
+      let numeroclase=0; 
+      Course.seciones.forEach((secione) => {
+         numeroclase+= secione.clases.length
+       })
+      let N_CLASES =numeroclase;
+      let curso:Cursoauthresouce
+      const cursoresp= Object.assign(Course, curso);
+      cursoresp.n_clases=N_CLASES
+      cursoresp.discount_g= DISCOUNT_G
+      
+      COURSES.push(cursoresp);
+  }
+
+  return COURSES;
+
+}
 
         
 
