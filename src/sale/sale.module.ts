@@ -19,7 +19,7 @@ import { MailsService } from 'src/mails/mails.service';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Sale,Cursostudent,Carrito,Saledetail]),JwtModule.register({
+  imports:[TypeOrmModule.forFeature([Sale,Cursostudent,Carrito,Saledetail,User]),JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
   })],

@@ -27,6 +27,7 @@ export class saleService {
         @InjectRepository(Sale) private saleRepository: Repository<Sale>
         ,@InjectRepository(Cursostudent) private cursostudentsRepository: Repository<Cursostudent>
         ,@InjectRepository(Carrito) private carritosRepository: Repository<Carrito>
+        ,@InjectRepository(User) private usersRepository: Repository<User>
         ,@InjectRepository(Saledetail) private saledetailsRepository: Repository<Saledetail>,
         private mailservices: MailsService
     ){}
@@ -77,7 +78,8 @@ export class saleService {
         //await send_email(Sale._id);
         let ordendetail = await this.saledetailsRepository.find({relations:['cursos'], where:{id_sale: Sale.id}});
         let orden = await this.saleRepository.findOne({relations:['user'], where:{id: Sale.id}});
-       await this.mailservices.sendmail(orden,ordendetail);
+        let usuario = await this.usersRepository.findOne({ where:{id: iduser}});
+       await this.mailservices.sendmail(orden,ordendetail,usuario.email);
 
             throw new HttpException('LA ORDEN SE GENERO CORRECTAMENTE ',HttpStatus.OK);
    
