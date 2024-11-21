@@ -14,6 +14,8 @@ import { UpdateCursoDto } from './dto/update-Curso.dto';
 import { CreatecursovideoDto } from './dto/Create-Curso-video.dto';
 import { diskStorage } from 'multer';
 import { renameimage } from './helpers/imagen.helpers';
+import { filtroDto } from './dto/filtro.dto';
+import { Updatecheck } from './dto/updatecheck.dto';
 @Controller('courses')
 export class CursosController {
 
@@ -34,7 +36,13 @@ finAll( ) {
 
 
 
- 
+
+
+@Get('config-all')
+configall( ) {
+ return this.cursoservices.config_filtro( );
+}
+
  
 @Get('findtienda')
 finAlltienda( ) {
@@ -87,6 +95,14 @@ finAllproductlandingcurso(@Param('id_curso',ParseIntPipe) id_curso:number, ) {
 }
 
 
+@Get('vercurso/:id_curso')
+finAllvercurso( @Headers() headers,@Param('id_curso',ParseIntPipe) id_curso:number, ) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  return this.cursoservices.findAllvercursolanding(id_curso,idclient.id );
+}
+
+
+
 
  
 
@@ -131,7 +147,7 @@ create(@UploadedFile(
 upload(@UploadedFile( 
   new ParseFilePipe({
     validators: [
-      new MaxFileSizeValidator({ maxSize: 1024*1024*10 }),
+      new MaxFileSizeValidator({ maxSize: 1024*1024*100 }),
       new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
     ],
   }),
@@ -174,6 +190,29 @@ Update (
  
   return this.cursoservices.update(  curso);
 }
+
+
+@HasRoles(JwtRole.CLIENT )
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Post('updatecheck')
+Updatecheck ( 
+ 
+ @Body() updatecheck:Updatecheck) {
+ 
+  return this.cursoservices.updatecheck(  updatecheck);
+}
+
+
+ 
+ 
+@Post('search-course')
+filtro ( 
+ 
+ @Body() filtro:filtroDto) {
+ 
+  return this.cursoservices.search_curso(  filtro);
+}
+
 
 
 

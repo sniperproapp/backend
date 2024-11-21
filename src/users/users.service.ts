@@ -72,8 +72,11 @@ return  this.usersRepository.save(newUser)
         {
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
-         
+        console.log(user)
+
         const updatedUser = Object.assign(userfound,user);
+        console.log(updatedUser)
+
         return this.usersRepository.save(updatedUser);
 
     }

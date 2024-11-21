@@ -17,7 +17,7 @@ export class Cursostudent{
     
 
     @Column('simple-array',{ nullable: true })
-    clases_checked:number[];
+    clases_checked:string[];
     
    
 

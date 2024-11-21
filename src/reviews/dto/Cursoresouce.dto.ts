@@ -38,7 +38,7 @@ export class Cursoresouce{
     level: string;
    
     idioma: string;
-    coursestudent:any;
+   
     requirements: string;
    
     who_is_it_for: string;
@@ -48,8 +48,4 @@ export class Cursoresouce{
     categorycurso:any;
     discount_g:any
     user:any;
-    n_students :any
-    num_review:any
-    avg_rating :any
-    
 }
