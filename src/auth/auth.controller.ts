@@ -4,9 +4,6 @@ import { RegisterauthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { LoginidAuthDto } from './dto/loginid-auth.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from './jwt/jwt-auth.guard';
-import { JwtRole } from './jwt/jwt-Rol';
-import { JwtRolesGuard } from './jwt/jwt-roles.guard';
 import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')

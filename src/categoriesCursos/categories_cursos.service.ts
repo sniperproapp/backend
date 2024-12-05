@@ -14,6 +14,9 @@ import { CategoryCursosDto } from './dto/categoryCursosDto';
 import { CategoryCursosResouceDto } from './dto/categoryCursosresouceDto';
 import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
 import { Cursoresoucecategori } from './dto/Cursoresoucecategori.dto';
+import { Reviews } from 'src/reviews/reviews.entity';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
+import { id_developer } from 'src/config/env';
 
 
 
@@ -22,7 +25,9 @@ export class CategoriesCursosService {
     constructor(
       @InjectRepository(CategoryCursos) private categoriesRepository: Repository<CategoryCursos>,
        @InjectRepository(Cursos) private cursosRepository: Repository<Cursos>
-       ,@InjectRepository(User) private usersRepository: Repository<User>
+       ,@InjectRepository(User) private usersRepository: Repository<User>,
+       @InjectRepository(Reviews) private reviewsRepository: Repository<Reviews>,
+       @InjectRepository(Cursostudent) private cursostudentRepository: Repository<Cursostudent>
        ,@InjectRepository(DescuentoCursos) private descuentocursoRepository: Repository<DescuentoCursos>
     ){}
 
@@ -62,15 +67,16 @@ export class CategoriesCursosService {
      
   async findalltiendacategoriacursos(){
     let cursosresp:Cursoresoucecategori
-    
+    let N_STUDENTS_C
     let descuento_g:any
     let categoriasresul:CategoryCursosResouceDto[]=[];
     let categories=await this.categoriesRepository.find({relations:['cursos.seciones.clases.files'],where:{estado:1}});
     let descuetos= await this.descuentocursoRepository.find({ });
 
     for(let categoria of  categories ){
-      let cursosrespretu:any[]=[]     
-      categoria.cursos.forEach((curso) => {
+      let cursosrespretu:any[]=[]   
+      for(let curso of    categoria.cursos ){  
+   
         descuetos.forEach((descuento) => {
            if(descuento.type_segment==1){
                descuento.courses.forEach((id) => {
@@ -99,21 +105,31 @@ export class CategoriesCursosService {
         if(descuento_g){
           updatecurso.discount_g=descuento_g
        }
-       updatecurso.num_clases=i;
+        N_STUDENTS_C= await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+       let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+       let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+       let NUM_REVIEW_C = REVIEWS_C.length;
+       updatecurso.n_students=N_STUDENTS_C 
+       updatecurso.num_review= NUM_REVIEW_C
+       updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
+        updatecurso.num_clases=i;
    
        
        cursosrespretu.push(updatecurso)
+
    
-      })
+      }
 
-
-
+       
+       
+ 
+      
 
       categoriasresul.push({ id: categoria.id,titulo: categoria.titulo,estado: categoria.estado
         ,count_curso:categoria.cursos.length ,image:categoria.image,
         created_at: categoria.created_at,
         updated_at: categoria.updated_at,cursos:cursosrespretu
-        ,titulosinespacio:categoria.titulo.replace(/\s+/g,"") })
+        ,titulosinespacio:categoria.titulo.replace(/\s+/g,"") }) 
     }
 
 return categoriasresul;

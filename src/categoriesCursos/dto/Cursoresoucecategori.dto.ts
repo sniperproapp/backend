@@ -48,4 +48,7 @@ export class Cursoresoucecategori{
     categorycurso:any;
     discount_g:any
     user:any;
+    n_students :any
+    num_review:any
+    avg_rating :any
 }

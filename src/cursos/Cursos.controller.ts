@@ -80,18 +80,23 @@ finAlltiendauser( @Param('id_user',ParseIntPipe) id_user:number ) {
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get('show/:id_curso')
-finAllproduct(@Param('id_curso',ParseIntPipe) id_curso:number ) {
- 
+finAllproduct( @Param('id_curso',ParseIntPipe) id_curso:number ) {
+  
   return this.cursoservices.findAllcurso(id_curso );
-}
+}/////////////////////
 
 
 
  
 @Get('landingcurso/:id_curso')
-finAllproductlandingcurso(@Param('id_curso',ParseIntPipe) id_curso:number, ) {
- 
-  return this.cursoservices.findAllcursolanding(id_curso );
+finAllproductlandingcurso(@Headers() headers,@Param('id_curso',ParseIntPipe) id_curso:number, ) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  if(idclient){
+    return this.cursoservices.findAllcursolanding(id_curso,idclient.id );
+  }else{
+    return this.cursoservices.findAllcursolanding(id_curso );
+  }
+  
 }
 
 

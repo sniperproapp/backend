@@ -1,9 +1,8 @@
-import { ClaseCursos } from "src/clase/ClaseCursos.entity";
-import { Cursos } from "src/cursos/Cursos.entity";
+ 
 import { Saledetail } from "src/saledetail/saledetail.entity";
 import { User } from "src/users/user.entity";
  
-import { BeforeInsert, Column, Entity,   JoinColumn,   ManyToOne,   OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {    Column, Entity,   JoinColumn,   ManyToOne,   OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'Sale'})
 export class Sale{

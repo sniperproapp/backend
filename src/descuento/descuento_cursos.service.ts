@@ -10,6 +10,8 @@ import { updatedescuentoCursosDto } from './dto/update-descuentoCursosDto';
 import { Cursos } from 'src/cursos/Cursos.entity';
 import { DescuentoCursosDto } from './dto/descuentoCursosDto';
 import { Cursoresouceseccion } from './dto/Cursoresouceseccion.dto';
+import { Reviews } from 'src/reviews/reviews.entity';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
  
  
  
@@ -32,6 +34,8 @@ export class descuentoCursosService {
     constructor(
         @InjectRepository(DescuentoCursos) private descuentoRepository: Repository<DescuentoCursos>
         ,@InjectRepository(Cursos) private cursosRepository: Repository<Cursos>
+        ,@InjectRepository(Cursostudent) private cursostudentRepository: Repository<Cursostudent>
+        ,@InjectRepository(Reviews) private reviewsRepository: Repository<Reviews>,
     ){}
 
     async findAll(code:string){
@@ -69,11 +73,15 @@ export class descuentoCursosService {
                 
 
               })
-
-             
-            
-
-               const updatecurso= Object.assign(cursoresp,curso );
+            const updatecurso= Object.assign(cursoresp,curso );
+               
+            let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:cursoid}})
+            let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:cursoid}})
+            let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+            let NUM_REVIEW_C = REVIEWS_C.length;
+            updatecurso.n_students=N_STUDENTS_C 
+            updatecurso.num_review= NUM_REVIEW_C
+            updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
               
                updatecurso.num_clases=i;
                
@@ -114,11 +122,18 @@ export class descuentoCursosService {
               
 
             })
-
-            
             const updatecurso= Object.assign(cursoresp,curso );
-             
+          
+
+            let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:cursoid}})
+            let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:cursoid}})
+            let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+            let NUM_REVIEW_C = REVIEWS_C.length;
+            updatecurso.n_students=N_STUDENTS_C 
+            updatecurso.num_review= NUM_REVIEW_C
+            updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
             updatecurso.num_clases=i;
+
             
            cursos.push(updatecurso)
           }
