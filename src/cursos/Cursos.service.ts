@@ -31,6 +31,7 @@ import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { Updatecheck } from './dto/updatecheck.dto';
 import { CursostudenresourceDto } from './dto/cursostuden.dto';
 import { Reviews } from 'src/reviews/reviews.entity';
+import { userresource } from './dto/userresource.dto';
  const fs=require('fs')
  const configService = new ConfigService();
  let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.get('CLIENT_SECRET'),configService.get('SECRE_KEY_VIMEO'));
@@ -73,7 +74,7 @@ async findAlltienda( ){
     let descuetos= await this.descuentocursoRepository.find({ });
    let cursos= await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3}) 
    
-   cursos.forEach((curso) => { 
+   for (let curso of cursos) { 
 
     let i=0;
     curso.seciones.forEach((seccion) => {
@@ -102,11 +103,19 @@ async findAlltienda( ){
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
+
+    let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+    let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+    let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+    let NUM_REVIEW_C = REVIEWS_C.length;
+    updatecurso.n_students=N_STUDENTS_C 
+    updatecurso.num_review= NUM_REVIEW_C
+    updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
     updatecurso.num_clases=i;
     
     cursosrespretu.push(updatecurso)
 
-   })
+   }
     
     return cursosrespretu        
 
@@ -130,7 +139,8 @@ async findAlltiendacategory(id_category:number ){
     let descuetos= await this.descuentocursoRepository.find({ });
    let cursos= await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{id_category_curso:id_category}}) 
   
-   cursos.forEach((curso) => {
+ 
+    for(let curso of cursos){
      descuetos.forEach((descuento) => {
         if(descuento.type_segment==1){
             descuento.courses.forEach((id) => {
@@ -159,14 +169,21 @@ async findAlltiendacategory(id_category:number ){
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
-
+    let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+    let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+    let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+    let NUM_REVIEW_C = REVIEWS_C.length;
+    updatecurso.n_students=N_STUDENTS_C 
+    updatecurso.num_review= NUM_REVIEW_C
+   updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
     updatecurso.num_clases=i;
     cursosrespretu.push(updatecurso)
 
-   })
+   }
     
     return cursosrespretu         
 }
+//----------------------------------------------------
 
 
 async findAlltiendauser(id_user:number ){
@@ -176,7 +193,8 @@ async findAlltiendauser(id_user:number ){
     let descuetos= await this.descuentocursoRepository.find({ });
      let cursos = await this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{id_user:id_user}})        
  
-   cursos.forEach((curso) => {
+    
+    for (let curso of cursos ){
      descuetos.forEach((descuento) => {
         if(descuento.type_segment==1){
             descuento.courses.forEach((id) => {
@@ -205,11 +223,22 @@ async findAlltiendauser(id_user:number ){
      if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
+
+     let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+      let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+      let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+      let NUM_REVIEW_C = REVIEWS_C.length;
+      updatecurso.n_students=N_STUDENTS_C 
+      updatecurso.num_review= NUM_REVIEW_C
+     updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
+    updatecurso.num_clases=i;
+
+
     updatecurso.num_clases=i;
     
     cursosrespretu.push(updatecurso)
 
-   })
+   }
     
     return cursosrespretu    
     
@@ -283,7 +312,7 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
 
 
     async findAllcurso(id_curso:number ){
-     
+      
         let descuento_g:any=''
         let descuetos= await this.descuentocursoRepository.find({ });
          descuetos.forEach((descuento) => {
@@ -332,6 +361,7 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
     }
       updatecurso.time_parse= this.sumarTiempos(...timecurso)
       updatecurso.num_clases=numeroclase;
+      
     return updatecurso
 
 
@@ -340,8 +370,18 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
     
 }
 
-async findAllcursolanding(id_curso:number ){
-     
+async findAllcursolanding(id_curso:number ,iduser:number=null){
+     console.log(iduser)
+  let cursostuden_have_course=false
+  if(iduser)
+  {
+    let cursostudenresp=await this.cursostudentRepository.findOne({where:{id_curso:id_curso,id_user:iduser}})
+     if(cursostudenresp){
+        cursostuden_have_course=true
+      }
+  }
+
+
    
     let descuento_g:any=''
     let descuetos= await this.descuentocursoRepository.find({ });
@@ -391,6 +431,46 @@ async findAllcursolanding(id_curso:number ){
       if(descuento_g.id>0){
         updatecurso.discount_g=descuento_g
     }
+    let cursosprofesor = await this.cursoRepository.find({where:{id_user:updatecurso.id_user}})
+
+    let N_STUDENTS_SUM_TOTAL = 0;
+    let AVG_RATING_SUM_TOTAL = 0;
+    let NUM_REVIEW_SUM_TOTAL = 0;
+  
+       
+  
+        for(let curso of cursosprofesor ){
+          console.log(curso)
+        let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
+        let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
+        let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+        let NUM_REVIEW_C = REVIEWS_C.length;
+       
+        N_STUDENTS_SUM_TOTAL += N_STUDENTS_C;
+        NUM_REVIEW_SUM_TOTAL += NUM_REVIEW_C;
+        AVG_RATING_SUM_TOTAL += AVG_RATING_C;
+
+
+       if(curso.id==id_curso){
+        updatecurso.n_students=N_STUDENTS_C 
+        updatecurso.num_review= NUM_REVIEW_C
+        updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
+
+       }
+        
+       updatecurso.user.n_students=N_STUDENTS_SUM_TOTAL;
+       updatecurso.user.num_review=NUM_REVIEW_SUM_TOTAL;
+       updatecurso.user.avg_rating=(AVG_RATING_SUM_TOTAL / NUM_REVIEW_SUM_TOTAL).toFixed(2);
+       updatecurso.user.count_course=cursosprofesor.length;
+       
+     
+      }
+     
+ 
+  
+//////////////////////////////////////////////////
+
+      updatecurso.cursostuden_have_course= cursostuden_have_course; 
       updatecurso.time_parse= this.sumarTiempos(...timecurso)
       updatecurso.num_clases=numeroclase;
     return updatecurso
@@ -411,6 +491,7 @@ console.log(updatecheck)
      
    
   course_student.clases_checked=updatecheck.clases_checked
+  course_student.state=updatecheck.state
   
 
   
@@ -422,11 +503,7 @@ return await  this.cursostudentRepository.save(course_student);
 
 
 async findAllvercursolanding(id_curso:number,iduser:number ){
-     
-
-              
-
-            let COURSE = await this.cursoRepository.findOne({where:{id: id_curso}}) 
+       let COURSE = await this.cursoRepository.findOne({where:{id: id_curso}}) 
             if(!COURSE){
               throw new HttpException('el curso no se encuentra registrado ',HttpStatus.OK);
 
@@ -460,6 +537,7 @@ async findAllvercursolanding(id_curso:number,iduser:number ){
    
   let cursosresp: Cursoresouce;
 
+
  
  let cursos= await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { 
       id: id_curso,
@@ -489,10 +567,6 @@ async findAllvercursolanding(id_curso:number,iduser:number ){
     
     
     updatecurso.time_parse= this.sumarTiempos(...timecurso)
-  
-    console.log(updatecurso.id)
-    console.log(updatecurso.id_user)
-   
     let cursosprofesor = await this.cursoRepository.find({where:{id_user:updatecurso.id_user}})
     
     
@@ -500,11 +574,8 @@ async findAllvercursolanding(id_curso:number,iduser:number ){
     let N_STUDENTS_SUM_TOTAL = 0;
     let AVG_RATING_SUM_TOTAL = 0;
     let NUM_REVIEW_SUM_TOTAL = 0;
-    let AVG_RATING_INSTRUCTOR = 0;// 5 4 3  = 12 / 3 = 4
-             
-      let numerodeestudiante_suma=0;
-      let numerodereviews_suma=0;
-      console.log(cursosprofesor)
+  
+       
       cursosprofesor.forEach(async (curso) => {
         let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:curso.id}})
         let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:curso.id}})
@@ -514,18 +585,35 @@ async findAllvercursolanding(id_curso:number,iduser:number ){
         N_STUDENTS_SUM_TOTAL += N_STUDENTS_C;
         NUM_REVIEW_SUM_TOTAL += NUM_REVIEW_C;
         AVG_RATING_SUM_TOTAL += AVG_RATING_C;
-      })
-    updatecurso.coursestudent= await this.cursostudentRepository.findOneBy( {id_curso:updatecurso.id,id_user:iduser})
+
+
+       if(curso.id==id_curso){
+        updatecurso.n_students=N_STUDENTS_C 
+        updatecurso.num_review= NUM_REVIEW_C
+        updatecurso.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
+
+       }
+        
+       updatecurso.user.n_students=N_STUDENTS_SUM_TOTAL;
+       updatecurso.user.num_review=NUM_REVIEW_SUM_TOTAL;
+       updatecurso.user.avg_rating=(AVG_RATING_SUM_TOTAL / NUM_REVIEW_SUM_TOTAL).toFixed(2);
+       updatecurso.user.count_course=cursosprofesor.length;
+       
      
-    updatecurso.num_clases=numeroclase;
+      })
+     
+     
     
-   updatecurso.n_students=N_STUDENTS_SUM_TOTAL
-   updatecurso.num_review=NUM_REVIEW_SUM_TOTAL
-   updatecurso.avg_rating=(AVG_RATING_SUM_TOTAL / NUM_REVIEW_SUM_TOTAL).toFixed(2);
-  
+    
+     
+
+      
+     
+    updatecurso.coursestudent= await this.cursostudentRepository.findOneBy( {id_curso:updatecurso.id,id_user:iduser})
+    updatecurso.num_clases=numeroclase;
    
-    console.log(N_STUDENTS_SUM_TOTAL)
-    console.log(NUM_REVIEW_SUM_TOTAL)
+    console.log(updatecurso)
+   
     
     
  

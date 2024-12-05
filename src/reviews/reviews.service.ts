@@ -9,6 +9,7 @@ import { Reviews } from './reviews.entity';
 import { CreatereviewsRepository } from './dto/Create-CreatereviewsDto.dto';
 import { Repository } from 'typeorm';
 import { UpdateReviewsDto } from './dto/update-Curso.dto';
+import { reviewinfo } from './dto/reviewinfo.dto';
  
  
   
@@ -33,11 +34,53 @@ constructor (@InjectRepository(Reviews) private reviewsRepository: Repository<Re
 
     async findAll( iduser:number){
     
-    return this.reviewsRepository.find({relations:['curso'], where:{id:iduser},order: {
+    return this.reviewsRepository.find({relations:['user'], where:{id:iduser},order: {
         id: "DESC" // "DESC"
     }})          
 }
 
+
+
+
+async findreviewsAll( id:number){
+    let respuestareviews: reviewinfo[]=[]
+ let reviews=await this.reviewsRepository.find({relations:['user'],  where:{id_curso:id},order: {
+      id: "DESC" // "DESC"
+  }})     
+  
+  for(let review of reviews)
+  {
+      respuestareviews.push({
+        name: review.user.name,
+        description: review.description,
+        rating: review.rating,
+        imagen: review.user.imagen
+      })
+
+  }
+  return respuestareviews
+}
+
+
+
+async findreviewsAllreviews( ){
+  let respuestareviews: reviewinfo[]=[]
+let reviews=await this.reviewsRepository.find({relations:['user'],order: {
+    id: "DESC" // "DESC"
+}})     
+
+for(let review of reviews)
+{
+    respuestareviews.push({
+      name: review.user.name,
+      description: review.description,
+      rating: review.rating,
+      imagen: review.user.imagen
+    })
+
+}
+return respuestareviews
+}
  
    
 

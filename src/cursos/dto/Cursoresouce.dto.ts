@@ -51,5 +51,6 @@ export class Cursoresouce{
     n_students :any
     num_review:any
     avg_rating :any
+    cursostuden_have_course:any
     
 }

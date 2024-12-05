@@ -32,6 +32,27 @@ finAll( @Headers() headers,  ) {
 }
 
 
+
+ 
+ 
+@Get('getall/:id')
+finreviewsAll( @Param('id',ParseIntPipe) id:number  ) {
+  
+   
+  return this.reviewservices.findreviewsAll(id );
+}
+
+
+ 
+@Get('getallreviews')
+finreviewsAllreviews(    ) {
+  
+   
+  return this.reviewservices.findreviewsAllreviews(  );
+}
+
+
+
  
 
 

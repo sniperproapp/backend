@@ -11,13 +11,16 @@ import { DescuentoCursos } from './descuentoCursos.entity';
 import { descuentoCursosController } from './descuentoCursos.controller';
 import { descuentoCursosService } from './descuento_cursos.service';
 import { Cursos } from 'src/cursos/Cursos.entity';
+import { Reviews } from 'src/reviews/reviews.entity';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
  
  
  
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([DescuentoCursos,Cursos]),JwtModule.register({
+  imports:[TypeOrmModule.forFeature([DescuentoCursos,Cursos,Cursostudent,
+    Reviews]),JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
   })],
