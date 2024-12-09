@@ -14,12 +14,23 @@ import { UpdateTimeLimitUserDto } from './dto/update_time_limit-user';
 export class UsersController {
 constructor(private UsersService:UsersService){}
 
+
+@Get('instructor/all')
+findallinstructor( ){
+  return this.UsersService.findAllinstructor( );
+}
+
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Get(':busqueda')
 findall(@Param('busqueda') busqueda: string){
   return this.UsersService.findAll(busqueda);
 }
+
+
+ 
+
+
 
 
 
@@ -38,7 +49,7 @@ findalladmin(@Param('search') busqueda: string){
 @Get('list/admin/prof/:search')
 findalladminpro(@Param('search') busqueda: string){
   console.log(busqueda)
-  return this.UsersService.findAlladminpro(busqueda);
+  return this.UsersService.findAlladminpro( );
 }
 
 @Post()
