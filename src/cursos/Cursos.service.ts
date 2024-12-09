@@ -801,9 +801,14 @@ return await{
 
  }
 
+
+
+ /////////////////////////////////////////////////filtro
+
 async search_curso(filtro:filtroDto)
 {
   console.log(filtro)
+  let cursosrespretu:any[]=[]
   let TIME_NOW = 'req.query.TIME_NOW';
   let search_course = filtro.search;
 
@@ -873,7 +878,7 @@ if(!selected_instructors || !selected_instructors.length   ){
   
     let descuetos= await this.descuentocursoRepository.find({ });
               
-  let COURSES = [];
+  
   for (const Course of Courses) {
       let DISCOUNT_G = null;
 
@@ -905,16 +910,31 @@ if(!selected_instructors || !selected_instructors.length   ){
       const cursoresp= Object.assign(Course, curso);
       cursoresp.n_clases=N_CLASES
       cursoresp.discount_g= DISCOUNT_G
+
+
+
+
+
+      let N_STUDENTS_C=await this.cursostudentRepository.count({where:{id_curso:cursoresp.id}})
+      let REVIEWS_C=await this.reviewsRepository.find({where:{id_curso:cursoresp.id}})
+      let AVG_RATING_C = REVIEWS_C.length > 0 ? REVIEWS_C.reduce((sum,review) => sum + review.rating, 0)/REVIEWS_C.length : 0; 
+      let NUM_REVIEW_C = REVIEWS_C.length;
+      cursoresp.n_students=N_STUDENTS_C 
+      cursoresp.num_review= NUM_REVIEW_C
+      cursoresp.avg_rating=(AVG_RATING_C / NUM_REVIEW_C).toFixed(2);
       
-      COURSES.push(cursoresp);
+      
+      cursosrespretu.push(cursoresp)
+      
+      
   }
 
-  return COURSES;
+  return cursosrespretu;
 
 }
 
         
-
+//////////////////////////////////////filtro
        
       
 }

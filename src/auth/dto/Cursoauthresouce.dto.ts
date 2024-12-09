@@ -48,4 +48,8 @@ export class Cursoauthresouce{
     categorycurso:any;
     discount_g:any
     user:any;
+    n_students :any
+    num_review:any
+    avg_rating :any
+    cursostuden_have_course:any
 }

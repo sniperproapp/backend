@@ -37,6 +37,22 @@ return  this.usersRepository.save(newUser)
         }
         
     }
+
+
+    findAllinstructor( ){
+       
+             
+   
+        return this.usersRepository.find({ where: {
+          roles:{id:"PROF"}
+   },relations:['roles'],}  );
+     
+   
+
+    }
+
+
+
     findAlladmin(busqueda: string){
        
             
@@ -50,7 +66,7 @@ return  this.usersRepository.save(newUser)
         
     }
 
-    findAlladminpro(busqueda: string){
+    findAlladminpro( ){
        
              
    
