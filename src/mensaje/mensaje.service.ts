@@ -39,8 +39,9 @@ export class MensajeService {
       
            if(  element.notification_token!== null  ){
                if(element.notification_token.length>30 ){
-                   if(element.estado==1){
-                   listastrintoken.push(element.notification_token);}
+                  // if(element.estado==1){
+                   listastrintoken.push(element.notification_token);
+                 // }
                     
                       
                 }
