@@ -1,5 +1,6 @@
 import { Injectable, Body } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { CreatepagosDto } from '../dto/createpagosDto';
 const crypto = require('crypto');
 const axios = require('axios');
 // This is a very simple script working on Binance Pay API
@@ -25,13 +26,13 @@ function random_string() {
     return crypto.randomBytes(32).toString('hex').substring(0,32);
   }
   
-  function dispatch_request(http_method, path, payload = {}) {
+  async function dispatch_request(http_method, path, payload = {}) {
       const timestamp = Date.now()
       const nonce = random_string()
       const payload_to_sign = timestamp + "\n" + nonce + "\n" + JSON.stringify(payload) + "\n"
       const url = baseURL + path
       const signature = hash_signature(payload_to_sign)
-      return axios.create({
+      return  await axios.create({
         baseURL,
         headers: {
           'content-type': 'application/json',
@@ -54,14 +55,14 @@ function random_string() {
    
   // POST /binancepay/openapi/order/query
   // https://developers.binance.com/docs/binance-pay/api-order-query
-  function query_order() {
-    dispatch_request(
+  async function query_order(id:number) {
+    return await dispatch_request(
       'POST', 
-      '/binancepay/openapi/v2/order/query',
+      '/binancepay/openapi/v2/order/query', 
       {
-        'merchantTradeNo': '124'
+        "merchantTradeNo": id,
       }
-    ).then(response => console.log(response.data) ).catch(error => console.log(error))
+    ).then(async response => {return await response.data}  ).catch(async error => {return await null})
    
   }
   
@@ -72,47 +73,64 @@ function random_string() {
   //
   // POST /binancepay/openapi/order
   // https://developers.binance.com/docs/binance-pay/api-order-create
-  function create_order() {
-    dispatch_request(
-      'POST', 
-      '/binancepay/openapi/v2/order',
-      {
-        'merchantId': '123456789',
-        'merchantTradeNo': '124',
-        'tradeType': 'WEB',
-        'totalFee': '0.01',
-        'currency': 'USDT',
-        'productType': 'fruit',
-        'productName': 'apple juice',
-        'productDetail': 'juicy apple juice'
-      }
-    ).then(response => console.log(response.data)).catch(error => console.log(error))
+  function create_order(pago:CreatepagosDto) {
+   return 
   }
-  
+   // 'merchantId': pago.merchantId,
+        // 'merchantTradeNo':pago.merchantTradeNo,
+        // 'tradeType': pago.tradeType,
+        // 'totalFee': pago.totalFee,
+        // 'currency': pago.currency,
+        // 'productType':pago.productType,
+        // 'productName': pago.productName,
+        // 'productDetail': pago.productDetail
   //create_order()
    
 @Injectable()
 export class PagosService {
 
 
-    async getHello(): Promise<any> {
+    async getinfo(id:number): Promise<any> {
 
-   var res =await query_order();
+      return  await query_order(id);
         
 
-       return res
- 
-
- 
+       
+      }
 
 
+
+      async create(pago:CreatepagosDto): Promise<any> {
+        return  await dispatch_request(
+          'POST', 
+          '/binancepay/openapi/v3/order',
+          {
+            "env": {
+              "terminalType": "WEB"
+            },
+             
+            "merchantTradeNo":pago.merchantTradeNo,
+            "orderAmount": pago.orderAmountnumber,
+            "currency": "USDT",
+            "description": "mensualidad",
+            "goodsDetails": [{
+              "goodsType": "01",
+              "goodsCategory": "D000",
+              "referenceGoodsId": "7876763A3B",
+              "goodsName": "mensualidad",
+              "goodsDetail": "mensualidad"
+            }]
+          }
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+        
+      
      
-
-}
-
-
-
-
+      
+     
+     
+          
+     
+     }
 
 
 
