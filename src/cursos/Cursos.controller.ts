@@ -87,6 +87,15 @@ finAllproduct( @Param('id_curso',ParseIntPipe) id_curso:number ) {
 
 
 
+
+
+@Get('landingcursomensualidad/:id_curso')
+finAllproductlandingcursomen( @Param('id_curso',ParseIntPipe) id_curso:number, ) {
+  
+   return this.cursoservices.findAllcursolanding(id_curso );
+  
+  
+}
  
 @Get('landingcurso/:id_curso')
 finAllproductlandingcurso(@Headers() headers,@Param('id_curso',ParseIntPipe) id_curso:number, ) {
