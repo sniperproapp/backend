@@ -155,32 +155,34 @@ export class AuthService {
     async recuperarpass(email: string)
     {
         const userfound= await this.usersRepository.findOneBy({email: email});
+        if (!userfound)
+            {
+                throw new HttpException('USUARIO NO ENCONTRADO',HttpStatus.OK);
+            }
         const  valor= this.getRandomArbitrary(10000, 10000000);
         userfound.tokenpass=String(valor);
         const isok= await this.usersRepository.save(userfound);
-        console.log(valor)
-        console.log('isok.tokenpass')
-        console.log(isok.tokenpass)
+        
         this.mailservices.senUserConfirmation(email,String(valor) );
 
 
-        return true
+        throw new HttpException('CORREO ENVIADO',HttpStatus.OK);
      }
 
 
      async updatepass(logindata: LoginAuthDto){
         const userfound= await this.usersRepository.findOneBy({tokenpass: logindata.tokenpass});
-
+        
         if (!userfound)
         {
-            throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
+            throw new HttpException('token expiro',HttpStatus.OK);
         }
  
         userfound.password= await bcrypt.hash(logindata.password,10 );
         userfound.tokenpass='';
        const isok= this.usersRepository.save(userfound);
 
-       if(isok!=null) { return true }else{return false}
+       throw new HttpException('MODIFICADO CON EXITO',HttpStatus.OK);
 
     }
 
