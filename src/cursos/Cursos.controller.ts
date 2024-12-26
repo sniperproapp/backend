@@ -97,14 +97,21 @@ finAllproductlandingcursomen( @Param('id_curso',ParseIntPipe) id_curso:number, )
   
 }
  
-@Get('landingcurso/:id_curso')
+@Get('landingcursoheader/:id_curso')
 finAllproductlandingcurso(@Headers() headers,@Param('id_curso',ParseIntPipe) id_curso:number, ) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  if(idclient){
+   
     return this.cursoservices.findAllcursolanding(id_curso,idclient.id );
-  }else{
+    
+  
+}
+
+
+@Get('landingcurso/:id_curso')
+finAllproductlandingcursosinheader(@Param('id_curso',ParseIntPipe) id_curso:number, ) {
+   
+   
     return this.cursoservices.findAllcursolanding(id_curso );
-  }
   
 }
 
