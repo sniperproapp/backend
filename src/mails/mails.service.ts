@@ -13,12 +13,12 @@ private mailerservices: MailerService
 
   ){}
 
-  async senUserConfirmation( email:string){
+  async senUserConfirmation( email:string,token:string){
     await this.mailerservices.sendMail({
       to:email,
       subject:"Recuperar Password",
       template:'./recueperarpass',
-      context:{id:email}
+      context:{id:token}
       
     })
   }

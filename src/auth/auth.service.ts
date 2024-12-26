@@ -147,16 +147,21 @@ export class AuthService {
 
 
       getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min);
       }
     
     async recuperarpass(email: string)
     {
         const userfound= await this.usersRepository.findOneBy({email: email});
         const  valor= this.getRandomArbitrary(10000, 10000000);
-        userfound.tokenpass=valor;
+        userfound.tokenpass=String(valor);
         const isok= await this.usersRepository.save(userfound);
-        this.mailservices.senUserConfirmation(String(isok.tokenpass) );
+        console.log(valor)
+        console.log('isok.tokenpass')
+        console.log(isok.tokenpass)
+        this.mailservices.senUserConfirmation(email,String(valor) );
 
 
         return true
