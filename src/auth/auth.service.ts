@@ -156,7 +156,7 @@ export class AuthService {
         const  valor= this.getRandomArbitrary(10000, 10000000);
         userfound.tokenpass=valor;
         const isok= await this.usersRepository.save(userfound);
-        this.mailservices.senUserConfirmation(isok.tokenpass );
+        this.mailservices.senUserConfirmation(String(isok.tokenpass) );
 
 
         return true
