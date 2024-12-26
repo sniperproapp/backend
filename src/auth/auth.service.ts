@@ -146,11 +146,17 @@ export class AuthService {
     }
 
 
-     
+      getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
+      }
     
     async recuperarpass(email: string)
     {
-        this.mailservices.senUserConfirmation(email );
+        const userfound= await this.usersRepository.findOneBy({email: email});
+        const  valor= this.getRandomArbitrary(10000, 10000000);
+        userfound.tokenpass=valor;
+        const isok= await this.usersRepository.save(userfound);
+        this.mailservices.senUserConfirmation(isok.tokenpass );
 
 
         return true
@@ -158,7 +164,7 @@ export class AuthService {
 
 
      async updatepass(logindata: LoginAuthDto){
-        const userfound= await this.usersRepository.findOneBy({email: logindata.email});
+        const userfound= await this.usersRepository.findOneBy({tokenpass: logindata.tokenpass});
 
         if (!userfound)
         {
@@ -166,9 +172,10 @@ export class AuthService {
         }
  
         userfound.password= await bcrypt.hash(logindata.password,10 );
+        userfound.tokenpass='';
        const isok= this.usersRepository.save(userfound);
 
-       if(isok!=null) { return true }else{return true}
+       if(isok!=null) { return true }else{return false}
 
     }
 
