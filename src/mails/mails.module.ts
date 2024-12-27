@@ -18,15 +18,15 @@ import { Sale } from 'src/sale/sale.entity';
     MailerModule.forRootAsync({
      useFactory: async (config:ConfigService)=>({
       transport:{
-        host:'tusoporteweb.cl',
+        host:'email-smtp.us-east-1.amazonaws.com',
         secure: true,
         port:465,
-        auth:{user:'sniperproapp@tusoporteweb.cl',pass:'gllv1992..',}
+        auth:{user:'AKIA3FLDZQGMF3Z357HZ',pass:'BBIjRigHly7gaUhB2usxQSHNCpogkg0+nl0LHnKxwjR0',}
       },
-      defaults:{from: `"NO REPLY" <sniperproapp@tusoporteweb.cl>`,},
+      defaults:{from: `"NO REPLY" <info@sniperproacademy.com>`,},
       template:{dir: join(__dirname,'templates'),
     adapter: new HandlebarsAdapter(),
-    options: {
+    options: { 
       strict: true,
             },
       },

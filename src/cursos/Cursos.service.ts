@@ -157,7 +157,7 @@ async findAlltiendacategory(id_category:number ){
         }
      })
 
-     let i=0;
+     let i=0; 
      curso.seciones.forEach((seccion) => {
         
       i=i+ seccion.clases.length;
