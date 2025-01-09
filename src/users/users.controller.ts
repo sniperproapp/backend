@@ -63,8 +63,8 @@ create(@Body() user:CreateUserDto){
     return this.UsersService.create(user);
 }
 
-@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
-@UseGuards(JwtAuthGuard,JwtRolesGuard)
+// @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+// @UseGuards(JwtAuthGuard,JwtRolesGuard)
 @Put('desactivate/all')
 updatedesactivate( ){
     return this.UsersService.desactivateall();

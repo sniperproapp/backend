@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import {  updatesectionCursosDto } from './dto/update-sectionCursosDto';
 import { CreateSaleDto } from './dto/create-saleDto';
 import { saleService } from './sale.service';
+import { CreateinscrilDto } from './dto/Createinscri.dto';
 
 @Controller('sale')
 export class saleController {
@@ -35,6 +36,20 @@ create(  @Headers() headers,
  @Body()  sale :CreateSaleDto) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
    return this.saleServices.create(idclient.id, sale);
+}
+
+
+
+ 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Post('inscribir/:id')
+ inscribir( @Headers() headers,@Param('id',ParseIntPipe) id:number , 
+ @Body()  iduse :CreateinscrilDto) {
+  
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+ 
+  return this.saleServices.inscribir(id,idclient.id );
 }
 
 

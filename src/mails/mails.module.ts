@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MailsService } from './mails.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import {   ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { TypeOrmModule } from '@nestjs/typeorm';
+ 
 import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { Sale } from 'src/sale/sale.entity';
  
-ConfigModule.forRoot({
-  envFilePath: `.env`,
-});
+ 
 
  
 const configService = new ConfigService();
