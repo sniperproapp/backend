@@ -68,14 +68,7 @@ finAll( @Headers() headers,  ) {
   return this.carritoervices.getstatuspay(  id );
 }
 
-// @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
-// @UseGuards(JwtAuthGuard ,JwtRolesGuard)
-// @Get('show/:id_curso')
-// finAllproduct(@Param('id_curso',ParseIntPipe) id_curso:number ) {
  
-//   return this.carritoervices.findAllcurso(id_curso );
-// }
-
 
  
   

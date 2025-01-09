@@ -10,20 +10,20 @@ export class Carrito{
     id: number;
 
 
-    @Column()
+    @Column({nullable: true})
     type_discount:number;
 
-    @Column()
+    @Column({nullable: true})
     discount:number; 
     
-    @Column()
+    @Column({nullable: true})
     campaign_discount:number;
 
 
     @Column({nullable: true})
     code_cupon:string;
 
-    @Column()
+    @Column({nullable: true})
     code_discount:string;
 
 

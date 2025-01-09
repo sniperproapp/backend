@@ -136,23 +136,22 @@ return  this.usersRepository.save(newUser)
         {
             throw new HttpException('usuario no existe',HttpStatus.NOT_FOUND);
         }
+         
+
         usersfound.forEach((element) => {
-            //console.log(  element.time_limit.toLocaleString().split('/')[0]+ element.time_limit.toLocaleString().split('/')[2].split(',')[0])
+            //console.log(  element.time_limit.toLocaleString()  )
+           // console.log(  element.time_limit.toLocaleString().split('/')[0]+ element.time_limit.toLocaleString().split('/')[2].split(',')[0])
            
             if(element.roles.length==1)
           {  
-            if(element.time_limit.toLocaleString().split('/')[2].split(',')[0]==currentDate.toLocaleString().split('/')[2].split(',')[0])
-            {
-                if(Number(element.time_limit.toLocaleString().split('/')[0])<=Number(currentDate.toLocaleString().split('/')[0]))
-                    {
-                        element.estado=0;
-                        
-                    }
-
+            if(Date.parse(element.time_limit.toLocaleString()) < Date.parse(currentDate.toLocaleString())){
+              //  console.log(element.id+'='+  element.time_limit.toLocaleString()+'<'+currentDate.toLocaleString()+'\n')
+                element.estado=0;
             }
            
+           
             }
-        })
+       })
 
         
          this.usersRepository.save(usersfound);
