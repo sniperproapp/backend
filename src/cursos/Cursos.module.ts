@@ -13,9 +13,12 @@ import { SectionCursos } from 'src/section/SectionCursos.entity';
 import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { Reviews } from 'src/reviews/reviews.entity';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Cursos,User,CategoryCursos,SectionCursos,DescuentoCursos,Cursostudent,Reviews ]),JwtModule.register({
+  imports:[MulterModule.register({
+    limits:{fileSize:1000*1024*1024}
+  }) ,  TypeOrmModule.forFeature([Cursos,User,CategoryCursos,SectionCursos,DescuentoCursos,Cursostudent,Reviews ]),JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
   })],

@@ -32,6 +32,9 @@ import { Updatecheck } from './dto/updatecheck.dto';
 import { CursostudenresourceDto } from './dto/cursostuden.dto';
 import { Reviews } from 'src/reviews/reviews.entity';
 import { userresource } from './dto/userresource.dto';
+ 
+const AWS = require("aws-sdk");
+require("aws-sdk/lib/maintenance_mode_message").suppress = true;
  const fs=require('fs')
  const configService = new ConfigService();
  let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.get('CLIENT_SECRET'),configService.get('SECRE_KEY_VIMEO'));
@@ -39,7 +42,11 @@ import { userresource } from './dto/userresource.dto';
 @Injectable()
 export class CursosService {
 
-
+  AWS_S3_BUCKET = 'videosrespaldo';
+  s3 = new AWS.S3({
+    accessKeyId: configService.get('KEY_AWSS3'),
+    secretAccessKey: configService.get('SECRE_KEY_AWSS3'),
+  });
 
 constructor (@InjectRepository(Cursos) private cursoRepository: Repository<Cursos>,@InjectRepository(User) private usersRepository: Repository<User>,
  @InjectRepository(CategoryCursos) private categorycursoRepository: Repository<CategoryCursos>,
@@ -253,13 +260,15 @@ async findAlltiendauser(id_user:number ){
 
 async uploadvideo(file: Express.Multer.File,curso: CreatecursovideoDto):Promise<any>
 {
+  console.log('file')
+  console.log(file)
     const cursoFound = await this.cursoRepository.findOneBy({id:curso.id})
        
-     const resul= await this.uploadvideovimeo(file,curso);
+     const resul= await this.uploadFile (file,curso);
 
-        
-    cursoFound.vimeo_id="https://player.vimeo.com/video/"+resul.split('/')[2];
-    let savecurso= this.cursoRepository.save(cursoFound); 
+     cursoFound.vimeo_id='https://d3piexzjuky4o1.cloudfront.net/'+ resul.Key;  
+   
+    let savecurso= await this.cursoRepository.save(cursoFound); 
    return await savecurso;    
 
 }
@@ -280,7 +289,7 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
           },
               function (uri) {
             console.log('Your video URI is: ' + uri);
-            fs.unlinkSync(file.path)
+           
             resolve( uri);
             
               
@@ -937,6 +946,40 @@ if(!selected_instructors || !selected_instructors.length   ){
 
         
 //////////////////////////////////////filtro
-       
+async uploadFile(file,curso) {
+  console.log(file);
+  const { filename } = file;
+  const stream = fs.createReadStream(file.path)
+  return await this.s3_upload(
+    stream,
+    this.AWS_S3_BUCKET,
+    filename,
+    file.mimetype,
+  );
+}
+
+async s3_upload(file, bucket, name, mimetype) {
+  const params = {
+    Bucket: bucket,
+    Key: String(name),
+    Body: file,
+    ACL: 'public-read',
+    ContentType: mimetype,
+    ContentDisposition: 'inline',
+    CreateBucketConfiguration: {
+      LocationConstraint: 'us-west-2',
+    },
+  };
+
+  try {
+    let s3Response = await this.s3.upload(params).promise();
+  console.log(s3Response);
+  fs.unlinkSync(file.path)
+    return s3Response;
+  } catch (e) {
+    console.log(e);
+  }
+}
+   
       
 }

@@ -12,7 +12,8 @@ import { CreateClaseCursosDto } from './dto/create-ClaseCursosDto';
 import { ClaseCursos    } from './ClaseCursos.entity';
 import { CreateclasevideoDto } from './dto/Create-Clase-video.dto';
 import { ConfigService } from '@nestjs/config';
- 
+const AWS = require("aws-sdk");
+require("aws-sdk/lib/maintenance_mode_message").suppress = true;
  
 const configService = new ConfigService();
 
@@ -22,6 +23,13 @@ let client = new Vimeo(configService.get('CLIENT_IDENTIFIER') , configService.ge
 
 @Injectable()
 export class ClaseCursosService {
+  AWS_S3_BUCKET = 'videosrespaldo';
+  s3 = new AWS.S3({
+    accessKeyId: configService.get('KEY_AWSS3'),
+    secretAccessKey: configService.get('SECRE_KEY_AWSS3'),
+  });
+
+
     constructor(
         @InjectRepository(ClaseCursos) private ClaseRepository: Repository<ClaseCursos>,@InjectRepository(User) private usersRepository: Repository<User>
     ){}
@@ -155,14 +163,14 @@ async uploadvideo(file: Express.Multer.File,curso: CreateclasevideoDto):Promise<
         
      })
    
-     const resul= await this.uploadvideovimeo(file,curso);
+     const resul= await this.uploadFile(file,curso);
     
      //const tiempoTotal = this.sumarTiempos(...registros);
      
-     
-    claseFound.vimeo_id="https://player.vimeo.com/video/"+resul.split('/')[2];
+    // https://d3piexzjuky4o1.cloudfront.net/DIA+1+CLASE+2+SEMINARIO+PAINX+400.mp4
+    claseFound.vimeo_id='https://d3piexzjuky4o1.cloudfront.net/'+ resul.Key;
     claseFound.time=DURATION;
-    let savecurso= this.ClaseRepository.save(claseFound); 
+    let savecurso= await this.ClaseRepository.save(claseFound); 
    // 
    return await savecurso;    
 
@@ -202,5 +210,44 @@ async uploadvideo(file: Express.Multer.File,curso: CreateclasevideoDto):Promise<
   // Retorna el resultado formateado.
   return `${horas} horas ${minutos} minutos ${segundos} segundos`;
 }
+
+
+async uploadFile(file,curso) {
+  const { filename } = file;
+  const stream = fs.createReadStream(file.path)
+   
+  return await this.s3_upload(
+    stream,
+    this.AWS_S3_BUCKET,
+    filename,
+    file.mimetype,
+  );
+}
+
+async s3_upload(file, bucket, name, mimetype) {
+  const params = {
+    Bucket: bucket,
+    Key: String(name),
+    Body: file,
+    ACL: 'public-read',
+    ContentType: mimetype,
+    ContentDisposition: 'inline',
+    CreateBucketConfiguration: {
+      LocationConstraint: 'us-west-2',
+    },
+  };
+
+  try {  
+    let s3Response = await this.s3.upload(params).promise();
+  console.log(s3Response);
+  fs.unlinkSync(file.path)//eliminar el video del servidor
+    return s3Response;
+  } catch (e) {
+    console.log(e);
+  }
+}
+   
+
+
 
 }
