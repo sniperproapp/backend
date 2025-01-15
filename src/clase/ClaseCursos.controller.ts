@@ -77,7 +77,7 @@ return this.SectionServices.delete(id);
 upload(@UploadedFile( 
   new ParseFilePipe({
     validators: [
-      new MaxFileSizeValidator({ maxSize: 1024*1024*100 }),
+      new MaxFileSizeValidator({ maxSize: 1024*1024*300 }),
       new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
     ],
   }),
