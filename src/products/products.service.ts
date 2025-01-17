@@ -478,37 +478,37 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
      
        let uploadedFile=0;
        const newproduct = this.producRepository.create(product);
-       const saveProduct= await this.producRepository.save(newproduct);
-
-      
+       
+       const url =await storage(files[0],files[0].originalname);
+       newproduct.image2=url;
     // guardar las imagenes
-    const startforeach=async () => {
-        await async_foreach(files,async(file:Express.Multer.File)=>{
+    // const startforeach=async () => {
+    //     await async_foreach(files,async(file:Express.Multer.File)=>{
 
-            const url =await storage(file,file.originalname);
+            
 
-            if(url !==undefined && url!==null)
-            {
-                if(uploadedFile===0){
-                    saveProduct.image2=url;
-                }else  if(uploadedFile===1){
-                    //saveProduct.image2=url;
-                }
+    //         if(url !==undefined && url!==null)
+    //         {
+    //             if(uploadedFile===0){
+    //                 saveProduct.image2=url;
+    //             }else  if(uploadedFile===1){
+    //                 //saveProduct.image2=url;
+    //             }
     
-            }
-            await this.update(saveProduct.id,saveProduct);
-            uploadedFile=uploadedFile+1;
+    //         }
+    //         await this.update(saveProduct.id,saveProduct);
+    //         uploadedFile=uploadedFile+1;
            
 
-        })
+    //     })
 
-
+        const saveProduct= await this.producRepository.save(newproduct);
 
          
        
         
-    }
-    await startforeach();
+  
+    //await startforeach();
 
     const valor = await this.producRepository.findOne({relations:['user'],where:{id:saveProduct.id}})
     const productsFound = await this.categoryRepository.findOneBy({id:product.id_category});
@@ -527,7 +527,7 @@ async create(files: Array<Express.Multer.File>,product: CreateProductsDto){
         
         productsFound!.pendientes=productsFound!.pendientes+1; 
     }
-    this.categoryRepository.save(productsFound);
+   await this.categoryRepository.save(productsFound);
  
 
      //enviar msj firebase
