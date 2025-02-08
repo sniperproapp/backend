@@ -19,6 +19,8 @@ import { Sale } from 'src/sale/sale.entity';
 import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { Cursoauthresouce } from './dto/Cursoauthresouce.dto';
 import { Reviews } from 'src/reviews/reviews.entity';
+import { ActivateAuthDto } from './dto/activateapp-auth.dto';
+import { ActivatealldateAuthDto } from './dto/activatealldate-auth.dto';
  
 
 function formDateToYMD(date,type=1) {
@@ -46,6 +48,87 @@ export class AuthService {
     , private jwtservice: JwtService,private mailservices: MailsService){
 
     }
+
+    async activateapp(data: ActivateAuthDto)
+    {
+        
+        const user= await this.usersRepository.findOneBy({id:data.id})
+        if(!user){
+            //409
+            throw new HttpException('el user no existe',HttpStatus.FORBIDDEN);
+        }
+
+        if(data.valorappoweb==1)//si valorappoweb ==1 es app
+        {
+
+            user.estado=data.valorstate;
+           
+        } else{//si valorappoweb =0 es web
+           
+            user.estadoweb=data.valorstate;
+
+        }
+
+        
+       
+       return await this.usersRepository.save(user);
+    }
+
+
+
+
+    async activatealldate(data: ActivatealldateAuthDto)
+    {
+        
+        const user= await this.usersRepository.findOneBy({id:data.id})
+        if(!user){
+            //409
+            throw new HttpException('el user no existe',HttpStatus.FORBIDDEN);
+        }
+
+        user.estado=1;
+        user.estadoweb=1;
+        user.time_limit=data.date;
+        user.time_limit_web=data.date;
+ 
+       return await this.usersRepository.save(user);
+    }
+
+
+
+
+    async activatedateapp(data: ActivatealldateAuthDto)
+    {
+        
+        const user= await this.usersRepository.findOneBy({id:data.id})
+        if(!user){
+            //409
+            throw new HttpException('el user no existe',HttpStatus.FORBIDDEN);
+        }
+
+        user.estado=1;
+        user.time_limit=data.date;
+        
+ 
+       return await this.usersRepository.save(user);
+    }
+    async activatedateweb(data: ActivatealldateAuthDto)
+    {
+        
+        const user= await this.usersRepository.findOneBy({id:data.id})
+        if(!user){
+            //409
+            throw new HttpException('el user no existe',HttpStatus.FORBIDDEN);
+        }
+
+        user.estadoweb=1;
+        user.time_limit_web=data.date;
+        
+ 
+       return await this.usersRepository.save(user);
+    }
+
+
 
     async register(user: RegisterauthDto)
     {

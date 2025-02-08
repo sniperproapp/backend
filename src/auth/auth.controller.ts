@@ -5,6 +5,8 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 import { LoginidAuthDto } from './dto/loginid-auth.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtService } from '@nestjs/jwt';
+import { ActivateAuthDto } from './dto/activateapp-auth.dto';
+import { ActivatealldateAuthDto } from './dto/activatealldate-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +50,32 @@ updateWithImage(@UploadedFile(
   
 }
 
+@Post('activate') 
+activateapp( @Body() data: ActivateAuthDto) {
+    return this.authServices.activateapp(data);
+  
+}
+
+
+
+@Post('activatealldate') 
+activatealldate( @Body() data: ActivatealldateAuthDto) {
+    return this.authServices.activatealldate(data);
+  
+}
+
+
+@Post('activatedateapp') 
+activatedateapp( @Body() data: ActivatealldateAuthDto) {
+    return this.authServices.activatedateapp(data);
+  
+}
+
+@Post('activatedateweb') 
+activatedateweb( @Body() data: ActivatealldateAuthDto) {
+    return this.authServices.activatedateweb(data);
+  
+}
 
 
     
