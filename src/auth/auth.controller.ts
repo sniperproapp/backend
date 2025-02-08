@@ -86,6 +86,14 @@ activatedateweb( @Body() data: ActivatealldateAuthDto) {
     }
 
 
+    @Post('loginweb')
+    loginweb(@Body() Logindata: LoginAuthDto){
+        return this.authServices.loginweb(Logindata);
+
+    }
+
+
+
     @Post('login_admin')
     loginadmin(@Body() Logindata: LoginAuthDto){
         return this.authServices.login_admin(Logindata);

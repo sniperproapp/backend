@@ -331,7 +331,67 @@ export class AuthService {
    return data;
     }
 
+    async loginweb(logindata: LoginAuthDto)
+    { 
+         
+        
+        const {email,password}= logindata;
+        const userFound= await this.usersRepository.findOne({
+            where:{ email: email},
+            relations:['roles']
+            })
 
+    
+     
+     if(!userFound)
+      {
+            throw new HttpException('EL EMAIL NO EXISTE',HttpStatus.NOT_FOUND);
+       }
+
+
+
+       if(userFound.estadoweb==0)
+       {
+             throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
+        } 
+   
+        // if(userFound.duplicatesesion==1)
+        // {
+        //       throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
+        //  } 
+ 
+     
+   const isPasswordValid = await compare(password,userFound.password)
+   if(!isPasswordValid)
+   {
+    throw new HttpException('passwoed incorrecto',HttpStatus.FORBIDDEN);
+
+       }
+   
+
+       if(userFound.notification_token!=logindata.token)
+       {userFound.notification_token=logindata.token;}
+
+
+   this.mailservices.welcome(email );
+
+    const rolesIds = userFound.roles.map(rol=>rol.id) ;
+    userFound.duplicatesesion=1;
+    this.usersRepository.save(userFound);
+   const payload={
+    id:userFound.id
+    ,name:userFound.name,
+    roles: rolesIds
+};
+   const token = this.jwtservice.sign(payload);
+   const data= {
+    user:userFound,
+    token:'Bearer ' + token
+ }
+
+ delete data.user.password;
+   return data;
+    }
 
 
      
