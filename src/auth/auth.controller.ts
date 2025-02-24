@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtService } from '@nestjs/jwt';
 import { ActivateAuthDto } from './dto/activateapp-auth.dto';
 import { ActivatealldateAuthDto } from './dto/activatealldate-auth.dto';
+import { LogoutwebAuthDto } from './dto/logoutweb-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -91,6 +92,15 @@ activatedateweb( @Body() data: ActivatealldateAuthDto) {
         return this.authServices.loginweb(Logindata);
 
     }
+
+
+    
+    @Post('logoutweb')
+    logoutweb(@Body() Logindata: LogoutwebAuthDto){
+        return this.authServices.logoutweb(Logindata);
+
+    }
+
 
 
 

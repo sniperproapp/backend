@@ -21,6 +21,7 @@ import { Cursoauthresouce } from './dto/Cursoauthresouce.dto';
 import { Reviews } from 'src/reviews/reviews.entity';
 import { ActivateAuthDto } from './dto/activateapp-auth.dto';
 import { ActivatealldateAuthDto } from './dto/activatealldate-auth.dto';
+import { LogoutwebAuthDto } from './dto/logoutweb-auth.dto';
  
 
 function formDateToYMD(date,type=1) {
@@ -331,6 +332,22 @@ export class AuthService {
    return data;
     }
 
+
+    async logoutweb(logindata: LogoutwebAuthDto)
+    { 
+        const userFound= await this.usersRepository.findOne({
+            where:{ email:logindata.email},
+            relations:['roles']
+            }) 
+
+            if(userFound.duplicatesesionweb==1)
+                {
+                    userFound.duplicatesesionweb=0;   
+                }
+
+       return this.usersRepository.save(userFound);
+    }
+
     async loginweb(logindata: LoginAuthDto)
     { 
          
@@ -355,10 +372,10 @@ export class AuthService {
              throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
         } 
    
-        // if(userFound.duplicatesesion==1)
-        // {
-        //       throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
-        //  } 
+         if(userFound.duplicatesesionweb==1)
+         {
+              throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
+          } 
  
      
    const isPasswordValid = await compare(password,userFound.password)
@@ -376,7 +393,7 @@ export class AuthService {
    this.mailservices.welcome(email );
 
     const rolesIds = userFound.roles.map(rol=>rol.id) ;
-    userFound.duplicatesesion=1;
+    userFound.duplicatesesionweb=1;
     this.usersRepository.save(userFound);
    const payload={
     id:userFound.id
