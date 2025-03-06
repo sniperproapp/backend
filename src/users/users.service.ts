@@ -148,6 +148,10 @@ return  this.usersRepository.save(newUser)
               //  console.log(element.id+'='+  element.time_limit.toLocaleString()+'<'+currentDate.toLocaleString()+'\n')
                 element.estado=0;
             }
+            if(Date.parse(element.time_limit_web.toLocaleString()) < Date.parse(currentDate.toLocaleString())){
+                //  console.log(element.id+'='+  element.time_limit.toLocaleString()+'<'+currentDate.toLocaleString()+'\n')
+                  element.estadoweb=0;
+              }
            
            
             }
