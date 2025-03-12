@@ -12,6 +12,7 @@ import { CreateClaseCursosDto } from './dto/create-ClaseCursosDto';
 import { ClaseCursos    } from './ClaseCursos.entity';
 import { CreateclasevideoDto } from './dto/Create-Clase-video.dto';
 import { ConfigService } from '@nestjs/config';
+import { updateposclaseCursosDto } from './dto/updatepos-claseCursosDto';
 const AWS = require("aws-sdk");
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
  
@@ -38,7 +39,8 @@ export class ClaseCursosService {
       let listarespuesta: Array< any> =[]
       
       console.log(id)
-      const data= await this.ClaseRepository.find({relations:['files'], where:{id_sectionCursos:id} });
+      const data= await this.ClaseRepository.find({relations:['files'], where:{id_sectionCursos:id},   order: {
+        posicion: "ASC"  } });
       data.forEach((element) => {
         let listatiempo: Array< any> =[]
         listatiempo.push(element.time)
@@ -97,6 +99,53 @@ export class ClaseCursosService {
          categorifound.estado=section.estado;
          categorifound.description=section.description;
         return this.ClaseRepository.save(categorifound);
+      }
+
+
+
+
+      async updatepos(  clases:updateposclaseCursosDto){
+        
+      
+     
+
+        const clase1found= await this.ClaseRepository.findOneBy({id: clases.id1})
+        if(!clase1found){
+         throw new HttpException('la clase no se encuentra ',HttpStatus.OK);
+ 
+        }
+
+        const clase2found= await this.ClaseRepository.findOneBy({id: clases.id2})
+        if(!clase2found){
+         throw new HttpException('la clase no se encuentra ',HttpStatus.OK);
+ 
+        }
+        const claselisfound= await this.ClaseRepository.find({where:{id_sectionCursos: clase1found.id_sectionCursos}})
+        if(!clase1found){
+         throw new HttpException('la clase no se encuentra ',HttpStatus.OK);
+ 
+        }
+         
+      //  let i=0;
+
+      //  claselisfound.forEach((clase) => {
+       
+      //   if(clase.posicion <=clase2found.posicion){
+      //     claselisfound[i].posicion=claselisfound[i].posicion-1;
+      //   }
+         
+      //   i++;
+      //  })
+        
+
+        clase1found.posicion= clase2found.posicion;
+        
+       this.ClaseRepository.save(clase1found);
+       //this.ClaseRepository.save(claselisfound);
+        
+
+        
+        return true;
       }
 
       async delete(id: number){
