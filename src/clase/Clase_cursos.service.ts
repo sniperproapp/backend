@@ -125,23 +125,49 @@ export class ClaseCursosService {
          throw new HttpException('la clase no se encuentra ',HttpStatus.OK);
  
         }
-         
-      //  let i=0;
+         let id1=clase1found.posicion
+         let id2=clase2found.posicion
+         console.log(id1)
+         console.log(id2)
+       let i=0;
+       if(id1<id2 ){
+        for (let clase of claselisfound)
+          {
+           
+           if(clase.posicion >= id1 && clase.posicion <= id2 ){
+             claselisfound[i].posicion=claselisfound[i].posicion-1;
+           }
+           if(clase.id == clase1found.id ){
+            claselisfound[i].posicion=id2;
+          }
+   
+           i++;
+           }
 
-      //  claselisfound.forEach((clase) => {
+       }
+       if(id1>id2 ){
+        for (let clase of claselisfound)
+          {
+         
+   
+           if(clase.posicion <= id1 && clase.posicion >= id2 ){
+             claselisfound[i].posicion=claselisfound[i].posicion+1;
+           }
+           if(clase.id == clase1found.id ){
+            claselisfound[i].posicion=id2;
+          }
+           i++;
+           }
+
+       }
+        
+
+    
+        
        
-      //   if(clase.posicion <=clase2found.posicion){
-      //     claselisfound[i].posicion=claselisfound[i].posicion-1;
-      //   }
-         
-      //   i++;
-      //  })
-        
-
-        clase1found.posicion= clase2found.posicion;
-        
-       this.ClaseRepository.save(clase1found);
-       //this.ClaseRepository.save(claselisfound);
+       this.ClaseRepository.save(claselisfound);
+       
+      
         
 
         
