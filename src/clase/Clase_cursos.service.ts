@@ -38,7 +38,7 @@ export class ClaseCursosService {
     async findAll(id:number){
       let listarespuesta: Array< any> =[]
       
-      console.log(id)
+      console.log("gercellllllllllllllllllllllllllll")
       const data= await this.ClaseRepository.find({relations:['files'], where:{id_sectionCursos:id},   order: {
         posicion: "ASC"  } });
       data.forEach((element) => {

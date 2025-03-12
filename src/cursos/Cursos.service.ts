@@ -420,7 +420,7 @@ async findAllcursolanding(id_curso:number ,iduser:number=null){
    let cursos= await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { 
         id: id_curso,
         
-      }});
+      },order:{seciones:{clases:{posicion:'ASC'}}}});
 
       const updatecurso= Object.assign(cursos, cursosresp);
      
@@ -553,7 +553,7 @@ async findAllvercursolanding(id_curso:number,iduser:number ){
  let cursos= await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { 
       id: id_curso,
       
-    }});
+    },order:{seciones:{clases:{posicion:'ASC'}}}});
 
     const updatecurso= Object.assign(cursos, cursosresp);
     
