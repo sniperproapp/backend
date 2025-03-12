@@ -28,6 +28,10 @@ time: string;
 estado: number;
 
  
+@Column()
+posicion: number;
+
+ 
 @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
 created_at: Date;
 

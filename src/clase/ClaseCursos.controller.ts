@@ -16,6 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CreatecursovideoDto } from 'src/cursos/dto/Create-Curso-video.dto';
 import { renameimage } from 'src/cursos/helpers/imagen.helpers';
+import { updateposclaseCursosDto } from './dto/updatepos-claseCursosDto';
 
 @Controller('course_clase')
 export class ClaseCursosController {
@@ -51,6 +52,16 @@ update(
 @Body() clase:updateclaseCursosDto){
 
 return this.SectionServices.update(clase.id,clase);
+}
+
+
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Post('updatepos')
+updatepos( 
+@Body() clase:updateposclaseCursosDto){
+
+return this.SectionServices.updatepos(clase);
 }
 
 
