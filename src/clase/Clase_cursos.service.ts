@@ -38,7 +38,7 @@ export class ClaseCursosService {
     async findAll(id:number){
       let listarespuesta: Array< any> =[]
       
-      console.log("gercellllllllllllllllllllllllllll")
+     
       const data= await this.ClaseRepository.find({relations:['files'], where:{id_sectionCursos:id},   order: {
         posicion: "ASC"  } });
       data.forEach((element) => {
@@ -61,11 +61,22 @@ export class ClaseCursosService {
 
     async create(  clase:CreateClaseCursosDto){
 
-      const categorifound= await this.ClaseRepository.findOneBy({title:clase.title})
+      const clasefound= await this.ClaseRepository.findOneBy({title:clase.title})
       // if(categorifound){
       //  throw new HttpException('la seccion ya se encuentra registrada ',HttpStatus.OK);
 
       // }
+      const clasesfound= await this.ClaseRepository.find({where:{id_sectionCursos:clase.id_sectionCursos}})
+         let i=0;
+        for(let clase of clasesfound)
+        {
+          if(clase.posicion>i)
+            { i=clase.posicion} 
+
+        }
+        clase.posicion=i+1;
+        
+
        let newclase = this.ClaseRepository.create( clase);
  
      
