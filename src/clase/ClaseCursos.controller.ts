@@ -21,7 +21,7 @@ import { updateposclaseCursosDto } from './dto/updatepos-claseCursosDto';
 @Controller('course_clase')
 export class ClaseCursosController {
 
-    constructor(private SectionServices: ClaseCursosService ){
+    constructor(private claseServices: ClaseCursosService ){
 
     }
 
@@ -29,7 +29,7 @@ export class ClaseCursosController {
     @UseGuards(JwtAuthGuard,JwtRolesGuard)
     @Get(':id')
     findall(@Param('id') id: number){
-      return this.SectionServices.findAll(id);
+      return this.claseServices.findAll(id);
     }
     
 
@@ -37,9 +37,9 @@ export class ClaseCursosController {
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Post() 
 createWithImage(   
- @Body()  section :CreateClaseCursosDto) {
+ @Body()  clase :CreateClaseCursosDto) {
  
-   return this.SectionServices.create( section);
+   return this.claseServices.create( clase);
 }
 
 
@@ -51,7 +51,7 @@ createWithImage(
 update( 
 @Body() clase:updateclaseCursosDto){
 
-return this.SectionServices.update(clase.id,clase);
+return this.claseServices.update(clase.id,clase);
 }
 
 
@@ -61,7 +61,7 @@ return this.SectionServices.update(clase.id,clase);
 updatepos( 
 @Body() clase:updateposclaseCursosDto){
 
-return this.SectionServices.updatepos(clase);
+return this.claseServices.updatepos(clase);
 }
 
 
@@ -70,7 +70,7 @@ return this.SectionServices.updatepos(clase);
 @Delete('remove/:id')
 delete(@Param('id',ParseIntPipe) id:number){
 
-return this.SectionServices.delete(id);
+return this.claseServices.delete(id);
 }
 
 
@@ -96,6 +96,6 @@ upload(@UploadedFile(
  @Body() curso:CreatecursovideoDto)  {
   console.log(file)
  
-  return this.SectionServices.uploadvideo(file,curso);
+  return this.claseServices.uploadvideo(file,curso);
 }
 }

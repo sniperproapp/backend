@@ -15,7 +15,7 @@ export class CreateClaseCursosDto{
     @IsString()
     id_sectionCursos:number;
 
-
+    posicion:number;
    
    
  
