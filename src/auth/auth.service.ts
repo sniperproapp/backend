@@ -372,10 +372,10 @@ export class AuthService {
              throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
         } 
    
-         if(userFound.duplicatesesionweb==1)
-         {
-              throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
-          } 
+        //  if(userFound.duplicatesesionweb==1)
+        //  {
+        //       throw new HttpException('Usuario tiene una sesion activa',HttpStatus.FORBIDDEN);
+        //   } 
  
      
    const isPasswordValid = await compare(password,userFound.password)
