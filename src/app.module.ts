@@ -26,6 +26,7 @@ import { CursostudentModule } from './studentcurso/Cursostudent.module';
 import { saleModule } from './sale/sale.module';
 import { SaledetailModule } from './saledetail/Saledetail.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { valid_payModule } from './valid_pay/valid_pay.module';
  
 
 @Module({
@@ -38,6 +39,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     SaledetailModule,
     ReviewsModule,
     RolesModule,
+    valid_payModule,
     VideoModule,
     ZoomModule,
     CategoriesModule, 
