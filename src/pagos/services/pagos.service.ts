@@ -8,7 +8,7 @@ const axios = require('axios');
 const configService = new ConfigService();
 const apiKey = configService.get('KEY_BINANCE') // set your API key here 
 const apiSecret =configService.get('SECRE_KEY_BINANCE')// set your secret key here
-const baseURL = 'https://bpay.binanceapi.com'
+const baseURL ='https://api.nowpayments.io/v1' //'https://bpay.binanceapi.com'
  
  
 function hash_signature(query_string) {
@@ -36,10 +36,11 @@ function random_string() {
         baseURL,
         headers: {
           'content-type': 'application/json',
-          'BinancePay-Timestamp': timestamp,
-          'BinancePay-Nonce': nonce,
-          'BinancePay-Certificate-SN': apiKey,
-          'BinancePay-Signature': signature.toUpperCase()
+         // 'BinancePay-Timestamp': timestamp,
+          'x-api-key':"BZYJZSC-BK6M10W-M7WDMPC-65T3KWN",
+          //'BinancePay-Nonce': nonce,
+         // 'BinancePay-Certificate-SN': apiKey,
+         // 'BinancePay-Signature': signature.toUpperCase()
         }
       }).request({
         'method': http_method,
@@ -100,27 +101,33 @@ export class PagosService {
 
 
 
+//       curl --location '' \
+// --header 'x-api-key: {{api-key}}' \
+// --header 'Content-Type: application/json' \
+// --data '{
+//   "price_amount": 3999.5,
+//   "price_currency": "usd",
+//   "pay_currency": "btc",
+//   "ipn_callback_url": "https://nowpayments.io",
+//   "order_id": "RGDBP-21314",
+//   "order_description": "Apple Macbook Pro 2019 x 1"
+// }'
+
+
+
+
       async create(pago:CreatepagosDto): Promise<any> {
         return  await dispatch_request(
           'POST', 
-          '/binancepay/openapi/v3/order',
+          '/invoice',
           {
-            "env": {
-              "terminalType": "WEB"
-            },
-             
-            "merchantTradeNo":pago.merchantTradeNo,
-            "orderAmount": pago.orderAmountnumber,
-            "currency": "USDT",
-            "description": "mensualidad",
-            "goodsDetails": [{
-              "goodsType": "01",
-              "goodsCategory": "D000",
-              "referenceGoodsId": "7876763A3B",
-              "goodsName": "mensualidad",
-              "goodsDetail": "mensualidad"
-            }]
-          }
+            "price_amount":  pago.orderAmountnumber,
+            "price_currency": "usd",
+            "pay_currency": "usdttrc20",
+            //"ipn_callback_url": "https://nowpayments.io",
+            "order_id": random_string(),
+            "order_description": "mensualidad"
+       }
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
       

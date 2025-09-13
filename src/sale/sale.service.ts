@@ -17,6 +17,7 @@ import { CreateCarritoDto } from 'src/carrito_de_compras/dto/Create-carrito.dto'
 import { CreateCarritoDetailDto } from './dto/Create-carritodetail.dto';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { MailsService } from 'src/mails/mails.service';
+import { PagosService } from 'src/pagos/services/pagos.service';
  
 
 
@@ -29,7 +30,7 @@ export class saleService {
         ,@InjectRepository(Carrito) private carritosRepository: Repository<Carrito>
         ,@InjectRepository(User) private usersRepository: Repository<User>
         ,@InjectRepository(Saledetail) private saledetailsRepository: Repository<Saledetail>,
-        private mailservices: MailsService
+        private mailservices: MailsService,private pagosservices:PagosService
     ){}
 
     async findAll(id:number){
@@ -75,34 +76,54 @@ export class saleService {
 
    
 
-    async create(iduser:number,  sale:CreateSaleDto){
+    async create(sale:CreateSaleDto){
 
       
           
-        let user = iduser;
-  
-        sale.id_user=user;
-        //let Sale = await this.saleRepository.create(sale);
-      //  await this.saleRepository.save(Sale);
-        let Carts = await this.carritosRepository.find({where:{id_user: user}});
+       
+        let data={merchantTradeNo:"11",orderAmountnumber:40}
+        let infopagos = await this.pagosservices.create(data)
+        console.log(infopagos)
+        let userinfo = await this.usersRepository.findOneBy({email: sale.email})
+       
+       
+        sale.id_user=userinfo.id;
+        sale.currency_payment="usdt"
+        sale.total=40
+        sale.method_payment="nowpaymenst"
+        sale.n_transaccion=infopagos.order_id
+        sale.status="Espera"
+        let Sale = await this.saleRepository.create(sale);
+        await this.saleRepository.save(Sale);
 
-        for (let Cart of Carts) {
-         let carrito:CreateCarritoDetailDto 
-          const createdetail = Object.assign(Cart,carrito);
+         let orden={total:40,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,
+
+     }
+
+         this.mailservices.sendmaillinkdepago(orden,userinfo.email)
+
+
+
+        
+       // let Carts = await this.carritosRepository.find({where:{id_user: user}});
+
+      //  for (let Cart of Carts) {
+        // let carrito:CreateCarritoDetailDto 
+        //  const createdetail = Object.assign(Cart,carrito);
           //createdetail.id_sale = Sale.id;
          //  let guardardetalle= await this.saledetailsRepository.create(createdetail);
            // await this.saledetailsRepository.save(guardardetalle);
             // LA HABILITACION DEL CURSO AL ESTUDIANTE QUE SE HA INSCRITO
-           let guardarusercurso= await this.cursostudentsRepository.create({
-                id_user: user,
-                id_curso: Cart.id_curso
-            });
+          // let guardarusercurso= await this.cursostudentsRepository.create({
+           //     id_user: user,
+               // id_curso: Cart.id_curso
+           // });
 
-            await this.cursostudentsRepository.save(guardarusercurso);
+           // await this.cursostudentsRepository.save(guardarusercurso);
 
             // 
-            await this.carritosRepository.delete( Cart.id);
-        }
+           // await this.carritosRepository.delete( Cart.id);
+     //   }
 
         // IRIA EL ENVIO DE EMAIL
         //await send_email(Sale._id);
@@ -111,7 +132,7 @@ export class saleService {
        // let usuario = await this.usersRepository.findOne({ where:{id: iduser}});
       // await this.mailservices.sendmail(orden,ordendetail,usuario.email);
 
-            throw new HttpException('LA ORDEN SE GENERO CORRECTAMENTE ',HttpStatus.OK);
+            throw new HttpException(infopagos.invoice_url,HttpStatus.OK);
    
 }
 
