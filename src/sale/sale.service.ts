@@ -89,7 +89,7 @@ export class saleService {
        
         sale.id_user=userinfo.id;
         sale.currency_payment="usdt"
-        sale.total=40
+        sale.total=15
         sale.method_payment="nowpaymenst"
         sale.n_transaccion=infopagos.order_id
         sale.status="Espera"
