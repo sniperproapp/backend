@@ -81,7 +81,7 @@ export class saleService {
       
           
        
-        let data={merchantTradeNo:"11",orderAmountnumber:40}
+        let data={merchantTradeNo:"11",orderAmountnumber:15}
         let infopagos = await this.pagosservices.create(data)
         console.log(infopagos)
         let userinfo = await this.usersRepository.findOneBy({email: sale.email})
