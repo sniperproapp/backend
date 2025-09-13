@@ -7,6 +7,7 @@ const axios = require('axios');
 // Set your apiKey and apiSecret, then you are ready to go.
 const configService = new ConfigService();
 const apiKey = configService.get('KEY_BINANCE') // set your API key here 
+const apiKeynow = configService.get('KEY_NOWPAY') // set your API key here 
 const apiSecret =configService.get('SECRE_KEY_BINANCE')// set your secret key here
 const baseURL ='https://api.nowpayments.io/v1' //'https://bpay.binanceapi.com'
  
@@ -37,7 +38,7 @@ function random_string() {
         headers: {
           'content-type': 'application/json',
          // 'BinancePay-Timestamp': timestamp,
-          'x-api-key':"BZYJZSC-BK6M10W-M7WDMPC-65T3KWN",
+          'x-api-key':apiKeynow,
           //'BinancePay-Nonce': nonce,
          // 'BinancePay-Certificate-SN': apiKey,
          // 'BinancePay-Signature': signature.toUpperCase()
