@@ -125,7 +125,7 @@ export class PagosService {
             "price_amount":  pago.orderAmountnumber,
             "price_currency": "usd",
             "pay_currency": "usdtbsc",
-            //"ipn_callback_url": "https://nowpayments.io",
+            "ipn_callback_url": "https://sniperpro-backend.onrender.com/valid_pay/valid",
             "order_id": random_string(),
             "order_description": "mensualidad"
        }
