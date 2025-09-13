@@ -124,7 +124,7 @@ export class PagosService {
           {
             "price_amount":  pago.orderAmountnumber,
             "price_currency": "usd",
-            "pay_currency": "usdttrc20",
+            "pay_currency": "usdtbsc",
             //"ipn_callback_url": "https://nowpayments.io",
             "order_id": random_string(),
             "order_description": "mensualidad"
