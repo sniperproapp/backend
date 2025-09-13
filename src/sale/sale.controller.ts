@@ -29,13 +29,13 @@ export class saleController {
     }
     
 
-@HasRoles(JwtRole.CLIENT)
-@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+ 
+ 
 @Post() 
-create(  @Headers() headers,  
+create(    
  @Body()  sale :CreateSaleDto) {
-  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-   return this.saleServices.create(idclient.id, sale);
+  
+   return this.saleServices.create( sale);
 }
 
 

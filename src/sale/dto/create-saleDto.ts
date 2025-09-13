@@ -6,10 +6,11 @@ export class CreateSaleDto{
     currency_total: string
     currency_payment: string
     total:number
-    @IsNotEmpty()
-    @IsString()
+     
     n_transaccion:string
     id_user:number
+    email:string
+    status:string
 
 
      

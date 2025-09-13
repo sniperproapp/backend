@@ -14,6 +14,7 @@ import { Carrito } from 'src/carrito_de_compras/Carrito.entity';
 import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { MailsService } from 'src/mails/mails.service';
+import { PagosService } from 'src/pagos/services/pagos.service';
  
  
  
@@ -23,7 +24,7 @@ import { MailsService } from 'src/mails/mails.service';
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
   })],
-  providers: [saleService,JwtStrategy,MailsService],
+  providers: [saleService,JwtStrategy,MailsService,MailsService,PagosService],
   controllers: [saleController]
 })
 export class saleModule {}
