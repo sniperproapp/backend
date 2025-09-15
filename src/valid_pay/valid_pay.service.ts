@@ -33,6 +33,7 @@ export class valid_payService {
      if(data.payment_status=="finished")
      {
        
+       
        const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
        userinfo.estado=1
        userinfo.estadoweb=1
@@ -40,8 +41,15 @@ export class valid_payService {
 
      }
      this.saleRepository.save(saleinfo)
-    
-     
+        const fecha = new Date();
+        const mesActual = fecha.getMonth();
+        fecha.setMonth(mesActual + 1);
+        const anio = fecha.getFullYear();
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+        const dia = fecha.getDate().toString().padStart(2, '0');
+
+        const fechaFormateada = `${anio}-${mes}-10`;
+        console.log(fechaFormateada)
      console.log("payment_id")    
      console.log(data.payment_id)  
      console.log("paymentstatus")  
