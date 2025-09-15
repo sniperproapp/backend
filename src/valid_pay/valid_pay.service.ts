@@ -40,22 +40,21 @@ export class valid_payService {
 
 
 
-     async update( id: any  ){
-        
-       
+     async update( data: any  ){
+      console.log("payment_id")    
+     console.log(data.payment_id)  
+     console.log("paymentstatus")  
+     console.log(data.payment_status)  
+     
+     
+   
  
-        return   console.log(id);;
+        return   console.log(data);
       }
 
      
      
-      async delete(id: number){
-
-        
-          
-        return    console.log(id);
-
-    }
+      
 
 
 

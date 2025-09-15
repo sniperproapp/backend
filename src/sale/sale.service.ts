@@ -19,9 +19,9 @@ import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { MailsService } from 'src/mails/mails.service';
 import { PagosService } from 'src/pagos/services/pagos.service';
  
-
-
-
+ 
+  
+ 
 @Injectable()
 export class saleService {
     constructor(
@@ -72,7 +72,6 @@ export class saleService {
 
    
      
-    
 
    
 
