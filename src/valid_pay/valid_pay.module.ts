@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import {  valid_payService } from './valid_pay.service';
 import {    valid_payController } from './valid_pay.controller';
+import { Sale } from 'src/sale/sale.entity';
  
  
  
@@ -16,7 +17,7 @@ import {    valid_payController } from './valid_pay.controller';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User])],
+  imports:[TypeOrmModule.forFeature([User,Sale])],
   providers: [valid_payService,JwtStrategy],
   controllers: [valid_payController]
 })
