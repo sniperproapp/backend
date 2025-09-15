@@ -126,6 +126,7 @@ export class PagosService {
             "price_currency": "usd",
             "pay_currency": "usdtbsc",
             "ipn_callback_url": "https://sniperpro-backend.onrender.com/valid_pay/valid",
+            "success_url":"https://sniperproacademy.com/auth/login",
             "order_id": random_string(),
             "order_description": "mensualidad"
        }
