@@ -80,7 +80,7 @@ export class saleService {
       
           
        
-        let data={merchantTradeNo:"11",orderAmountnumber:15}
+        let data={merchantTradeNo:"11",orderAmountnumber:50}
         let infopagos = await this.pagosservices.create(data)
         console.log(infopagos)
         let userinfo = await this.usersRepository.findOneBy({email: sale.email})
@@ -88,14 +88,14 @@ export class saleService {
        
         sale.id_user=userinfo.id;
         sale.currency_payment="usdt"
-        sale.total=15
+        sale.total=50
         sale.method_payment="nowpaymenst"
         sale.n_transaccion=infopagos.order_id
-        sale.status="Espera"
+        sale.status="NEW"
         let Sale = await this.saleRepository.create(sale);
         await this.saleRepository.save(Sale);
 
-         let orden={total:40,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,
+         let orden={total:50,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,
 
      }
 

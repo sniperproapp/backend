@@ -1,9 +1,10 @@
 import { hash } from "bcrypt";
 import { Cursos } from "src/cursos/Cursos.entity";
 import { Products } from "src/products/products.entity";
+import { Referral } from "src/referral/referral.entity";
 import { Rol } from "src/roles/rol.entity";
 import { Sale } from "src/sale/sale.entity";
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
 export class User{
@@ -101,5 +102,24 @@ async hashPassword(){
 //     this.password=await hash(this.password,Number(process.env.HASH_SALT))}
 // }
  
+
+@Column({ nullable: true })
+  referralCode: string;
+
+  // Relación de muchos a uno: muchos usuarios pueden ser referidos por un solo usuario.
+  @ManyToOne(() => User, user => user.referredUsers)
+  @JoinColumn({ name: 'referrerId' }) // La columna que almacena el ID del referente
+  referrer: User;
+
+  @Column({ nullable: true })
+  referrerId: number; // El ID del usuario que lo refirió
+
+  // Relación de uno a muchos: un usuario puede referir a muchos otros.
+  @OneToMany(() => User, user => user.referrer)
+  referredUsers: User[];
+  
+  // Opcional: Relación con la tabla de recompensas
+  @OneToMany(() => Referral, referral => referral.referrer)
+  referrals: Referral[];
 
 }
