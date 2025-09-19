@@ -159,7 +159,12 @@ export class AuthService {
         user.descargo=0;
         user.time_limit= new Date();
         user.referralCode=await this.generateUniqueReferralCode();
-         
+        const userreferencia= await this.usersRepository.findOneBy({referralCode:user.codigo_refernecia})
+        
+        if(userreferencia){
+            user.referrerId=userreferencia.id
+               
+        }
         const newUser=this.usersRepository.create(user);
         let rolesIds = [];
         if(user.rolesIds !== undefined && user.rolesIds!==null)
