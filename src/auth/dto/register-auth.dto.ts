@@ -30,5 +30,8 @@ export class RegisterauthDto{
 
     rolesIds: string[];
     time_limit:Date;
+    referralCode:string;
+    referrerId:number;
+    codigo_refernecia:string;
     
 }

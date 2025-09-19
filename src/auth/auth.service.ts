@@ -129,7 +129,18 @@ export class AuthService {
        return await this.usersRepository.save(user);
     }
 
+ private async generateUniqueReferralCode(): Promise<string> {
+    let code: string;
+    let userWithCode: User | null;
 
+    do {
+      // Genera un código aleatorio de 8 caracteres
+      code = Math.random().toString(36).substring(2, 10);
+      userWithCode = await this.usersRepository.findOne({ where: { referralCode: code } });
+    } while (userWithCode); // Se repite si el código ya existe
+    
+    return code;
+  }
 
     async register(user: RegisterauthDto)
     {
@@ -147,6 +158,7 @@ export class AuthService {
         // }
         user.descargo=0;
         user.time_limit= new Date();
+        user.referralCode=await this.generateUniqueReferralCode();
          
         const newUser=this.usersRepository.create(user);
         let rolesIds = [];
