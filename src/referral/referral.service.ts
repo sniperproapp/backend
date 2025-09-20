@@ -67,6 +67,15 @@ export class referralService {
     return this.usersRepository.query(query);
   }
 
+
+
+
+
+  async getlist( id: number  ){
+ 
+     return this.referralRepository.find({where:{referrerId:id}});
+  }
+
  
  
 }

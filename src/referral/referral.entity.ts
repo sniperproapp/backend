@@ -4,7 +4,7 @@ import { User } from 'src/users/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
  
 
-@Entity()
+@Entity({name: 'referral'})
 export class Referral {
   @PrimaryGeneratedColumn()
   id: number;

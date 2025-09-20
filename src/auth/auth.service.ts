@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
-import { ArrayContains, In, IsNull, Not, Repository } from 'typeorm';
+import { ArrayContains, createQueryBuilder, In, IsNull, Not, Repository } from 'typeorm';
 import { RegisterauthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { compare } from 'bcrypt';
@@ -735,7 +735,7 @@ return data;
       WHERE
         level > 1;
     `;
-
+ 
      
             return{
                 enrolled_course_count: enrolled_course_count,
@@ -758,8 +758,19 @@ return data;
                 termined_course_news: termined_course_news,
                 sales: sales_collection,
                 sales_details: sales_details_collection,
-                referral: await this.usersRepository.query(query)
+                referral: await this.usersRepository.query(query),
+               comisiones: await this.ReferralesRepository.find(
+                {where:{referrerId:iduser},
+                   relations:['referredUser'],
+                     select: { referredUser: {
+                            imagen: true,
+                            name: true
+                                             }
+                            },
+                 }
+                )
             }
+           
         } catch (error) {
             console.log(error);
             throw new HttpException('HUBO UN ERROR',HttpStatus.NOT_FOUND);
