@@ -21,6 +21,13 @@ export class referralController {
       return this.referralServices.getlistn1(id);
     }
 
+     @Get('comisiones/:id')
+    getlist( @Param('id') id: number): any {
+       
+      return this.referralServices.getlist(id);
+    }
+
+
 
       
  
