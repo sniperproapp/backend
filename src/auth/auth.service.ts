@@ -22,6 +22,8 @@ import { Reviews } from 'src/reviews/reviews.entity';
 import { ActivateAuthDto } from './dto/activateapp-auth.dto';
 import { ActivatealldateAuthDto } from './dto/activatealldate-auth.dto';
 import { LogoutwebAuthDto } from './dto/logoutweb-auth.dto';
+import { referralService } from 'src/referral/referral.service';
+import { Referral } from 'src/referral/referral.entity';
  
 
 function formDateToYMD(date,type=1) {
@@ -45,8 +47,9 @@ export class AuthService {
          @InjectRepository(Reviews) private reviewssRepository: Repository<Reviews>,
          @InjectRepository(Cursostudent) private cursostudentsRepository: Repository<Cursostudent>,
          @InjectRepository(Cursos) private cursossRepository: Repository<Cursos>,
-    @InjectRepository(Rol) private rolesRepository:Repository<Rol>
-    , private jwtservice: JwtService,private mailservices: MailsService){
+    @InjectRepository(Rol) private rolesRepository:Repository<Rol>,
+    @InjectRepository(Referral) private ReferralesRepository:Repository<Referral>
+    , private jwtservice: JwtService,private mailservices: MailsService ){
 
     }
 
@@ -696,7 +699,44 @@ return data;
                     created_at: formDateToYMD(sale.created_at),
                 });
             }
+             const query = `
+      WITH RECURSIVE referred_chain AS (
+        SELECT
+          id AS userId,
+          referrerId,
+          name,
+          imagen,
+          1 AS level
+        FROM
+          users
+        WHERE
+          id =${iduser}
 
+        UNION ALL
+
+        SELECT
+          u.id AS userId,
+          u.referrerId,
+              u.name,
+          u.imagen,
+          rc.level + 1 AS level
+        FROM
+          users u
+        JOIN
+          referred_chain rc ON u.referrerId = rc.userId
+        WHERE
+          rc.level < 4
+      )
+      SELECT
+        userId,
+        level,imagen,name
+      FROM
+        referred_chain
+      WHERE
+        level > 1;
+    `;
+
+     
             return{
                 enrolled_course_count: enrolled_course_count,
                 actived_course_count: actived_course_count,
@@ -718,6 +758,7 @@ return data;
                 termined_course_news: termined_course_news,
                 sales: sales_collection,
                 sales_details: sales_details_collection,
+                referral: await this.usersRepository.query(query)
             }
         } catch (error) {
             console.log(error);

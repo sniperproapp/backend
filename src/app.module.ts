@@ -27,6 +27,7 @@ import { saleModule } from './sale/sale.module';
 import { SaledetailModule } from './saledetail/Saledetail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { valid_payModule } from './valid_pay/valid_pay.module';
+import { referralModule } from './referral/referral.module';
  
 
 @Module({
@@ -56,6 +57,7 @@ import { valid_payModule } from './valid_pay/valid_pay.module';
     FileCursosModule,
     cuponCursosModule,
     descuentoCursosModule,
+    referralModule
    
     
   ],

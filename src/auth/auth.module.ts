@@ -16,10 +16,12 @@ import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { ReviewsService } from 'src/reviews/reviews.service';
 import { Reviews } from 'src/reviews/reviews.entity';
+import { referralService } from 'src/referral/referral.service';
+import { Referral } from 'src/referral/referral.entity';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User, Rol,Cursos,Sale,Saledetail,Reviews,Cursostudent]),
+  imports:[TypeOrmModule.forFeature([User, Rol,Cursos,Sale,Saledetail,Reviews,Cursostudent,Referral]),
   JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: '10000h' },
