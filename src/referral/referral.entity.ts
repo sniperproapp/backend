@@ -23,6 +23,9 @@ export class Referral {
   @Column()
   referrerId: number;
 
+  @Column()
+  monto: number;
+
   // Relación: la referencia pertenece a un usuario que fue referido.
   @ManyToOne(() => User)
   @JoinColumn({ name: 'referredUserId' })

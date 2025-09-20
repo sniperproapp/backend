@@ -7,6 +7,8 @@ import {   Repository } from 'typeorm';
  
 import { User } from 'src/users/user.entity';
 import { Sale } from 'src/sale/sale.entity';
+import { Referral } from 'src/referral/referral.entity';
+import { CreateReferralDto } from './dto/create-referral.dto';
  
  
  
@@ -18,13 +20,15 @@ import { Sale } from 'src/sale/sale.entity';
 export class valid_payService {
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
-        @InjectRepository(Sale) private saleRepository: Repository<Sale>
+        @InjectRepository(Sale) private saleRepository: Repository<Sale>,
+        @InjectRepository(Referral) private referralRepository: Repository<Referral>,
     ){}
 
      
 
 
      async update( data: any  ){
+        let referreldata:CreateReferralDto
         const fecha = new Date();
         const mesActual = fecha.getMonth();
         fecha.setMonth(mesActual + 1);
@@ -47,6 +51,37 @@ export class valid_payService {
        userinfo.time_limit=new Date(fechaFormateada)
        userinfo.time_limit_web=new Date(fechaFormateada)
        this.usersRepository.save(userinfo)
+                            //calcular las comisiones de 3 niveles 
+                                            //nivel 1
+                                            if(userinfo.referrerId){
+                                            referreldata.status='pendiente'
+                                            referreldata.referrerId=userinfo.referrerId
+                                            referreldata.referredUserId=userinfo.id
+                                            referreldata.monto=50*0.1
+                                            this.referralRepository.create()}
+                                               
+                                                //nivel 2
+                                                   const userinfon2= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
+                                                    if(userinfo.referrerId){
+                                                            referreldata.status='pendiente'
+                                                            referreldata.referrerId=userinfon2.referrerId
+                                                            referreldata.referredUserId=userinfon2.id
+                                                            referreldata.monto=50*0.15
+                                                            this.referralRepository.create()}
+                                                         
+                                                       
+                                                        //nivel 3
+                                                            const userinfon3= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
+                                                             if(userinfon3.referrerId){
+                                                                referreldata.status='pendiente'
+                                                                referreldata.referrerId=userinfon3.referrerId
+                                                                referreldata.referredUserId=userinfon3.id
+                                                                referreldata.monto=50*0.1
+                                                                this.referralRepository.create()}
+
+
+
+       this.referralRepository.create()
 
      }
      this.saleRepository.save(saleinfo)

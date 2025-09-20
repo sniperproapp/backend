@@ -10,6 +10,7 @@ import { User } from 'src/users/user.entity';
 import {  valid_payService } from './valid_pay.service';
 import {    valid_payController } from './valid_pay.controller';
 import { Sale } from 'src/sale/sale.entity';
+import { Referral } from 'src/referral/referral.entity';
  
  
  
@@ -17,7 +18,7 @@ import { Sale } from 'src/sale/sale.entity';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Sale])],
+  imports:[TypeOrmModule.forFeature([User,Sale,Referral])],
   providers: [valid_payService,JwtStrategy],
   controllers: [valid_payController]
 })
