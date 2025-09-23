@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Category } from 'src/categories/category.entity';
+ 
 import { JwtStrategy } from 'src/auth/jwt/jwt.strategy';
 import { User } from 'src/users/user.entity';
 import { jwtConstants } from 'src/auth/jwt/jwt.constants';
@@ -14,6 +14,7 @@ import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { Reviews } from 'src/reviews/reviews.entity';
 import { MulterModule } from '@nestjs/platform-express';
+import { EstadoWebAuthGuard } from './guard/auth.guard';
 
 @Module({
   imports:[MulterModule.register({
@@ -23,6 +24,6 @@ import { MulterModule } from '@nestjs/platform-express';
     signOptions: { expiresIn: '10000h' },
   })],
   controllers: [CursosController],
-  providers: [CursosService,JwtStrategy]
+  providers: [CursosService,JwtStrategy,EstadoWebAuthGuard]
 })
 export class CursosModule {}

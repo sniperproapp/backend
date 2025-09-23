@@ -49,7 +49,8 @@ export class AuthService {
          @InjectRepository(Cursos) private cursossRepository: Repository<Cursos>,
     @InjectRepository(Rol) private rolesRepository:Repository<Rol>,
     @InjectRepository(Referral) private ReferralesRepository:Repository<Referral>
-    , private jwtservice: JwtService,private mailservices: MailsService ){
+    , private jwtservice: JwtService,private mailservices: MailsService ,
+private readonly referralservice: referralService){
 
     }
 
@@ -387,10 +388,10 @@ export class AuthService {
 
 
 
-       if(userFound.estadoweb==0)
-       {
-             throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
-        } 
+    //    if(userFound.estadoweb==0)
+    //    {
+    //          throw new HttpException('Comuníquese con Administración para ser Activado',HttpStatus.FORBIDDEN);
+    //     } 
    
         //  if(userFound.duplicatesesionweb==1)
         //  {
@@ -699,43 +700,7 @@ return data;
                     created_at: formDateToYMD(sale.created_at),
                 });
             }
-             const query = `
-      WITH RECURSIVE referred_chain AS (
-        SELECT
-          id AS userId,
-          referrerId,
-          name,
-          imagen,
-          1 AS level
-        FROM
-          users
-        WHERE
-          id =${iduser}
-
-        UNION ALL
-
-        SELECT
-          u.id AS userId,
-          u.referrerId,
-              u.name,
-          u.imagen,
-          rc.level + 1 AS level
-        FROM
-          users u
-        JOIN
-          referred_chain rc ON u.referrerId = rc.userId
-        WHERE
-          rc.level < 4
-      )
-      SELECT
-        userId,
-        level,imagen,name
-      FROM
-        referred_chain
-      WHERE
-        level > 1;
-    `;
- 
+       
      
             return{
                 enrolled_course_count: enrolled_course_count,
@@ -746,6 +711,7 @@ return data;
                     name: Student.name,
                     surname: Student.lastname,
                     email: Student.email,
+                    wallet:Student.wallet,
                    // profession: Student.profession,
                    // description: Student.description,
                     phone: Student.phone,
@@ -758,7 +724,9 @@ return data;
                 termined_course_news: termined_course_news,
                 sales: sales_collection,
                 sales_details: sales_details_collection,
-                referral: await this.usersRepository.query(query),
+                referral: await this.referralservice.getlistn1(iduser),
+                comisionesSuma: await this.referralservice.getsumacomisiones(iduser),
+                comisionesSumatotal: await this.referralservice.getsumacomisionestotal(iduser),
                comisiones: await this.ReferralesRepository.find(
                 {where:{referrerId:iduser},
                    relations:['referredUser'],
