@@ -15,6 +15,9 @@ export class Referral {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+ @Column({default: 0})
+    estado: number;
+
   // Relación: la referencia pertenece a un usuario que refiere.
   @ManyToOne(() => User, user => user.referrals)
   @JoinColumn({ name: 'referrerId' })
