@@ -6,7 +6,7 @@ export class UpdateUserDto{
 
     
     lastname?: string;
-
+    wallet: string;
      
     phone?: string;
     password?: string;

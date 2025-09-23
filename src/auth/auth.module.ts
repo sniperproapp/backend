@@ -24,11 +24,11 @@ import { Referral } from 'src/referral/referral.entity';
   imports:[TypeOrmModule.forFeature([User, Rol,Cursos,Sale,Saledetail,Reviews,Cursostudent,Referral]),
   JwtModule.register({
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '10000h' },
+    signOptions: { expiresIn: '24h' },
   })
 ],
  
-  providers: [AuthService,RolesService,JwtStrategy,MailsService],
+  providers: [AuthService,RolesService,JwtStrategy,MailsService,referralService],
   controllers: [AuthController]
 }) 
 export class AuthModule {}

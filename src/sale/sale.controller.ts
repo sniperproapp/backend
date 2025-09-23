@@ -32,9 +32,11 @@ export class saleController {
  
  
 @Post() 
-create(    
- @Body()  sale :CreateSaleDto) {
-  
+create(   
+  @Headers() headers, 
+ @Body( )  sale :CreateSaleDto) {
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  sale.id_user=idclient.id
    return this.saleServices.create( sale);
 }
 

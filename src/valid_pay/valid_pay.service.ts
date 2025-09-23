@@ -39,6 +39,8 @@ export class valid_payService {
         const fechaFormateada = `${anio}-${mes}-10`;
 
      const saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
+     const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
+     console.log(usersProf)
      saleinfo.status=data.payment_status
      
      if(data.payment_status=="finished")
@@ -51,7 +53,7 @@ export class valid_payService {
        userinfo.time_limit=new Date(fechaFormateada)
        userinfo.time_limit_web=new Date(fechaFormateada)
        this.usersRepository.save(userinfo)
-                            //calcular las comisiones de 3 niveles 
+                            //calcular las comisiones de 2 niveles 
                                             //nivel 1
                                             if(userinfo.referrerId){
                                             referreldata.status='pendiente'
@@ -71,13 +73,7 @@ export class valid_payService {
                                                          
                                                        
                                                         //nivel 3
-                                                            const userinfon3= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
-                                                             if(userinfon3.referrerId){
-                                                                referreldata.status='pendiente'
-                                                                referreldata.referrerId=userinfon3.referrerId
-                                                                referreldata.referredUserId=userinfon3.id
-                                                                referreldata.monto=50*0.1
-                                                                this.referralRepository.create()}
+                                                         
 
 
 

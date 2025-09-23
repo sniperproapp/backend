@@ -77,52 +77,24 @@ export class saleService {
 
     async create(sale:CreateSaleDto){
 
-      
-          
-       
-        let data={merchantTradeNo:"11",orderAmountnumber:50}
+        let data={merchantTradeNo:"11",orderAmountnumber:sale.total}
         let infopagos = await this.pagosservices.create(data)
-        console.log(infopagos)
-        let userinfo = await this.usersRepository.findOneBy({email: sale.email})
+         
+        let userinfo = await this.usersRepository.findOneBy({id: sale.id_user})
        
-       
+     
         sale.id_user=userinfo.id;
         sale.currency_payment="usdt"
-        sale.total=50
         sale.method_payment="nowpaymenst"
         sale.n_transaccion=infopagos.order_id
         sale.status="NEW"
         let Sale = await this.saleRepository.create(sale);
         await this.saleRepository.save(Sale);
 
-         let orden={total:50,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,
-
-     }
-
-         this.mailservices.sendmaillinkdepago(orden,userinfo.email)
-
-
-
-        
-       // let Carts = await this.carritosRepository.find({where:{id_user: user}});
-
-      //  for (let Cart of Carts) {
-        // let carrito:CreateCarritoDetailDto 
-        //  const createdetail = Object.assign(Cart,carrito);
-          //createdetail.id_sale = Sale.id;
-         //  let guardardetalle= await this.saledetailsRepository.create(createdetail);
-           // await this.saledetailsRepository.save(guardardetalle);
-            // LA HABILITACION DEL CURSO AL ESTUDIANTE QUE SE HA INSCRITO
-          // let guardarusercurso= await this.cursostudentsRepository.create({
-           //     id_user: user,
-               // id_curso: Cart.id_curso
-           // });
-
-           // await this.cursostudentsRepository.save(guardarusercurso);
-
-            // 
-           // await this.carritosRepository.delete( Cart.id);
-     //   }
+         let orden={total:sale.total,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,  } 
+      let Cart = await this.carritosRepository.findOne({where:{id_user: sale.id_user}});
+        await this.carritosRepository.delete( Cart.id);
+        this.mailservices.sendmaillinkdepago(orden,userinfo.email)
 
         // IRIA EL ENVIO DE EMAIL
         //await send_email(Sale._id);

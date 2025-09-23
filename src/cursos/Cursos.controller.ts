@@ -16,6 +16,7 @@ import { diskStorage } from 'multer';
 import { renameimage } from './helpers/imagen.helpers';
 import { filtroDto } from './dto/filtro.dto';
 import { Updatecheck } from './dto/updatecheck.dto';
+import { EstadoWebAuthGuard } from './guard/auth.guard';
 @Controller('courses')
 export class CursosController {
 
@@ -115,7 +116,7 @@ finAllproductlandingcursosinheader(@Param('id_curso',ParseIntPipe) id_curso:numb
   
 }
 
-
+@UseGuards(JwtAuthGuard,EstadoWebAuthGuard )
 @Get('vercurso/:id_curso')
 finAllvercurso( @Headers() headers,@Param('id_curso',ParseIntPipe) id_curso:number, ) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);

@@ -16,6 +16,8 @@ export class User{
 
     @Column()
     lastname: string;
+    @Column()
+    wallet: string;
 
     @Column({default:0})
     duplicatesesion: number;
