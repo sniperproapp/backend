@@ -47,7 +47,7 @@ export class valid_payService {
 
         const fechaFormateada = `${anio}-${mes}-10`;
 
-     const saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
+     let saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
      const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
      // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   itspipegiraldo@gmail.com
      console.log(saleinfo)
