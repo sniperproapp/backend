@@ -28,6 +28,10 @@ price_dolar:number;
 n_transaccion:string;
 @Column()
 status:string;
+
+ @Column({default: 0})
+  estadorecibido: number;
+
  
 @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
 created_at: Date;

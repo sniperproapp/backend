@@ -53,6 +53,9 @@ export class valid_payService {
         const fechaFormateada = `${anio}-${mes}-10`;
 
      let saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
+     if(saleinfo.estadorecibido==1)
+     {console.log("ya este pago fue validado ")
+        return}
      const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
      // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   itspipegiraldo@gmail.com
      console.log(saleinfo)
@@ -70,7 +73,7 @@ export class valid_payService {
        this.usersRepository.save(userinfo)
                             //calcular las comisiones de 2 niveles 
                                             //nivel 1
-                                            if(userinfo.referrerId){
+                                            if(userinfo.referrerId>0){
                                             referreldata.status='pendiente'
                                             referreldata.referrerId=userinfo.referrerId
                                             referreldata.referredUserId=userinfo.id
@@ -79,7 +82,7 @@ export class valid_payService {
                                                
                                                 //nivel 2
                                                    const userinfon2= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
-                                                    if(userinfo.referrerId){
+                                                    if(userinfo.referrerId>0){
                                                             referreldata.status='pendiente'
                                                             referreldata.referrerId=userinfon2.referrerId
                                                             referreldata.referredUserId=userinfon2.id
@@ -95,6 +98,7 @@ export class valid_payService {
        this.referralRepository.create()
 
      }
+     saleinfo.estadorecibido=1;
      this.saleRepository.save(saleinfo)
       
     //  console.log(fechaFormateada)
