@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
- 
+ import { ConfigService } from '@nestjs/config';
  
  
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,10 @@ import { User } from 'src/users/user.entity';
 import { Sale } from 'src/sale/sale.entity';
 import { Referral } from 'src/referral/referral.entity';
 import { CreateReferralDto } from './dto/create-referral.dto';
+import { referralService } from 'src/referral/referral.service';
+import { PagosService } from 'src/pagos/services/pagos.service';
  
- 
+  const configService = new ConfigService();
  
  
 
@@ -22,7 +24,12 @@ export class valid_payService {
         @InjectRepository(User) private usersRepository: Repository<User>,
         @InjectRepository(Sale) private saleRepository: Repository<Sale>,
         @InjectRepository(Referral) private referralRepository: Repository<Referral>,
-    ){}
+        private readonly referralService:referralService,
+        private readonly payService:PagosService
+    ){
+
+       
+    }
 
      
 
@@ -40,7 +47,8 @@ export class valid_payService {
 
      const saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
      const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
-     console.log(usersProf)
+     // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   itspipegiraldo@gmail.com
+     console.log(saleinfo)
      saleinfo.status=data.payment_status
      
      if(data.payment_status=="finished")
@@ -68,11 +76,11 @@ export class valid_payService {
                                                             referreldata.status='pendiente'
                                                             referreldata.referrerId=userinfon2.referrerId
                                                             referreldata.referredUserId=userinfon2.id
-                                                            referreldata.monto=50*0.15
+                                                            referreldata.monto=50*0.05
                                                             this.referralRepository.create()}
                                                          
                                                        
-                                                        //nivel 3
+                                                
                                                          
 
 
@@ -82,19 +90,33 @@ export class valid_payService {
      }
      this.saleRepository.save(saleinfo)
       
-        console.log(fechaFormateada)
-     console.log("payment_id")    
-     console.log(data.payment_id)  
-     console.log("paymentstatus")  
-     console.log(data.payment_status)  
-         console.log("order_id")  
-     console.log(data.order_id)  
+    //  console.log(fechaFormateada)
+    //  console.log("payment_id")    
+    //  console.log(data.payment_id)  
+    //  console.log("paymentstatus")  
+    //  console.log(data.payment_status)  
+    //  console.log("order_id")  
+    //  console.log(data.order_id)  
      
    
      
  
-        return   console.log(data);
+        return data    
       }
+
+     async Create(id:number){
+       let user= await this.usersRepository.findOne({where:{id:id},select:{wallet:true,}})
+       let amount= await this.referralService.getsumacomisionestotal(id);
+    //    console.log(configService.get('USERNOWPAYMENTS'))
+    //    console.log(user)
+    //    console.log(amount) 
+    //     console.log(configService.get('PASSNOWPAYMENTS'))
+    //     console.log(id)
+
+
+     return await this.payService.createpay({address:user.wallet,amount:amount.totalPrice,currency:'usdtbsc',ipn_callback_url:"https://nowpayments.io"})
+ 
+     }
 
      
      

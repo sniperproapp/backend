@@ -1,6 +1,7 @@
-import { Injectable, Body } from '@nestjs/common';
+import { Injectable, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreatepagosDto } from '../dto/createpagosDto';
+import { createpagosmasivoDto } from '../dto/createpagosmasivoDto';
 const crypto = require('crypto');
 const axios = require('axios');
 // This is a very simple script working on Binance Pay API
@@ -27,7 +28,7 @@ function random_string() {
     return crypto.randomBytes(32).toString('hex').substring(0,32);
   }
   
-  async function dispatch_request(http_method, path, payload = {}) {
+  async function dispatch_request(http_method, path, payload = {},token) {
       const timestamp = Date.now()
       const nonce = random_string()
       const payload_to_sign = timestamp + "\n" + nonce + "\n" + JSON.stringify(payload) + "\n"
@@ -37,11 +38,10 @@ function random_string() {
         baseURL,
         headers: {
           'content-type': 'application/json',
-         // 'BinancePay-Timestamp': timestamp,
+          'Authorization': `Bearer ${token}`,
           'x-api-key':apiKeynow,
-          //'BinancePay-Nonce': nonce,
-         // 'BinancePay-Certificate-SN': apiKey,
-         // 'BinancePay-Signature': signature.toUpperCase()
+          
+   
         }
       }).request({
         'method': http_method,
@@ -49,73 +49,95 @@ function random_string() {
         data: payload
       })
   }
+
+
+
+  async function dispatch_request_token(http_method, path, payload = {}) {
+       const url = baseURL + path
+   
+      return  await axios.create({
+        baseURL,
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key':apiKeynow,
+           
+        }
+      }).request({
+        'method': http_method,
+        url,
+        data: payload
+      })
+  }
+
+
+
+
+
   
   // ===== functions ======
   
   
-  // Query Order
-   
-  // POST /binancepay/openapi/order/query
-  // https://developers.binance.com/docs/binance-pay/api-order-query
-  async function query_order(id:number) {
-    return await dispatch_request(
-      'POST', 
-      '/binancepay/openapi/v2/order/query', 
-      {
-        "merchantTradeNo": id,
-      }
-    ).then(async response => {return await response.data}  ).catch(async error => {return await null})
-   
-  }
+ 
   
  
   
   
-  // Create Order
-  //
-  // POST /binancepay/openapi/order
-  // https://developers.binance.com/docs/binance-pay/api-order-create
-  function create_order(pago:CreatepagosDto) {
-   return 
-  }
-   // 'merchantId': pago.merchantId,
-        // 'merchantTradeNo':pago.merchantTradeNo,
-        // 'tradeType': pago.tradeType,
-        // 'totalFee': pago.totalFee,
-        // 'currency': pago.currency,
-        // 'productType':pago.productType,
-        // 'productName': pago.productName,
-        // 'productDetail': pago.productDetail
-  //create_order()
-   
 @Injectable()
 export class PagosService {
 
 
-    async getinfo(id:number): Promise<any> {
+    
+ 
 
-      return  await query_order(id);
-        
 
-       
+async createpay(data:createpagosmasivoDto){
+        //validar address
+       let address = await dispatch_request('POST', 
+          '/payout/validate-address',
+          {
+            "address": data.address, 
+            "currency": "usdtbsc", 
+            "extra_id":null
+            
+       },""
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+      
+        console.log(address)
+
+      if(address!="OK"){
+         return address.response.data ;
       }
 
 
+        //obtener token
+        console.log(configService.get('USERNOWPAYMENTS'))
+        console.log(configService.get('PASSNOWPAYMENTS'))
+       let token = await dispatch_request_token('POST', 
+          '/auth',
+          {
+            "email":configService.get('USERNOWPAYMENTS') ,
+            "password":configService.get('PASSNOWPAYMENTS') ,
+            
+       }
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+        
+        // console.log("token")
+        // console.log(token)
+      let   createpaymasive:createpagosmasivoDto[]=[];
+ 
+       createpaymasive.push(data)
 
-//       curl --location '' \
-// --header 'x-api-key: {{api-key}}' \
-// --header 'Content-Type: application/json' \
-// --data '{
-//   "price_amount": 3999.5,
-//   "price_currency": "usd",
-//   "pay_currency": "btc",
-//   "ipn_callback_url": "https://nowpayments.io",
-//   "order_id": "RGDBP-21314",
-//   "order_description": "Apple Macbook Pro 2019 x 1"
-// }'
-
-
-
+        let mensaje=await  await dispatch_request(
+          'POST', 
+          '/payout',
+          {
+            "ipn_callback_url": "https://nowpayments.io",
+           "withdrawals": createpaymasive
+       },token.token
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+        console.log(mensaje.response.data)
+   return mensaje.response.data
+}
 
       async create(pago:CreatepagosDto): Promise<any> {
         return  await dispatch_request(
@@ -129,7 +151,7 @@ export class PagosService {
             "success_url":"https://sniperproacademy.com/auth/login",
             "order_id": random_string(),
             "order_description": "mensualidad"
-       }
+       },""
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
       

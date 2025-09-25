@@ -58,15 +58,7 @@ finAll( @Headers() headers,  ) {
 
 
 
-
-@Post('getstsuspay/:id') 
- getstatuspay( 
-  @Param('id') id: number,) {
-   
-  
-  
-  return this.carritoervices.getstatuspay(  id );
-}
+ 
 
  
 

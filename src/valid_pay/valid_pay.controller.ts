@@ -38,6 +38,15 @@ return this.valid_payServices.update(data);
 
 
 
+@Post('create/:id')
+createpay(@Param('id') id:number){
+
+return this.valid_payServices.Create(id);
+}
+
+
+
+
 
 
 

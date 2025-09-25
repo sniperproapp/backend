@@ -11,6 +11,8 @@ import {  valid_payService } from './valid_pay.service';
 import {    valid_payController } from './valid_pay.controller';
 import { Sale } from 'src/sale/sale.entity';
 import { Referral } from 'src/referral/referral.entity';
+import { referralService } from 'src/referral/referral.service';
+import { PagosService } from 'src/pagos/services/pagos.service';
  
  
  
@@ -19,7 +21,7 @@ import { Referral } from 'src/referral/referral.entity';
 
 @Module({
   imports:[TypeOrmModule.forFeature([User,Sale,Referral])],
-  providers: [valid_payService,JwtStrategy],
+  providers: [valid_payService,JwtStrategy,referralService,PagosService],
   controllers: [valid_payController]
 })
 export class valid_payModule {}
