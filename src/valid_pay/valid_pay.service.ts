@@ -37,7 +37,12 @@ export class valid_payService {
      async update( data: any  ){
      console.log(data)
 
-        let referreldata:CreateReferralDto
+        let referreldata:CreateReferralDto ={
+            status: '',
+            referrerId: 0,
+            monto: 0,
+            referredUserId: 0
+        }
         const fecha = new Date();
         const mesActual = fecha.getMonth();
         fecha.setMonth(mesActual + 1);
