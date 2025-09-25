@@ -61,48 +61,7 @@ constructor (@InjectRepository(Carrito) private carritoRepository: Repository<Ca
 
 
 
-async getstatuspay( id:number){
-
-    let infopago = await this.pagosservices.getinfo(id);
-    if(!infopago)
-        {
-            throw new HttpException('no se encontro su orden de pago verifique el numero de orden enviado al correo',HttpStatus.OK); 
-         }
-
-    console.log(infopago.data.status)
  
-    
-  
-   if(infopago.data.status =="PAID")
-    {
-        let date1=new Date( )
-        date1.setMonth(date1.getMonth() + 1);
-        date1.setDate(5);
-       let pago= await this.carritoRepository.findOne({where:{id:id}});
-       let user=await this.usersRepository.findOne({where:{id:pago.id_user}})
-       user.time_limit=date1;
-       let useredit= await this.usersRepository.save(user);
-       this.carritoRepository.delete(id);
-       throw new HttpException('Su pago fue realizado correctamente tiene su menbresia activa hasta el'+date1,HttpStatus.OK); 
-        
-    }
-    if(infopago.data.status=="PENDING")
-        {
-            throw new HttpException('Su pago esta pendiente de parte de la plataforma de pagos',HttpStatus.OK); 
-        }
-     if(infopago.data.status=="INITIAL")
-            {
-                throw new HttpException('Su pago fue creado correctamente debe ir a su correo a pagar con el link de pago',HttpStatus.OK); 
-            }
-    if(infopago.data.status!="PAID" && infopago.data.status!="INITIAL" && infopago.data.status!="PENDING")
-    {
-        this.carritoRepository.delete(id); 
-        throw new HttpException('debe iniciar un nuevo pago',HttpStatus.OK); 
-    }
-    
-    return
-
-}
  
    
 

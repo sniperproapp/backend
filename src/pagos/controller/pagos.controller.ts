@@ -6,10 +6,10 @@ import { CreatepagosDto } from '../dto/createpagosDto';
 export class PagosController {
     constructor(private readonly pagosservices: PagosService) {}
 
-    @Get('orden')
-    getHello( @Param('id') id: number): any {
-      return this.pagosservices.getinfo(id);
-    }
+    // @Get('orden')
+    // getHello( @Param('id') id: number): any {
+    //   return this.pagosservices.getinfo(id);
+    // }
 
  
 @Post('pagomensual') 

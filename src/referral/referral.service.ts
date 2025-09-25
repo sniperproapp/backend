@@ -72,13 +72,14 @@ export class referralService {
 async getsumacomisiones(id:number){
   return  this.referralRepository.createQueryBuilder('referral')
       .select('SUM(referral.monto)', 'totalPrice') // 1. Selecciona la suma y le da un alias
-      .where('referral.estado = :estado && referral.referrerId = :referrerId' , { estado: 0,referrerId:id }) // 2. Aplica la condición WHERE
+      .where('referral.estado = :estado && referral.referrerId = :referrerId ' , { estado: 1,referrerId:id }) // 2. Aplica la condición WHERE
       .getRawOne(); // 3. Obtiene el resultado
 }
 async getsumacomisionestotal(id:number){
   return  this.referralRepository.createQueryBuilder('referral')
       .select('SUM(referral.monto)', 'totalPrice') // 1. Selecciona la suma y le da un alias
-      .where('  referral.referrerId = :referrerId' , {  referrerId:id }) // 2. Aplica la condición WHERE
+      .where('referral.estado = :estado && referral.referrerId = :referrerId &&  referral.status = :status' , { estado: 0,referrerId:id,status:"finished" }) // 2. Aplica la condición WHERE
+      
       .getRawOne(); // 3. Obtiene el resultado
 }
 
