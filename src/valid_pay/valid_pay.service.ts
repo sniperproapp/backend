@@ -78,7 +78,9 @@ export class valid_payService {
                                             referreldata.referrerId=userinfo.referrerId
                                             referreldata.referredUserId=userinfo.id
                                             referreldata.monto=50*0.1
-                                            this.referralRepository.create()}
+                                            let referral1 = await this.referralRepository.create(referreldata)
+                                            let savereferral1= await this.referralRepository.save(referral1)
+                                        }
                                                
                                                 //nivel 2
                                                    const userinfon2= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
@@ -87,7 +89,8 @@ export class valid_payService {
                                                             referreldata.referrerId=userinfon2.referrerId
                                                             referreldata.referredUserId=userinfon2.id
                                                             referreldata.monto=50*0.05
-                                                            this.referralRepository.create()}
+                                                             let referral2 = await this.referralRepository.create(referreldata)
+                                                             let savereferral2= await this.referralRepository.save(referral2)}
                                                          
                                                        
                                                 
@@ -95,7 +98,7 @@ export class valid_payService {
 
 
 
-       this.referralRepository.create()
+       
 
      }
      saleinfo.estadorecibido=1;
