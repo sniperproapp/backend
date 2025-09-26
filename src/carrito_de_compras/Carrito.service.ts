@@ -123,10 +123,10 @@ async createmensualidad(carrito:CreateCarritoDto,idUser:number ){
      console.log(infopagos)
 
      
-     let orden={total:carrito.total,id:newcarritores.id,name:"losavio",lastname:"gercel",method_payment:"BINANCE",link:infopagos.data.universalUrl,
+    //  let orden={total:carrito.total,id:newcarritores.id,name:"losavio",lastname:"gercel",method_payment:"BINANCE",link:infopagos.data.universalUrl,
 
-     }
-     this.mailservices.sendmaillinkdepago(orden,user.email)
+    //  }
+    //  this.mailservices.sendmaillinkdepago(orden,user.email)
      const newcarritoresr= await this.carritoRepository.findOne({relations:['curso'],where:{id:newcarritores.id}})
      
     return newcarritoresr
