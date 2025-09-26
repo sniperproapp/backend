@@ -33,6 +33,10 @@ export class User{
 
     @Column({default: 0})
     estado: number;
+
+    @Column({default: 0})
+    estadomensualidad: number;
+
     @Column({default: 0})
     estadoweb: number;
 

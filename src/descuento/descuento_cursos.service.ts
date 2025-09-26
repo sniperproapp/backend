@@ -53,7 +53,7 @@ export class descuentoCursosService {
     async findAlltiendabaner(  ){
        
       const  descueto= await this.descuentoRepository.findOneBy( { type_campaign:3} );
-        
+        console.log(descueto)
        let discountresul:DescuentoCursosDto ;
        let cursos:any[]=[];
         let curso:Cursoresouceseccion;

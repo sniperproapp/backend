@@ -42,7 +42,7 @@ return  this.usersRepository.save(newUser)
 
     
     async finduser(email: string){
-        
+        console.log(email)
         return   await   this.usersRepository.findOne({ where:{email:Like('%'+email+'%')}});
    
             
