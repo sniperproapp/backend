@@ -135,8 +135,8 @@ async createpay(data:createpagosmasivoDto){
            "withdrawals": createpaymasive
        },token.token
         ).then(async response =>  {return await response.data}).catch(error =>  error)
-        console.log(mensaje.response.data)
-   return mensaje.response.data
+        console.log(mensaje)
+   return mensaje
 }
 
       async create(pago:CreatepagosDto): Promise<any> {
