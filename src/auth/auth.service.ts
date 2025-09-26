@@ -712,7 +712,7 @@ return data;
                     surname: Student.lastname,
                     email: Student.email,
                     wallet:Student.wallet,
-                   // profession: Student.profession,
+                    estadomensualidad: Student.estadomensualidad,
                    // description: Student.description,
                     phone: Student.phone,
                    // birthday: Student.birthday ? formDateToYMD(new Date(Student.birthday)) : null,

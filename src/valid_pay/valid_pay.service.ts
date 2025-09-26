@@ -36,74 +36,162 @@ export class valid_payService {
 
      async update( data: any  ){
      console.log(data)
-
+     let dataprofe:number[]=[24,110,942,2149]
         let referreldata:CreateReferralDto ={
             status: '',
             referrerId: 0,
             monto: 0,
             referredUserId: 0
         }
-        const fecha = new Date();
-        const mesActual = fecha.getMonth();
-        fecha.setMonth(mesActual + 1);
-        const anio = fecha.getFullYear();
-        const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
-        const dia = fecha.getDate().toString().padStart(2, '0');
-
-        const fechaFormateada = `${anio}-${mes}-10`;
+        
+       
 
      let saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id}})
      if(saleinfo.estadorecibido==1)
      {console.log("ya este pago fue validado ")
         return}
      const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
-     // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   itspipegiraldo@gmail.com
-     console.log(saleinfo)
+     // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   
+    console.log(saleinfo)
      saleinfo.status=data.payment_status
-     
-     if(data.payment_status=="finished")
+     if(data.outcome_amount>17)
      {
-       
-       
-       const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
-       userinfo.estado=1
-       userinfo.estadoweb=1
-       userinfo.time_limit=new Date(fechaFormateada)
-       userinfo.time_limit_web=new Date(fechaFormateada)
-       this.usersRepository.save(userinfo)
-                            //calcular las comisiones de 2 niveles 
-                                            //nivel 1
-                                            if(userinfo.referrerId>0){
-                                            referreldata.status='pendiente'
-                                            referreldata.referrerId=userinfo.referrerId
-                                            referreldata.referredUserId=userinfo.id
-                                            referreldata.monto=50*0.1
-                                            let referral1 = await this.referralRepository.create(referreldata)
-                                            let savereferral1= await this.referralRepository.save(referral1)
-                                        }
-                                               
-                                                //nivel 2
-                                                   const userinfon2= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
-                                                    if(userinfo.referrerId>0){
-                                                            referreldata.status='pendiente'
-                                                            referreldata.referrerId=userinfon2.referrerId
-                                                            referreldata.referredUserId=userinfon2.id
-                                                            referreldata.monto=50*0.05
-                                                             let referral2 = await this.referralRepository.create(referreldata)
-                                                             let savereferral2= await this.referralRepository.save(referral2)}
-                                                         
-                                                       
-                                                
-                                                         
+
+
+                    if(data.payment_status=="finished")
+                        {
+                            const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
+
+                            if(data.outcome_amount<18){//activar la app de señales por un año
+                                           const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 12);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+
+                                     
+                                    userinfo.estado=1
+                                     userinfo.estadomensualidad=1
+                                    //userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                   // userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+
+                            }else{//activar la app de señales y la web por dos meses 
+                                            const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 2);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+
+                                
+                            }
+                        
+                        
+                      
+                                                //calcular las comisiones de 2 niveles 
+                                                            //nivel 1
+                                                            if(userinfo.referrerId>0){
+                                                            referreldata.status='finished'
+                                                            referreldata.referrerId=userinfo.referrerId
+                                                            referreldata.referredUserId=userinfo.id
+                                                            referreldata.monto= data.outcome_amount *0.15
+                                                            let referral1 = await this.referralRepository.create(referreldata)
+                                                            let savereferral1= await this.referralRepository.save(referral1)
+                                                        }
+                                                            
+                                                                //nivel 2
+                                                                const userinfon2= await  this.usersRepository.findOne({where:{id:userinfo.referrerId }})
+                                                                   
+                                                                if(userinfon2.id==42){// si el referente es la maquina se le da 3% a el y dos a los hijos
+                                                                     if(userinfo.referrerId>0){ //3%para miguel
+                                                                            referreldata.status='finished'
+                                                                            referreldata.referrerId=42
+                                                                            referreldata.referredUserId=userinfon2.id
+                                                                            referreldata.monto=data.outcome_amount*0.03
+                                                                            let referral2 = await this.referralRepository.create(referreldata)
+                                                                            let savereferral2= await this.referralRepository.save(referral2)}
+                                                                     if(userinfo.referrerId>0){// 2%para los hijos
+                                                                            referreldata.status='finished'
+                                                                            referreldata.referrerId=4141
+                                                                            referreldata.referredUserId=userinfon2.id
+                                                                            referreldata.monto=data.outcome_amount*0.02
+                                                                            let referral2 = await this.referralRepository.create(referreldata)
+                                                                            let savereferral2= await this.referralRepository.save(referral2)}
+                                                                }else{
+
+                                                                      if(userinfo.referrerId>0){
+                                                                            referreldata.status='finished'
+                                                                            referreldata.referrerId=userinfon2.referrerId
+                                                                            referreldata.referredUserId=userinfon2.id
+                                                                            referreldata.monto=data.outcome_amount*0.05
+                                                                            let referral2 = await this.referralRepository.create(referreldata)
+                                                                            let savereferral2= await this.referralRepository.save(referral2)}
+                                                                        
+
+                                                                }
+                                                                
+                                                                
+                                                                    
+                                                                //calculo de porcentaje para profesores
+                                                                     dataprofe.forEach(async element  => {
+                                                                        referreldata.status='finished'
+                                                                            referreldata.referrerId=element
+                                                                            referreldata.referredUserId=userinfo.id
+                                                                            referreldata.monto=data.outcome_amount*0.0125
+                                                                            let referral3 = await this.referralRepository.create(referreldata)
+                                                                            let savereferral3= await this.referralRepository.save(referral3)
+                                                                    
+                                                                     }); 
+
+                                                                            
+                                                                    
+                                                                   
+                                                                          
+                                                                        
 
 
 
        
 
-     }
+                        }
+   
+
+        }else{// solo pago de mensualidad
+              const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
+              const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 1);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+        }
+        
      saleinfo.estadorecibido=1;
      this.saleRepository.save(saleinfo)
-      
+        
     //  console.log(fechaFormateada)
     //  console.log("payment_id")    
     //  console.log(data.payment_id)  
