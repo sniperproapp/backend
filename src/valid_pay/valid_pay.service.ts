@@ -54,7 +54,7 @@ export class valid_payService {
      // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   
     console.log(saleinfo)
      saleinfo.status=data.payment_status
-     if(data.outcome_amount>17)
+     if(data.outcome_amount>16)
      {
 
 
@@ -73,11 +73,11 @@ export class valid_payService {
                                             const fechaFormateada = `${anio}-${mes}-10`;
 
                                      
-                                    userinfo.estado=1
+                                     userinfo.estado=1
                                      userinfo.estadomensualidad=1
                                     //userinfo.estadoweb=1
                                     userinfo.time_limit=new Date(fechaFormateada)
-                                   // userinfo.time_limit_web=new Date(fechaFormateada)
+                                    // userinfo.time_limit_web=new Date(fechaFormateada)
                                     this.usersRepository.save(userinfo)
 
                             }else{//activar la app de señales y la web por dos meses 
@@ -166,11 +166,16 @@ export class valid_payService {
 
 
        
-
+                                    saleinfo.estadorecibido=1;
                         }
    
-
+        
         }else{// solo pago de mensualidad
+
+
+            if(data.payment_status=="finished")
+                        {
+                           
               const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
               const fecha = new Date();
                                             const mesActual = fecha.getMonth();
@@ -187,9 +192,13 @@ export class valid_payService {
                                     userinfo.time_limit=new Date(fechaFormateada)
                                     userinfo.time_limit_web=new Date(fechaFormateada)
                                     this.usersRepository.save(userinfo)
+
+
+                                    saleinfo.estadorecibido=1;
+          }
         }
         
-     saleinfo.estadorecibido=1;
+     
      this.saleRepository.save(saleinfo)
         
     //  console.log(fechaFormateada)
@@ -224,7 +233,7 @@ export class valid_payService {
         let respuesta=await this.referralService.cambiodeestadopagado(id)
         console.log(respuesta)
 
-         throw new HttpException('usuario no existe',HttpStatus.OK);
+         throw new HttpException('El pago fue realizado con éxito',HttpStatus.OK);
       }else{
         return respuesta
       }
