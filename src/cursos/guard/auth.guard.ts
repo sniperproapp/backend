@@ -33,11 +33,8 @@ export class EstadoWebAuthGuard implements CanActivate {
       });
       console.log(user)
       if (user.estadomensualidad == 0) {
-        throw new HttpException("compra un paquete para disfrutar del servicio de educacion",HttpStatus.OK);
-      }else{
-        throw new HttpException("Paga la Mensualidad para seguir disfrutando de la educacion ",HttpStatus.OK);
-
-      }
+        throw new HttpException(" Paga la Mensualidad o compra un paquete para disfrutar del servicio de educacion",HttpStatus.OK);
+      } 
 
        
 
