@@ -79,10 +79,7 @@ export class saleService {
 
         let data={merchantTradeNo:"11",orderAmountnumber:sale.total}
         let infopagos = await this.pagosservices.create(data)
-         
         let userinfo = await this.usersRepository.findOneBy({id: sale.id_user})
-       
-     
         sale.id_user=userinfo.id;
         sale.currency_payment="usdt"
         sale.method_payment="nowpaymenst"
