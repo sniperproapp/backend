@@ -31,10 +31,14 @@ export class EstadoWebAuthGuard implements CanActivate {
       const user = await this.usersRepository.findOne({
         where: { id: payload.id },
       });
-console.log(user)
-      if (user.estadoweb == 0) {
+      console.log(user)
+      if (user.estadomensualidad == 0) {
+        throw new HttpException("compra un paquete para disfrutar del servicio de educacion",HttpStatus.OK);
+      }else{
         throw new HttpException("Paga la Mensualidad para seguir disfrutando de la educacion ",HttpStatus.OK);
+
       }
+
        
 
      
