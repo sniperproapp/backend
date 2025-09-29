@@ -1,6 +1,7 @@
 import { Injectable, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreatepagosDto } from '../dto/createpagosDto';
+import { authenticator } from 'otplib';
 import { createpagosmasivoDto } from '../dto/createpagosmasivoDto';
 const crypto = require('crypto');
 const axios = require('axios');
@@ -12,17 +13,15 @@ const apiKeynow = configService.get('KEY_NOWPAY') // set your API key here
 const apiSecret =configService.get('SECRE_KEY_BINANCE')// set your secret key here
 const baseURL ='https://api.nowpayments.io/v1' //'https://bpay.binanceapi.com'
  
- 
+const NOWPAYMENTS_2FA_SECRET = process.env.NOWPAYMENTS_PAYOUT_SECRET;  
 function hash_signature(query_string) {
     return crypto
         .createHmac('sha512', apiSecret)
         .update(query_string)
         .digest('hex');
   }
-
-
+ 
   
-// ===== functions ======
 
 function random_string() {
     return crypto.randomBytes(32).toString('hex').substring(0,32);
@@ -85,11 +84,34 @@ function random_string() {
 @Injectable()
 export class PagosService {
 
+// auhttenticator
+    async verifyPayout(batchId: string) {
+        // 1. Obtener el código 2FA generado
+        const verificationCode = this.generateVerificationCode();
 
-    
- 
+        // 2. Construir la URL y el cuerpo de la solicitud
+        const url = `https://api.nowpayments.io/v1/payout/${batchId}/verify`;
+        const payload = {
+            verification_code: verificationCode, // <-- Aquí se envía el código generado
+        };
 
+        // 3. Realizar la llamada a la API (usando axios o HttpService de NestJS)
+        // ...
+        // const response = await this.httpService.post(url, payload, { headers }).toPromise();
+        // ...
+    }
+    generateVerificationCode(): string {
+        if (!NOWPAYMENTS_2FA_SECRET) {
+            throw new Error('NOWPAYMENTS_PAYOUT_SECRET no está configurado.');
+        }
 
+        // otplib genera el código TOTP basado en el secreto y el tiempo actual (cada 30 segundos)
+        const verificationCode = authenticator.generate(NOWPAYMENTS_2FA_SECRET);
+
+        return verificationCode;
+    }
+
+// auhttenticator fin
 async createpay(data:createpagosmasivoDto){
         //validar address
        let address = await dispatch_request('POST', 
@@ -108,6 +130,8 @@ async createpay(data:createpagosmasivoDto){
          return address.response.data ;
       }
 
+
+      
 
         //obtener token
         console.log(configService.get('USERNOWPAYMENTS'))
@@ -136,7 +160,30 @@ async createpay(data:createpagosmasivoDto){
        },token.token
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         console.log(mensaje)
-   return mensaje
+
+  if(!mensaje.id){
+     return mensaje
+  }
+   let code= await this.generateVerificationCode()
+        console.log(code)
+
+
+let mensajevalidarpago=await  await dispatch_request(
+          'POST', 
+          '/payout/'+mensaje.id+'/verify',
+          {
+            "verification_code": code
+             
+       },token.token
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+
+
+ 
+return  mensajevalidarpago
+ 
+
+
+  
 }
 
       async create(pago:CreatepagosDto): Promise<any> {

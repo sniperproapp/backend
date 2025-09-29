@@ -26,7 +26,8 @@ export class Referral {
   @Column()
   referrerId: number;
 
-  @Column()
+ 
+   @Column({type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   monto: number;
 
   // Relación: la referencia pertenece a un usuario que fue referido.
