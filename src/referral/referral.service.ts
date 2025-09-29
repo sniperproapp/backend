@@ -83,6 +83,22 @@ async getsumacomisionestotal(id:number){
       .getRawOne(); // 3. Obtiene el resultado
 }
 
+
+async cambiodeestadopagado(id:number){
+  return  this.referralRepository.createQueryBuilder()
+        // 2. Definir la acción como UPDATE
+        .update('referral')
+        // 3. Establecer los nuevos valores para el/los campo/s
+        .set({ estado: 1 })
+        // 4. Definir la condición WHERE (actualiza SOLO donde el estado sea el anterior)
+      .where('referral.estado = :estado && referral.referrerId = :referrerId &&  referral.status = :status' , { estado: 0,referrerId:id,status:"finished" }) // 2. Aplica la condición WHERE
+      // 5. Ejecutar la consulta en la base de datos
+        .execute();
+      
+ 
+}
+
+
   async getlist( id: number  ){
  
      return this.referralRepository.find({where:{referrerId:id}});

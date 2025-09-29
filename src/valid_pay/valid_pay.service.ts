@@ -216,8 +216,19 @@ export class valid_payService {
     //     console.log(id)
 
 
-     return await this.payService.createpay({address:user.wallet,amount:amount.totalPrice,currency:'usdtbsc',ipn_callback_url:"https://nowpayments.io"})
+    const respuesta=  await this.payService.createpay({address:user.wallet,amount:amount.totalPrice,currency:'usdtbsc',ipn_callback_url:"https://nowpayments.io"})
  
+      if(respuesta=='OK')
+      {
+
+        let respuesta=await this.referralService.cambiodeestadopagado(id)
+        console.log(respuesta)
+
+         throw new HttpException('usuario no existe',HttpStatus.OK);
+      }else{
+        return respuesta
+      }
+  
      }
 
      
