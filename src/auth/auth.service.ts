@@ -694,6 +694,7 @@ return data;
                     currency_total: sale.currency_total,
                     currency_payment: sale.currency_payment,
                     total: sale.total,
+                    status: sale.status,
                     price_dolar: sale.price_dolar,
                     n_transaccion: sale.n_transaccion,
                     sales_details: sales_detail_collection,
