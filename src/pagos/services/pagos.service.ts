@@ -185,6 +185,9 @@ return  mensajevalidarpago
 
   
 }
+  async get2af(): Promise<any> {
+ return await this.generateVerificationCode()
+  }
 
       async create(pago:CreatepagosDto): Promise<any> {
         return  await dispatch_request(
