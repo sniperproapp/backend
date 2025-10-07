@@ -18,7 +18,8 @@ export class Zoom{
     @Column()
     image: string;
     
-
+    // @Column({default: 0})
+    // estado: number;
     
 
     @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
