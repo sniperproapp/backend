@@ -571,7 +571,7 @@ return data;
             let termined_course_count = await this.cursostudentsRepository.count({where:{id_user: user,state: 2}});
              
 
-            let Student = await this.usersRepository.findOne({where:{id: user}});
+            let Student = await this.usersRepository.findOne({relations:['roles'],where:{id: user}});
 
             let enrolled_course_news = [];
             let actived_course_news = [];
@@ -714,7 +714,7 @@ return data;
                     email: Student.email,
                     wallet:Student.wallet,
                     estadomensualidad: Student.estadomensualidad,
-                   // description: Student.description,
+                    rol: Student.roles,
                     phone: Student.phone,
                    // birthday: Student.birthday ? formDateToYMD(new Date(Student.birthday)) : null,
                    // birthday_format: Student.birthday ? Student.birthday : null,
