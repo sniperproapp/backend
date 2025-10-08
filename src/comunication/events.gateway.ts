@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 // Aquí configuramos CORS para permitir la conexión desde tu app de Angular.
 @WebSocketGateway({
   cors: {
-    origin: 'https://sniperproacademy.com/', // La URL de tu Angular App
+    origin: 'https://sniperproacademy.com', // La URL de tu Angular App
   },
 })
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
