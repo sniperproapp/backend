@@ -54,7 +54,7 @@ export class valid_payService {
      // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   
     console.log(saleinfo)
      saleinfo.status=data.payment_status
-     if(data.outcome_amount>16)
+     if(data.outcome_amount!=50)
      {
 
 
@@ -62,7 +62,7 @@ export class valid_payService {
                         {
                             const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
 
-                            if(data.outcome_amount<18){//activar la app de señales por un año
+                            if(data.outcome_amount==400){//activar la app de señales por un año
                                            const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 12);
