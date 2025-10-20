@@ -157,8 +157,7 @@ create(@UploadedFile(
 
 
 
-@HasRoles(JwtRole.ADMIN,JwtRole.PROF)
-@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+
 @Post('upload_vimeo')
 @UseInterceptors(FileInterceptor('file',{
   storage:diskStorage({
@@ -170,7 +169,7 @@ upload(@UploadedFile(
   new ParseFilePipe({
     validators: [
       new MaxFileSizeValidator({ maxSize: 1024*1024*1000 }),
-      new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
+       //new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
     ],
   }),
 ) file: Express.Multer.File,

@@ -88,8 +88,9 @@ return this.claseServices.delete(id);
 upload(@UploadedFile( 
   new ParseFilePipe({
     validators: [
-      new MaxFileSizeValidator({ maxSize: 1024*1024*300 }),
-      new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
+     //new FileTypeValidator({ fileType: '.(mpg|wmv|mp4)' }),
+      new MaxFileSizeValidator({ maxSize: 1024*1024*1000 }),
+      
     ],
   }),
 ) file: Express.Multer.File,
