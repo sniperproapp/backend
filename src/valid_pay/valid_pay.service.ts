@@ -80,7 +80,8 @@ export class valid_payService {
                                     // userinfo.time_limit_web=new Date(fechaFormateada)
                                     this.usersRepository.save(userinfo)
 
-                            }else{//activar la app de señales y la web por dos meses 
+                            } 
+                            if(data.outcome_amount==499){//activar la app de señales y la web por dos meses 
                                             const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 2);
@@ -99,6 +100,29 @@ export class valid_payService {
 
                                 
                             }
+
+
+                             if(data.outcome_amount==2000){//activar la app de señales y la web por 3 meses 
+                                            const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 3);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+
+                                
+                            }
+
+
                         
                         
                       
