@@ -54,7 +54,7 @@ export class valid_payService {
      // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   
     console.log(saleinfo)
      saleinfo.status=data.payment_status
-     if(data.outcome_amount!=50)
+     if(data.price_amount!=50)
      {
 
 
@@ -62,7 +62,7 @@ export class valid_payService {
                         {
                             const userinfo= await  this.usersRepository.findOne({where:{id:saleinfo.id_user }})
 
-                            if(data.outcome_amount==400 || data.outcome_amount==200 ){//activar la app de señales por un año
+                            if(data.price_amount==400 || data.price_amount==200 ){//activar la app de señales por un año
                                            const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 12);
@@ -81,7 +81,7 @@ export class valid_payService {
                                     this.usersRepository.save(userinfo)
 
                             } 
-                            if(data.outcome_amount==499 || data.outcome_amount==249 ){//activar la app de señales y la web por dos meses 
+                            if(data.price_amount==499 || data.price_amount==249 ){//activar la app de señales y la web por dos meses 
                                             const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 2);
@@ -102,7 +102,7 @@ export class valid_payService {
                             }
 
 
-                             if(data.outcome_amount==2000 || data.outcome_amount==1000){//activar la app de señales y la web por 3 meses 
+                             if(data.price_amount==2000 || data.price_amount==1000){//activar la app de señales y la web por 3 meses 
                                             const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 3);
