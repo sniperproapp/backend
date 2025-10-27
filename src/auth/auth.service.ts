@@ -160,11 +160,13 @@ private readonly referralservice: referralService){
         //     //409
         //     throw new HttpException('el telefono ya existe',HttpStatus.CONFLICT);
         // }
+     
+
         user.descargo=0;
         user.time_limit= new Date();
         user.referralCode=await this.generateUniqueReferralCode();
         const userreferencia= await this.usersRepository.findOneBy({referralCode:user.codigo_refernecia})
-        
+        console.log(userreferencia)
         if(userreferencia){
             user.referrerId=userreferencia.id
                
