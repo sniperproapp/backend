@@ -9,6 +9,8 @@ import { User } from 'src/users/user.entity';
 import { Sale } from 'src/sale/sale.entity';
 import { Referral } from 'src/referral/referral.entity';
  
+import { PagosService } from 'src/pagos/services/pagos.service';
+ 
  
  
  
@@ -20,8 +22,8 @@ import { Referral } from 'src/referral/referral.entity';
 export class referralService {
     constructor(
         @InjectRepository(User) private usersRepository: Repository<User>,
-        @InjectRepository(Sale) private saleRepository: Repository<Sale>,
         @InjectRepository(Referral) private referralRepository: Repository<Referral>,
+        private pagosservices:PagosService
     ){}
 
      
@@ -75,6 +77,9 @@ async getsumacomisiones(id:number){
       .where('referral.estado = :estado && referral.referrerId = :referrerId ' , { estado: 1,referrerId:id }) // 2. Aplica la condición WHERE
       .getRawOne(); // 3. Obtiene el resultado
 }
+
+
+
 async getsumacomisionestotal(id:number){
   return  this.referralRepository.createQueryBuilder('referral')
       .select('SUM(referral.monto)', 'totalPrice') // 1. Selecciona la suma y le da un alias
@@ -83,6 +88,30 @@ async getsumacomisionestotal(id:number){
       .getRawOne(); // 3. Obtiene el resultado
 }
 
+
+
+async getsumacomisionestotalalluser(){
+
+let  data= []
+
+   let balances = await this.pagosservices.getbalance();
+ 
+ 
+ 
+  let comisiones = await this.referralRepository.createQueryBuilder('referral')
+          .select('SUM(referral.monto)', 'totalPrice') // 1. Selecciona la suma y le da un alias
+       .where('referral.estado = :estado  &&  referral.status = :status' , { estado: 0,status:"finished" }) // 2. Aplica la condición WHERE
+      
+       .getRawOne(); // 3. Obtiene el resultado
+data.push({
+  comisiones:comisiones,
+  balances:balances
+})
+ 
+
+
+       return   data
+}
 
 async cambiodeestadopagado(id:number){
   return  this.referralRepository.createQueryBuilder()

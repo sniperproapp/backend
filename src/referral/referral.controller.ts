@@ -28,6 +28,13 @@ export class referralController {
     }
 
 
+      @Get('comisionesall')
+    getlistalluser( ): any {
+       
+      return this.referralServices.getsumacomisionestotalalluser();
+    }
+
+
 
       
  
