@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CreatepagosDto } from '../dto/createpagosDto';
 import { authenticator } from 'otplib';
 import { createpagosmasivoDto } from '../dto/createpagosmasivoDto';
+ 
 const crypto = require('crypto');
 const axios = require('axios');
 // This is a very simple script working on Binance Pay API
@@ -12,8 +13,10 @@ const apiKey = configService.get('KEY_BINANCE') // set your API key here
 const apiKeynow = configService.get('KEY_NOWPAY') // set your API key here 
 const apiSecret =configService.get('SECRE_KEY_BINANCE')// set your secret key here
 const baseURL ='https://api.nowpayments.io/v1' //'https://bpay.binanceapi.com'
+
+
  
-const NOWPAYMENTS_2FA_SECRET = process.env.NOWPAYMENTS_PAYOUT_SECRET;  
+ 
 function hash_signature(query_string) {
     return crypto
         .createHmac('sha512', apiSecret)
@@ -51,14 +54,14 @@ function random_string() {
 
 
 
-  async function dispatch_request_token(http_method, path, payload = {}) {
+  async function dispatch_request_token(http_method, path, payload = {},key) {
        const url = baseURL + path
    
       return  await axios.create({
         baseURL,
         headers: {
           'content-type': 'application/json',
-          'x-api-key':apiKeynow,
+          'x-api-key':key,
            
         }
       }).request({
@@ -83,7 +86,15 @@ function random_string() {
   
 @Injectable()
 export class PagosService {
-
+private readonly keyapi: string;
+private readonly NOWPAYMENTS_2FA_SECRET: string;
+constructor(private readonly configService: ConfigService) {
+    
+    // 2. Llama a la variable de entorno usando .get()
+    this.keyapi = this.configService.get<string>('KEY_NOWPAY');
+   this.NOWPAYMENTS_2FA_SECRET=this.configService.get<string>('NOWPAYMENTS_PAYOUT_SECRET');
+ 
+  }
 // auhttenticator
     async verifyPayout(batchId: string) {
         // 1. Obtener el código 2FA generado
@@ -101,17 +112,30 @@ export class PagosService {
         // ...
     }
     generateVerificationCode(): string {
-        if (!NOWPAYMENTS_2FA_SECRET) {
+        if (!this.NOWPAYMENTS_2FA_SECRET) {
             throw new Error('NOWPAYMENTS_PAYOUT_SECRET no está configurado.');
         }
 
         // otplib genera el código TOTP basado en el secreto y el tiempo actual (cada 30 segundos)
-        const verificationCode = authenticator.generate(NOWPAYMENTS_2FA_SECRET);
+        const verificationCode = authenticator.generate(this.NOWPAYMENTS_2FA_SECRET);
 
         return verificationCode;
     }
 
 // auhttenticator fin
+
+
+async getbalance(){
+  
+  return await dispatch_request_token('GET', 
+          '/balance',{},this.keyapi
+        
+        ).then(async response =>  {return await response.data}).catch(error =>  error)
+ 
+}
+
+
+
 async createpay(data:createpagosmasivoDto){
         //validar address
        let address = await dispatch_request('POST', 
@@ -142,7 +166,7 @@ async createpay(data:createpagosmasivoDto){
             "email":configService.get('USERNOWPAYMENTS') ,
             "password":configService.get('PASSNOWPAYMENTS') ,
             
-       }
+       },''
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
         // console.log("token")
@@ -168,7 +192,7 @@ async createpay(data:createpagosmasivoDto){
         console.log(code)
 
 
-let mensajevalidarpago=await  await dispatch_request(
+let mensajevalidarpago= await dispatch_request(
           'POST', 
           '/payout/'+mensaje.id+'/verify',
           {

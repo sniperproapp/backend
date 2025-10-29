@@ -18,6 +18,8 @@ import { ReviewsService } from 'src/reviews/reviews.service';
 import { Reviews } from 'src/reviews/reviews.entity';
 import { referralService } from 'src/referral/referral.service';
 import { Referral } from 'src/referral/referral.entity';
+import { PagosModule } from 'src/pagos/pagos.module';
+import { PagosService } from 'src/pagos/services/pagos.service';
  
 
 @Module({
@@ -28,7 +30,7 @@ import { Referral } from 'src/referral/referral.entity';
   })
 ],
  
-  providers: [AuthService,RolesService,JwtStrategy,MailsService,referralService],
+  providers: [AuthService,RolesService,JwtStrategy,MailsService,referralService,PagosService],
   controllers: [AuthController]
 }) 
 export class AuthModule {}
