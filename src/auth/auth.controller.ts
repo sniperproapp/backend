@@ -29,6 +29,15 @@ finAll( @Headers() headers,  ) {
 }
 
 
+
+@Get('getallreferral')
+getallreferral(    ) {
+  
+   
+  return this.authServices.getallreferral();
+}
+
+
 @Post('register')
 create(@Body() user: RegisterauthDto){
         return this.authServices.register(user);
