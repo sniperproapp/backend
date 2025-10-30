@@ -97,6 +97,7 @@ export class User{
 
     @OneToMany(()=>Sale,sale=>sale.user)
     sales: Sale[]
+ 
     
 @BeforeInsert()
 async hashPassword(){
@@ -111,6 +112,9 @@ async hashPassword(){
 
 @Column({ nullable: true })
   referralCode: string;
+
+
+
 
   // Relación de muchos a uno: muchos usuarios pueden ser referidos por un solo usuario.
   @ManyToOne(() => User, user => user.referredUsers)

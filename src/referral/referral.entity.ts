@@ -26,7 +26,8 @@ export class Referral {
   @Column()
   referrerId: number;
 
- 
+  
+     
    @Column({type: 'decimal', precision: 10, scale: 2, default: 0.0 })
   monto: number;
 
@@ -37,4 +38,5 @@ export class Referral {
 
   @Column()
   referredUserId: number;
+     
 }
