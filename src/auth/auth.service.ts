@@ -563,14 +563,25 @@ return data;
     async getallreferral(){
 
      let salelist = await   this.salesRepository.find({
-        relations:['user.referrer'],where:{status:'finished'},
-                   select: {total:true,n_transaccion:true, status:true,created_at:true, user: {         name: true,
-                                               email:true,
-                                               phone:true,
-                                               referrerId:true,
-                                               referrer:{
-                                                name:true,
-                                                email:true,
+        relations:['user.referrer.referrals'],where:{status:'finished'},
+                   select: {total:true,n_transaccion:true, status:true,created_at:true,
+                     user: {                  
+                                id:true,
+                                name: true,
+                               lastname:true,
+                                email:true,
+                                phone:true,
+                                referrerId:true,
+                                     referrer:{
+                                          name:true,
+                                          email:true,
+                                                referrals:{
+                                                    monto:true,
+                                                    referredUserId:true,
+                                                    referrerId:true,
+                                                    estado:true
+
+                                                }
 
                                                }
                                                   }
