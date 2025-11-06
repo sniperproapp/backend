@@ -17,12 +17,7 @@ const baseURL ='https://api.nowpayments.io/v1' //'https://bpay.binanceapi.com'
 
  
  
-function hash_signature(query_string) {
-    return crypto
-        .createHmac('sha512', apiSecret)
-        .update(query_string)
-        .digest('hex');
-  }
+ 
  
   
 
@@ -30,18 +25,18 @@ function random_string() {
     return crypto.randomBytes(32).toString('hex').substring(0,32);
   }
   
-  async function dispatch_request(http_method, path, payload = {},token) {
-      const timestamp = Date.now()
-      const nonce = random_string()
-      const payload_to_sign = timestamp + "\n" + nonce + "\n" + JSON.stringify(payload) + "\n"
+  async function dispatch_request(http_method, path, payload = {},token,key) {
+     
+    
+      
       const url = baseURL + path
-      const signature = hash_signature(payload_to_sign)
+     
       return  await axios.create({
         baseURL,
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${token}`,
-          'x-api-key':apiKeynow,
+          'x-api-key':key,
           
    
         }
@@ -145,7 +140,7 @@ async createpay(data:createpagosmasivoDto){
             "currency": "usdtbsc", 
             "extra_id":null
             
-       },""
+       },"",this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
       
         console.log(address)
@@ -181,7 +176,7 @@ async createpay(data:createpagosmasivoDto){
           {
             "ipn_callback_url": "https://nowpayments.io",
            "withdrawals": createpaymasive
-       },token.token
+       },token.token,''
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         console.log(mensaje)
 
@@ -198,7 +193,7 @@ let mensajevalidarpago= await dispatch_request(
           {
             "verification_code": code
              
-       },token.token
+       },token.token,''
         ).then(async response =>  {return await response.data}).catch(error =>  error)
 
 
@@ -225,7 +220,7 @@ return  mensajevalidarpago
             "success_url":"https://sniperproacademy.com/auth/login",
             "order_id": random_string(),
             "order_description": "mensualidad"
-       },""
+       },"",this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
       
