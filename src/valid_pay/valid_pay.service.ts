@@ -47,7 +47,8 @@ export class valid_payService {
        
 
      let saleinfo= await  this.saleRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetails"]})
-     console.log(saleinfo)
+     console.log(saleinfo.saledetails[0])
+     console.log(saleinfo.saledetails[0].id_curso)
      if(saleinfo.estadorecibido==1)
      {console.log("ya este pago fue validado ")
         return}
