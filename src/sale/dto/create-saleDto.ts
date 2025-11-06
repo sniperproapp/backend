@@ -6,7 +6,7 @@ export class CreateSaleDto{
     currency_total: string
     currency_payment: string
     total:number
-     
+     id_curso:number
     n_transaccion:string
     id_user:number
     email:string

@@ -85,10 +85,15 @@ export class saleService {
         sale.method_payment="nowpaymenst"
         sale.n_transaccion=infopagos.order_id
         sale.status="NEW"
-        let Sale = await this.saleRepository.create(sale);
-        await this.saleRepository.save(Sale);
 
-         let orden={total:sale.total,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,  } 
+        let Sale = await this.saleRepository.create(sale);
+       let salesready= await this.saleRepository.save(Sale);
+       let detallepago= await this.saledetailsRepository.create({
+         price_unit:	sale.total,subtotal:sale.total,	total:sale.total,	id_sale:salesready.id,	id_curso:sale.id_curso	
+       })
+      let detallesave = await this.saledetailsRepository.save(detallepago);
+     
+       let orden={total:sale.total,id:infopagos.order_id,name:userinfo.name,lastname:userinfo.lastname,method_payment:"NOWPAYMES",link:infopagos.invoice_url,  } 
       let Cart = await this.carritosRepository.findOne({where:{id_user: sale.id_user}});
         await this.carritosRepository.delete( Cart.id);
         this.mailservices.sendmaillinkdepago(orden,userinfo.email)
