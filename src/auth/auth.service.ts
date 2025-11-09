@@ -590,17 +590,17 @@ return data;
 
     query.select([
         // Sale (entidad principal)
-        "sale.total", "sale.n_transaccion", "sale.status", "sale.created_at",
+        "sale.total","sale.n_transaccion","sale.status","sale.created_at",
         
         
         // User
-        "user.id", "user.name", "user.lastname", "user.email", "user.phone", "user.referrerId",
+        "user.id", "user.name","user.lastname","user.email","user.phone","user.referrerId",
         
         // Referrer (User Referrer)
         "referrer.name", "referrer.email", 
         
         // Referrals
-        "ref.monto", "ref.referredUserId", "ref.referrerId", "ref.estado",
+        "ref.monto", "ref.referredUserId","ref.referrerId","ref.estado",
     ]);
     
     // 5. Ejecutar la consulta
