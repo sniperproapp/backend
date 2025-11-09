@@ -562,33 +562,78 @@ return data;
 
     async getallreferral(){
 
-     let salelist = await   this.salesRepository.find({
-        relations:['user.referrer.referrals'],where:{status:'finished'},
-                   select: {total:true,n_transaccion:true, status:true,created_at:true,
-                     user: {                  
-                                id:true,
-                                name: true,
-                               lastname:true,
-                                email:true,
-                                phone:true,
-                                referrerId:true,
-                                     referrer:{
-                                          name:true,
-                                          email:true,
-                                                referrals:{
-                                                    monto:true,
-                                                    referredUserId:true,
-                                                    referrerId:true,
-                                                    estado:true
+     
+     const query = await  this.salesRepository.createQueryBuilder("sale"); // Alias 'sale'
 
-                                                }
+    // 2. Aplicar Joins y seleccionar las relaciones
+    query
+        // Relación directa a saledetails (para el WHERE)
+        .innerJoinAndSelect("sale.saledetails", "sd") // Alias 'sd' para saledetails
+        
+        // Relaciones anidadas
+        .leftJoinAndSelect("sale.user", "user")         // Alias 'user'
+        .leftJoinAndSelect("user.referrer", "referrer") // Alias 'referrer'
+        .leftJoinAndSelect("referrer.referrals", "ref"); // Alias 'ref'
 
-                                               }
-                                                  }
-     }})
+    // 3. Aplicar condiciones WHERE
+    query
+        // Condición en la entidad principal (Sales)
+        .where("sale.status = :status", { status: 'finished' })
+
+        // Condición en la tabla relacionada (Saledetails)
+        .andWhere("sd.id_curso != :detailValue", { detailValue: '59' }); 
+        // ¡REEMPLAZA 'some_column' y 'some_value' con tu filtro deseado en saledetails!
+
+    // 4. Aplicar SELECTs (Proyección de columnas)
+    // Nota: Query Builder maneja la proyección de columnas de manera diferente.
+    // Necesitas listar explícitamente TODAS las columnas que quieres.
+
+    query.select([
+        // Sale (entidad principal)
+        "sale.total", "sale.n_transaccion", "sale.status", "sale.created_at",
+        
+        
+        // User
+        "user.id", "user.name", "user.lastname", "user.email", "user.phone", "user.referrerId",
+        
+        // Referrer (User Referrer)
+        "referrer.name", "referrer.email", 
+        
+        // Referrals
+        "ref.monto", "ref.referredUserId", "ref.referrerId", "ref.estado",
+    ]);
+    
+    // 5. Ejecutar la consulta
+    const sales = await query.getMany();
+     
+     
+    //  this.salesRepository.find({
+    //     relations:['user.referrer.referrals','saledetails'],where:{status:'finished',},
+    //                select: {total:true,n_transaccion:true, status:true,created_at:true,
+    //                  user: {                  
+    //                             id:true,
+    //                             name: true,
+    //                            lastname:true,
+    //                             email:true,
+    //                             phone:true,
+    //                             referrerId:true,
+    //                                  referrer:{
+    //                                       name:true,
+    //                                       email:true,
+    //                                             referrals:{
+    //                                                 monto:true,
+    //                                                 referredUserId:true,
+    //                                                 referrerId:true,
+    //                                                 estado:true
+
+    //                                             }
+
+    //                                            }
+    //                                               }
+    //  }})
 
       
-       return salelist
+       return sales
         
     }
 
