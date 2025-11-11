@@ -161,7 +161,7 @@ async createpay(data:createpagosmasivoDto){
             "email":configService.get('USERNOWPAYMENTS') ,
             "password":configService.get('PASSNOWPAYMENTS') ,
             
-       },''
+       },this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
         // console.log("token")
