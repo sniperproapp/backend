@@ -155,6 +155,8 @@ async createpay(data:createpagosmasivoDto){
         //obtener token
         console.log(configService.get('USERNOWPAYMENTS'))
         console.log(configService.get('PASSNOWPAYMENTS'))
+        console.log(this.keyapi)
+        console.log()
        let token = await dispatch_request_token('POST', 
           '/auth',
           {
@@ -164,7 +166,7 @@ async createpay(data:createpagosmasivoDto){
        },this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         
-        // console.log("token")
+         console.log("token")
         // console.log(token)
       let   createpaymasive:createpagosmasivoDto[]=[];
  
@@ -176,7 +178,7 @@ async createpay(data:createpagosmasivoDto){
           {
             "ipn_callback_url": "https://nowpayments.io",
            "withdrawals": createpaymasive
-       },token.token,''
+       },token.token,this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
         console.log(mensaje)
 
@@ -193,7 +195,7 @@ let mensajevalidarpago= await dispatch_request(
           {
             "verification_code": code
              
-       },token.token,''
+       },token.token,this.keyapi
         ).then(async response =>  {return await response.data}).catch(error =>  error)
 
 
