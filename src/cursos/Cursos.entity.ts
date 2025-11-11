@@ -21,6 +21,10 @@ export class Cursos{
    
     @Column({default:1})
     estado:number;
+
+
+    @Column({default:0})
+    is_course:number;
    
    
     @Column()
