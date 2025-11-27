@@ -28,6 +28,8 @@ import { SaledetailModule } from './saledetail/Saledetail.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { valid_payModule } from './valid_pay/valid_pay.module';
 import { referralModule } from './referral/referral.module';
+import { MembresiasModule } from './membresias/Membresias.module';
+import { ProductsMenbresiaModule } from './productos_membresias/ProductsMenbresia.module';
  
 
 @Module({
@@ -57,7 +59,9 @@ import { referralModule } from './referral/referral.module';
     FileCursosModule,
     cuponCursosModule,
     descuentoCursosModule,
-    referralModule
+    referralModule,
+    MembresiasModule,
+    ProductsMenbresiaModule
    
     
   ],
