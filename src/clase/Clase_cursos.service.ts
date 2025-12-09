@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
  
 import  storage = require( '../utils/cloud_storage');
 import { InjectRepository } from '@nestjs/typeorm';
-import {   Repository } from 'typeorm';
+import {   Like, Repository } from 'typeorm';
  
 import { User } from 'src/users/user.entity';
 import { Vimeo } from '@vimeo/vimeo';
@@ -13,6 +13,7 @@ import { ClaseCursos    } from './ClaseCursos.entity';
 import { CreateclasevideoDto } from './dto/Create-Clase-video.dto';
 import { ConfigService } from '@nestjs/config';
 import { updateposclaseCursosDto } from './dto/updatepos-claseCursosDto';
+import { filtroDto } from 'src/cursos/dto/filtro.dto';
 const AWS = require("aws-sdk");
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
  
@@ -51,7 +52,21 @@ export class ClaseCursosService {
         return listarespuesta
     }
     
-      
+
+
+
+     async findAllsearch(search:filtroDto){
+      console.log(search)
+      let filters:any =  {
+         title:Like(`%${search.search}%`),
+         
+           };
+
+       let clases = await this.ClaseRepository.find({relations:['sectionCursos.cursos.user'],where:filters});
+       console.log(clases)
+        return clases
+    }
+       
        
      
        

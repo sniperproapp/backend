@@ -29,8 +29,20 @@ constructor(@InjectRepository(Inventario) private inventarioRepository: Reposito
        return this.inventarioRepository.save(inventarionew);
     }
 
+     async update( id:number, stok: number){
+      let inventario=await this.inventarioRepository.findOne({where:{id_inventario:id}})
+        inventario.cantidad_stock=inventario.cantidad_stock-stok
+       return this.inventarioRepository.save(inventario);
+    }
+
+
+
+    async delete (  id: number){
+       
+       return  this.inventarioRepository.delete(id);
 
  
 
  
+}
 }

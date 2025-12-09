@@ -17,6 +17,7 @@ import { diskStorage } from 'multer';
 import { CreatecursovideoDto } from 'src/cursos/dto/Create-Curso-video.dto';
 import { renameimage } from 'src/cursos/helpers/imagen.helpers';
 import { updateposclaseCursosDto } from './dto/updatepos-claseCursosDto';
+import { filtroDto } from 'src/cursos/dto/filtro.dto';
 
 @Controller('course_clase')
 export class ClaseCursosController {
@@ -30,6 +31,15 @@ export class ClaseCursosController {
     @Get(':id')
     findall(@Param('id') id: number){
       return this.claseServices.findAll(id);
+    }
+
+
+    @Post('search-course')
+    filtro ( 
+     
+     @Body() filtro:filtroDto) {
+     
+      return this.claseServices.findAllsearch(  filtro);
     }
     
 
@@ -53,6 +63,8 @@ update(
 
 return this.claseServices.update(clase.id,clase);
 }
+
+
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)

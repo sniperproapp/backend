@@ -1,6 +1,6 @@
 import { Double } from "typeorm";
 
-export class CreateCarritoDto{
+export class CreateSaledetailDto{
 
  
     type_discount:number;
@@ -20,7 +20,7 @@ export class CreateCarritoDto{
 
 
     
-    price:number;
+    price_unit:number;
    
     
     subtotal:number;
@@ -30,8 +30,7 @@ export class CreateCarritoDto{
   
     
     id_user:number;   
-    
-    id_producto:number; 
+    id_curso:number;
     
       
 

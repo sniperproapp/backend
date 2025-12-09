@@ -13,6 +13,9 @@ import { Sale } from 'src/sale/sale.entity';
 import { Referral } from 'src/referral/referral.entity';
 import { referralService } from 'src/referral/referral.service';
 import { PagosService } from 'src/pagos/services/pagos.service';
+import { Saleproducto } from 'src/sales_producto/saleproducto.entity';
+import { InventarioService } from 'src/inventario/services/Inventario.service';
+import { Inventario } from 'src/inventario/Inventario.entity';
  
  
  
@@ -20,8 +23,8 @@ import { PagosService } from 'src/pagos/services/pagos.service';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Sale,Referral])],
-  providers: [valid_payService,JwtStrategy,referralService,PagosService],
+  imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario])],
+  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService],
   controllers: [valid_payController]
 })
 export class valid_payModule {}

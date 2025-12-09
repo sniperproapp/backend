@@ -53,8 +53,9 @@ constructor (@InjectRepository(Carrito) private carritoRepository: Repository<Ca
  
 
     async findAll( iduser:number){
-    
-    return this.carritoRepository.find({relations:['curso'], where:{id_user:iduser},order: {
+    console.log(iduser)
+  
+    return this.carritoRepository.find({relations:['productos.inventario'], where:{id_user:iduser},order: {
         id: "DESC" // "DESC"
     }})          
 }
@@ -69,7 +70,7 @@ constructor (@InjectRepository(Carrito) private carritoRepository: Repository<Ca
 async create(carrito:CreateCarritoDto,idUser:number ){   
     
    
-  const categorifound= await this.carritoRepository.findOne({where:{id_user:idUser,id_curso:carrito.id_curso}})
+  const categorifound= await this.carritoRepository.findOne({where:{id_user:idUser,id_producto:carrito.id_producto}})
   if(categorifound){
      throw new HttpException('el curso ya se encuentra registrado ',HttpStatus.OK);
 
@@ -77,7 +78,7 @@ async create(carrito:CreateCarritoDto,idUser:number ){
   carrito.id_user=idUser;
    let newcarrito = this.carritoRepository.create( carrito);
    const newcarritores= await this.carritoRepository.save(newcarrito);
-   const newcarritoresr= await this.carritoRepository.findOne({relations:['curso'],where:{id:newcarritores.id}})
+   const newcarritoresr= await this.carritoRepository.findOne({relations:['productos.inventario'],where:{id:newcarritores.id}})
    
   return newcarritoresr
       
@@ -85,7 +86,7 @@ async create(carrito:CreateCarritoDto,idUser:number ){
        
 
       
-       
+        
     
         
         
@@ -100,34 +101,24 @@ async create(carrito:CreateCarritoDto,idUser:number ){
 
 
    
-async createmensualidad(carrito:CreateCarritoDto,idUser:number ){   
+async createmensualidad(carrito:CreateCarritoDto  ){   
     
-   let user=await this.usersRepository.findOne({where:{id:idUser }})
-    const categorifound= await this.carritoRepository.findOne({where:{id_user:idUser,id_curso:carrito.id_curso}})
+   
+    const categorifound= await this.carritoRepository.findOne({where:{id_user:carrito.id_user,id_producto:carrito.id_producto}})
+   
+   
+   
     if(categorifound){
        throw new HttpException('el pago ya se encuentra registrado ',HttpStatus.OK);
   
       }
-    carrito.id_user=idUser;
+    
    
-
+   
      let newcarrito = this.carritoRepository.create( carrito);
      const newcarritores= await this.carritoRepository.save(newcarrito);
-
-
-
-
-     let data={merchantTradeNo:newcarritores.id+"",orderAmountnumber:carrito.total}
-     let infopagos = await this.pagosservices.create(data)
  
-     console.log(infopagos)
-
-     
-    //  let orden={total:carrito.total,id:newcarritores.id,name:"losavio",lastname:"gercel",method_payment:"BINANCE",link:infopagos.data.universalUrl,
-
-    //  }
-    //  this.mailservices.sendmaillinkdepago(orden,user.email)
-     const newcarritoresr= await this.carritoRepository.findOne({relations:['curso'],where:{id:newcarritores.id}})
+     const newcarritoresr= await this.carritoRepository.find({relations:['productos.inventario'],where:{id_user:carrito.id_user}})
      
     return newcarritoresr
         
@@ -156,7 +147,7 @@ async createmensualidad(carrito:CreateCarritoDto,idUser:number ){
           throw new HttpException('el cupon no se encuentra registrado ',HttpStatus.OK);
          
         }
-        let carts = await this.carritoRepository.find({relations:['curso'],where:{id_user: user}})
+        let carts = await this.carritoRepository.find({relations:['productos.inventario'],where:{id_user: user}})
         let courses = [];
         let categories = [];
         let carritofound
@@ -170,73 +161,73 @@ async createmensualidad(carrito:CreateCarritoDto,idUser:number ){
         // ["125","126","123"]
         for (const cart of carts) {
             if(courses.length > 0){
-                if(courses.includes(cart.curso.id+"")){
-                    // EL % O $ D DESCUENTO
-                    let subtotal = 0;
-                    let total = 0;
-                    if(CUPON.type_discount == 1){//% 30 40
-                        subtotal = cart.price_unit - cart.price_unit*(CUPON.discount*0.01);
-                    }else{//$
-                        subtotal = cart.price_unit - CUPON.discount;
-                    }
-                    total = subtotal;
-                    cart.subtotal= subtotal,
-                    cart.total= total,
-                    cart.type_discount= CUPON.type_discount,
-                    cart.discount= CUPON.discount,
-                    cart.code_cupon=cupon,
-                    cart.campaign_discount= null,
-                    cart.code_discount= null,
-                         carritofound= await this.carritoRepository.findOneBy({id:cart.id})
-                    if(!carritofound){
-                     throw new HttpException('la carritoa no se encuentra ',HttpStatus.OK);
+           if(courses.includes(cart.productos.id_producto+"")){
+               // EL % O $ D DESCUENTO
+               let subtotal = 0;
+               let total = 0;
+               if(CUPON.type_discount == 1){//% 30 40
+                   subtotal = cart.price_unit - cart.price_unit*(CUPON.discount*0.01);
+               }else{//$
+                   subtotal = cart.price_unit - CUPON.discount;
+               }
+               total = subtotal;
+               cart.subtotal= subtotal,
+               cart.total= total,
+               cart.type_discount= CUPON.type_discount,
+               cart.discount= CUPON.discount,
+               cart.code_cupon=cupon,
+               cart.campaign_discount= null,
+               cart.code_discount= null,
+                    carritofound= await this.carritoRepository.findOneBy({id:cart.id})
+               if(!carritofound){
+                throw new HttpException('la carritoa no se encuentra ',HttpStatus.OK);
              
-                    }
+               }
                     
             
-                     delete cart.id;
-                     const updateddescuento = Object.assign(carritofound,cart);
-                     await this.carritoRepository.save(updateddescuento);
+                delete cart.id;
+                const updateddescuento = Object.assign(carritofound,cart);
+                await this.carritoRepository.save(updateddescuento);
 
 
 
-                }
+           }
             }
             if(categories.length > 0){
-                if(categories.includes(cart.curso.id+"")){
-                    // EL % O $ D DESCUENTO
-                    let subtotal = 0;
-                    let total = 0;
-                    if(CUPON.type_discount == 1){//% 30 40
-                        subtotal = cart.price_unit - cart.price_unit*(CUPON.discount*0.01);
-                    }else{//$
-                        subtotal = cart.price_unit - CUPON.discount;
-                    }
-                    total = subtotal;
-                    cart.subtotal= subtotal,
-                    cart.total= total,
-                    cart.type_discount= CUPON.type_discount,
-                    cart.discount= CUPON.discount,
-                    cart.code_cupon=cupon,
-                    cart.campaign_discount= null,
-                    cart.code_discount= null,
-                       carritofound= await this.carritoRepository.findOne({where:{id:cart.id}});
-                    if(!carritofound){
-                     throw new HttpException('la carritoa no se encuentra ',HttpStatus.OK);
+          if(categories.includes(cart.productos.id_producto+"")){
+              // EL % O $ D DESCUENTO
+              let subtotal = 0;
+              let total = 0;
+              if(CUPON.type_discount == 1){//% 30 40
+                  subtotal = cart.price_unit - cart.price_unit*(CUPON.discount*0.01);
+              }else{//$
+                  subtotal = cart.price_unit - CUPON.discount;
+              }
+              total = subtotal;
+              cart.subtotal= subtotal,
+              cart.total= total,
+              cart.type_discount= CUPON.type_discount,
+              cart.discount= CUPON.discount,
+              cart.code_cupon=cupon,
+              cart.campaign_discount= null,
+              cart.code_discount= null,
+                 carritofound= await this.carritoRepository.findOne({where:{id:cart.id}});
+              if(!carritofound){
+               throw new HttpException('la carritoa no se encuentra ',HttpStatus.OK);
              
-                    }
+              }
                     
             
-                     delete cart.id;
-                     const updateddescuento = Object.assign(carritofound,cart);
-                     await this.carritoRepository.save(updateddescuento);
+               delete cart.id;
+               const updateddescuento = Object.assign(carritofound,cart);
+               await this.carritoRepository.save(updateddescuento);
 
 
-                }
+          }
             }
         }
 
-        return await this.carritoRepository.find({relations:['curso'],where:{id_user: user}}) 
+        return await this.carritoRepository.find({relations:['productos.inventario'],where:{id_user: user}}) 
  
 
   

@@ -12,6 +12,6 @@ export class Inventario {
     
     // Relación 1:1 (el lado mapeado)
     @OneToOne(() => ProductsMenbresia, producto => producto.inventario)
-    @JoinColumn({ name: 'id_producto' })
+    @JoinColumn({ name: 'id_productos' })
     producto: ProductsMenbresia;
 }
