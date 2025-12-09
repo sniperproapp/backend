@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, UploadedFile } from '@nestjs/common';
-import { UpdateProductsDto } from './dto/update-Products.dto copy';
+import { UpdateProductsDto } from './dto/update-Products.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductsMenbresia } from './ProductsMenbresia.entity';
 import { Repository } from 'typeorm';
@@ -30,27 +30,29 @@ private readonly membresiasService: MembresiasService){}
 
 
     async findAll( ){
-        console.log('gercel')
+         
       return this.producRepository.find({relations:['inventario'], order: {
-        id_producto: "DESC" // "DESC"
+        id_producto: "ASC" // "DESC"
     }})          
 }
 
 
-     
+    async find( id_product:number){
+          
+      return this.producRepository.findOneBy( {
+        id_producto: id_product // "DESC"
+    })          
+}
 
 
-    async findAllproduct(id_product:number,idclient){
+
+   
+
+
+    async findAllproduct(id_product:number  ){
      
-    const userfound= await this.usersRepository.findOneBy({id: idclient});
     
-     if(userfound.estado==0)
-     {
-         
-            throw new HttpException('usuario desactivado',HttpStatus.NOT_FOUND);
-         
-     }
-    return this.producRepository.findOne({relations:['user'],where: { 
+    return this.producRepository.findOne({relations:['inventario'],where: { 
         id_producto: id_product,
         
       }});
@@ -118,69 +120,36 @@ async create(file: Express.Multer.File,product: CreateProductsMembresiaDto){
 
 
 
-   async updateWithImage(id: number,files: Array<Express.Multer.File>,product: UpdateProductsDto){   
+   async updateWithImage( file:  Express.Multer.File ,product: UpdateProductsDto){   
     
-    if (files.length===0 ){
-        throw new HttpException("las imagenes son obligatorias",HttpStatus.NOT_FOUND);
-     
-       }
-       
-       let counter =0;
-       let imagentoupdatelist = JSON.parse(product.image_To_update);
-       let uploadedFile=imagentoupdatelist[counter];
-      
-       const updateproduct = await this.update(id,product);
-     
-    
-    const startforeach=async () => {
-        await async_foreach(files,async(file:Express.Multer.File)=>{
-
-            const url =await storage(file,file.originalname);
-
-            if(url !==undefined && url!==null)
-            {
-                if(uploadedFile===0){
-                    updateproduct.image1=url;
-                }else  if(uploadedFile===1){
-                    updateproduct.image1=url;
-                }
-    
-            }
-            await this.update(updateproduct.id_producto,updateproduct);
-            counter++;
-            uploadedFile=imagentoupdatelist[counter];
-           
-
-        })
-       
-        
-    }
-    await startforeach();
-   
-    const valor = await this.producRepository.findOne({relations:['user'],where:{id_producto:updateproduct.id_producto}})
+          
+           const url =await storage(file,file.originalname);
+           product.image1=url
+           const updateproduct = await this.update( product);
+           const valor = await this.producRepository.findOne({where:{id_producto:updateproduct.id_producto}})
     
     return valor;
 
    }
 
 
-    async update(id: number,product: UpdateProductsDto){
+    async update(  product: UpdateProductsDto){
     
 
-     const productsFound = await this.producRepository.findOneBy({id_producto:id})
+     const productsFound = await this.producRepository.findOneBy({id_producto:Number(product.id_producto)})
     
    if (!productsFound ){
     throw new HttpException("producto no encontrado",HttpStatus.NOT_FOUND);
 
    }
    const estadoproductanterior=productsFound.estad;
-
+   delete product.id_producto;
 
    const updateproducts= Object.assign(productsFound, product);
       
    
      this.producRepository.save(updateproducts);
-     const valor = await this.producRepository.findOne({relations:['user'],where:{id_producto:updateproducts.id_producto}})
+     const valor = await this.producRepository.findOne({where:{id_producto:updateproducts.id_producto}})
  
       return valor
     }
@@ -192,13 +161,13 @@ async create(file: Express.Multer.File,product: CreateProductsMembresiaDto){
    
 
     async delete(id: number){
-        const productsFound = await this.producRepository.findOneBy({id_producto:id})
+        const productsFound = await this.producRepository.findOne({where:{id_producto:id} ,relations: ['inventario' ],})
       if (!productsFound ){
        throw new HttpException("producto no encontrado",HttpStatus.NOT_FOUND);
 
  }
-
-     
+   console.log(productsFound)
+      await this.inventarioService.delete(productsFound.inventario.id_inventario);
       return this.producRepository.delete(id);
    
        }

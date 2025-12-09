@@ -6,7 +6,7 @@ import { JwtRole } from 'src/auth/jwt/jwt-Rol';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { JwtRolesGuard } from 'src/auth/jwt/jwt-roles.guard';
  
-import { UpdateProductsDto } from './dto/update-Products.dto copy';
+import { UpdateProductsDto } from './dto/update-Products.dto';
   
 import { JwtService } from '@nestjs/jwt';
 import { CreateProductsMembresiaDto } from './dto/Create-Products.dto';
@@ -34,7 +34,7 @@ finAll( ) {
 @Get(':id_product')
 finAllproduct(@Param('id_product',ParseIntPipe) id_product:number,@Headers() headers ) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.producservices.findAllproduct(id_product ,idclient['id']);
+  return this.producservices.findAllproduct(id_product  );
 }
 
 
@@ -74,8 +74,8 @@ create(@UploadedFile(
  
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
-@Put('upload/:id')
-@UseInterceptors(FilesInterceptor('files[]',2))
+@Put('updateimagen')
+@UseInterceptors(FilesInterceptor('file',2))
 Updatewithimage(@UploadedFiles( 
   new ParseFilePipe({
     validators: [
@@ -83,31 +83,31 @@ Updatewithimage(@UploadedFiles(
       new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
     ],
   }),
-) files: Array<Express.Multer.File>,
-@Param('id',ParseIntPipe) id:number,
+) file: Express.Multer.File,
+ 
  @Body() product:UpdateProductsDto) {
  
-  return this.producservices.updateWithImage(id,files,product);
+  return this.producservices.updateWithImage( file,product);
 }
 
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
-@Put(':id')
+@Put('update')
  
 Update ( 
-@Param('id',ParseIntPipe) id:number,
+ 
  @Body() product:UpdateProductsDto) {
  
-  return this.producservices.update(id,  product);
+  return this.producservices.update(   product);
 }
 
 
 
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
-@Delete(':id')
+@Delete('remove/:id')
  
 delete ( 
 @Param('id',ParseIntPipe) id:number)
@@ -116,5 +116,21 @@ delete (
   return this.producservices.delete(id);
 }
 
+@HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+@UseGuards(JwtAuthGuard ,JwtRolesGuard)
+@Get('show/:id_producto')
+find( @Param('id_producto',ParseIntPipe) id_producto:number ) {
+  
+  return this.producservices.find(id_producto );
+}/////////////////////
+
+@Get('producto/:id_productos')
+finAllproductlandingcursomen( @Param('id_productos',ParseIntPipe) id_productos:number, ) {
+  
+   return this.producservices.findAllproduct(id_productos );
+  
+  
+}
+ 
  
 }

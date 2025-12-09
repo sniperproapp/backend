@@ -6,14 +6,15 @@ import { JwtRole } from 'src/auth/jwt/jwt-Rol';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 import { JwtRolesGuard } from 'src/auth/jwt/jwt-roles.guard';
 import { JwtService } from '@nestjs/jwt';
-import { UpdateCursoDto } from './dto/update-Curso.dto';
-import { CarritoService } from './Carrito.service';
-import { CreateCarritoDto } from './dto/Create-carrito.dto';
+import { SaledetailproducService   } from './Saledetailproduc.service';
+import { CreateSaledetailDto } from './dto/Create-CreateSaledetailDto.dto';
  
-@Controller('carrito')
-export class CarritoController {
+ 
+ 
+@Controller('Saledetailproduc')
+export class SaledetailproducController {
 
-constructor(private carritoervices: CarritoService,private jwtservice: JwtService ){}
+constructor(private Saledetailervices: SaledetailproducService,private jwtservice: JwtService ){}
  
 
 
@@ -23,9 +24,9 @@ constructor(private carritoervices: CarritoService,private jwtservice: JwtServic
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Get()
 finAll( @Headers() headers,  ) {
+  
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-
-  return this.carritoervices.findAll(idclient.id );
+  return this.Saledetailervices.findAll(idclient.id );
 }
 
 
@@ -36,29 +37,20 @@ finAll( @Headers() headers,  ) {
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)
 @Post('register')
  create( @Headers() headers,  
- @Body() carrito:CreateCarritoDto) {
+ @Body() Saledetail:CreateSaledetailDto) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
   console.log(idclient.id) 
-  console.log(carrito)
-  return this.carritoervices.create(carrito,idclient.id );
+  console.log(Saledetail)
+  return this.Saledetailervices.create(Saledetail,idclient.id );
 }
-
-
-
+// @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
+// @UseGuards(JwtAuthGuard ,JwtRolesGuard)
+// @Get('show/:id_curso')
+// finAllproduct(@Param('id_curso',ParseIntPipe) id_curso:number ) {
  
-@Post('registermensualidad') 
- createmensualidad( 
- @Body() carrito:CreateCarritoDto) {
-    
-  return this.carritoervices.createmensualidad(carrito  );
-}
+//   return this.Saledetailervices.findAllcurso(id_curso );
+// }
 
-
-
-
- 
-
- 
 
  
   
@@ -68,7 +60,7 @@ finAll( @Headers() headers,  ) {
 @Post('update/:cupon')
 Update ( @Headers() headers,@Param('cupon') cupon:string ) {
   var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
-  return this.carritoervices.update( idclient.id,cupon );
+  return this.Saledetailervices.update( idclient.id,cupon );
 }
 
 
@@ -80,7 +72,7 @@ delete (
 @Param('id',ParseIntPipe) id:number)
   {
  
-  return this.carritoervices.delete(id);
+  return this.Saledetailervices.delete(id);
 }
 
 

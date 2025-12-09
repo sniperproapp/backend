@@ -30,6 +30,8 @@ import { valid_payModule } from './valid_pay/valid_pay.module';
 import { referralModule } from './referral/referral.module';
 import { MembresiasModule } from './membresias/Membresias.module';
 import { ProductsMenbresiaModule } from './productos_membresias/ProductsMenbresia.module';
+import { saleproductoModule } from './sales_producto/saleproducto.module';
+import { SaledetailproducModule } from './salesdetalleproducto/Saledetail.module';
  
 
 @Module({
@@ -61,7 +63,9 @@ import { ProductsMenbresiaModule } from './productos_membresias/ProductsMenbresi
     descuentoCursosModule,
     referralModule,
     MembresiasModule,
-    ProductsMenbresiaModule
+    ProductsMenbresiaModule,
+    saleproductoModule,
+    SaledetailproducModule
    
     
   ],
