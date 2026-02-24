@@ -1,6 +1,7 @@
 import { Cursos } from "src/cursos/Cursos.entity";
 import { FileCursos } from "src/files/FileCursos.entity";
 import { SectionCursos } from "src/section/SectionCursos.entity";
+import { Video_paid } from "src/videos_paid/video_paid.entity";
  
 import { BeforeInsert, Column, Entity,   JoinColumn,   ManyToMany,   ManyToOne,   OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -52,7 +53,9 @@ async estadochage(){
  sectionCursos: SectionCursos
 
 
- 
+@OneToMany(()=>Video_paid,video_paid=>video_paid.claseCursos)
+video_paid: Video_paid[]
+     
 
  @OneToMany(()=>FileCursos,filesCursos=>filesCursos.ClaseCursos)
   files: FileCursos[]

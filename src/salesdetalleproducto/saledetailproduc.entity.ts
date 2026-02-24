@@ -40,6 +40,12 @@ export class Saledetailproduc{
     total:number;
     @Column()
     n_cantidad:number;
+
+     @Column({nullable: true})
+     id_clase:number;
+
+     @Column({nullable: true})
+     id_curso:number;
   
     @Column()
     id_saleproducto:number;

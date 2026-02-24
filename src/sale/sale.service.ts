@@ -44,7 +44,7 @@ export class saleService {
     async inscribir(idcurso:number,iduser:number){
 
           let Sale = await this.saleRepository.create({
-            method_payment:'usdt',currency_total:'30',currency_payment:'usdt',total:0,
+            method_payment:'membresia',currency_total:'0',currency_payment:'usdt',total:0,
 
             price_dolar:0,n_transaccion:'000',id_user:iduser });
          let saleinfo= await this.saleRepository.save(Sale);

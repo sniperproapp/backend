@@ -45,6 +45,10 @@ export class Carrito{
     @Column()
     id_transaccion:number;
     
+    @Column()
+    name_clase:string;
+    @Column({nullable: true})
+    id_clase:number;
       
     
       

@@ -16,6 +16,15 @@ import { PagosService } from 'src/pagos/services/pagos.service';
 import { Saleproducto } from 'src/sales_producto/saleproducto.entity';
 import { InventarioService } from 'src/inventario/services/Inventario.service';
 import { Inventario } from 'src/inventario/Inventario.entity';
+import { Video_paid } from 'src/videos_paid/video_paid.entity';
+import { CursosService } from 'src/cursos/Cursos.service';
+import { CursosModule } from 'src/cursos/Cursos.module';
+import { Cursos } from 'src/cursos/Cursos.entity';
+import { CategoryCursos } from 'src/categoriesCursos/categoryCursos.entity';
+import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
+import { Reviews } from 'src/reviews/reviews.entity';
+import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
+import { SectionCursos } from 'src/section/SectionCursos.entity';
  
  
  
@@ -23,8 +32,9 @@ import { Inventario } from 'src/inventario/Inventario.entity';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario])],
-  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService],
-  controllers: [valid_payController]
+  imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario,Video_paid,Cursos,SectionCursos,CategoryCursos,DescuentoCursos,Cursostudent,Reviews])  ],
+  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService,CursosService],
+  controllers: [valid_payController],
+   
 })
 export class valid_payModule {}

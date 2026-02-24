@@ -88,6 +88,7 @@ export class saleproductoService {
         sale.method_payment="nowpaymenst"
         sale.n_transaccion= infopagos.order_id
         sale.status="NEW"
+        
 
         let Sale = await this.saleRepository.create(sale);
        let salesready= await this.saleRepository.save(Sale);
@@ -99,7 +100,8 @@ export class saleproductoService {
             let detallepago= this.saledetailsproducRepository.create({
               price_unit: sale.total, subtotal: sale.total,
                total: sale.total, id_saleproducto: salesready.id, 
-               id_producto: producto.id_producto,n_cantidad:producto.n_cantidad
+               id_producto: producto.id_producto,n_cantidad:producto.n_cantidad,
+               id_clase:producto.id_clase
             })
        let detallesave = await this.saledetailsproducRepository.save(detallepago);
      

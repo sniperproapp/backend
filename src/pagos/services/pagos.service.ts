@@ -216,7 +216,7 @@ return  mensajevalidarpago
           '/invoice',
           {
             "price_amount":  pago.orderAmountnumber,
-            "price_currency": "usd",
+            "price_currency": "usdtbsc",
             "pay_currency": "usdtbsc",
             "ipn_callback_url": "https://sniperpro-backend.onrender.com/valid_pay/valid",
             "success_url":"https://sniperproacademy.com/auth/login",

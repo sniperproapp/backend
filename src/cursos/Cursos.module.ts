@@ -24,6 +24,7 @@ import { EstadoWebAuthGuard } from './guard/auth.guard';
     signOptions: { expiresIn: '10000h' },
   })],
   controllers: [CursosController],
-  providers: [CursosService,JwtStrategy,EstadoWebAuthGuard]
+  providers: [CursosService,JwtStrategy,EstadoWebAuthGuard],
+  
 })
 export class CursosModule {}

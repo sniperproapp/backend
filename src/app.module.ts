@@ -32,6 +32,7 @@ import { MembresiasModule } from './membresias/Membresias.module';
 import { ProductsMenbresiaModule } from './productos_membresias/ProductsMenbresia.module';
 import { saleproductoModule } from './sales_producto/saleproducto.module';
 import { SaledetailproducModule } from './salesdetalleproducto/Saledetail.module';
+import { Video_paidModule } from './videos_paid/video_paid.module';
  
 
 @Module({
@@ -65,7 +66,8 @@ import { SaledetailproducModule } from './salesdetalleproducto/Saledetail.module
     MembresiasModule,
     ProductsMenbresiaModule,
     saleproductoModule,
-    SaledetailproducModule
+    SaledetailproducModule,
+    Video_paidModule
    
     
   ],

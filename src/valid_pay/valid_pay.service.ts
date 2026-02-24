@@ -13,6 +13,9 @@ import { referralService } from 'src/referral/referral.service';
 import { PagosService } from 'src/pagos/services/pagos.service';
 import { Saleproducto } from 'src/sales_producto/saleproducto.entity';
 import { InventarioService } from 'src/inventario/services/Inventario.service';
+import { Video_paid } from 'src/videos_paid/video_paid.entity';
+import { CursosService } from 'src/cursos/Cursos.service';
+ 
  
   const configService = new ConfigService();
  
@@ -26,9 +29,12 @@ export class valid_payService {
         @InjectRepository(User) private usersRepository: Repository<User>,
         @InjectRepository(Saleproducto) private saleproducRepository: Repository<Saleproducto>,
         @InjectRepository(Referral) private referralRepository: Repository<Referral>,
+        @InjectRepository(Video_paid) private video_paidRepository: Repository<Video_paid>,
         private readonly referralService:referralService,
         private readonly inventarioService:InventarioService,
-        private readonly payService:PagosService
+        private readonly payService:PagosService,
+        private readonly cursosservice:CursosService
+        
     ){
 
        
@@ -166,6 +172,36 @@ export class valid_payService {
                                 
                                  this.inventarioService.update(element.productos.inventario.id_inventario,element.n_cantidad)
                               }
+
+
+                               if(element.productos.estad==3){//activar la clase
+                                    
+                                if(saleproducinfo.saledetailsproduc[0].id_clase){//si solo compro una clase 
+
+                                      const videopaid = this.video_paidRepository.create({
+                                        id_clase:saleproducinfo.saledetailsproduc[0].id_clase
+                                      ,id_user:userinfo.id
+                                     });
+                                       this.video_paidRepository.save(videopaid)  
+                                }
+
+                                   if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
+                                    let curso= await this.cursosservice.findcurso(saleproducinfo.saledetailsproduc[0].id_curso)
+                                      curso.seciones.forEach(async seccion => {
+                                           seccion.clases.forEach(async clase => {//para guardar todas las clases compradas 
+                                                                 const videopaid = this.video_paidRepository.create({
+                                                                  id_clase:clase.id
+                                                                  ,id_user:userinfo.id    });
+                                           this.video_paidRepository.save(videopaid)
+                                           })
+                                      })
+                                  
+                                }
+
+                             
+                                
+                                            
+                            }
 
                     }
 

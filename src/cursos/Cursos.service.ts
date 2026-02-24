@@ -320,7 +320,9 @@ async uploadvideovimeo(file: Express.Multer.File,curso: CreatecursovideoDto): Pr
 
 
 }
-
+async findcurso(id_curso:number ){//solo para obtener todas las calases de un curso se usa solo en la venta de un personalizado <<
+ return   await this.cursoRepository.findOne({relations:['user','categorycurso','seciones.clases.files'],where: { id: id_curso}});
+}
 
     async findAllcurso(id_curso:number ){
       

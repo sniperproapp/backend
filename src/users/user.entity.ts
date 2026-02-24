@@ -4,6 +4,7 @@ import { Products } from "src/products/products.entity";
 import { Referral } from "src/referral/referral.entity";
 import { Rol } from "src/roles/rol.entity";
 import { Sale } from "src/sale/sale.entity";
+import { Video_paid } from "src/videos_paid/video_paid.entity";
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'users'})
@@ -97,7 +98,12 @@ export class User{
 
     @OneToMany(()=>Sale,sale=>sale.user)
     sales: Sale[]
- 
+
+    @OneToMany(()=>Cursos,cursos=>cursos.user)
+      cursoss: Cursos[]
+    
+    @OneToMany(()=>Video_paid,video_paid=>video_paid.user)
+      video_paid: Video_paid[]
     
 @BeforeInsert()
 async hashPassword(){

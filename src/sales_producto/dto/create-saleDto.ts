@@ -12,6 +12,8 @@ export class CreateSaleDto{
     email:string
     adress:string
     telefono:string
+    id_clase:number
+    id_curso:number
     status:string
 
 
