@@ -4,7 +4,7 @@ const env = require('../config/env')
 const url = require('url');
 const { v4: uuidv4 } = require('uuid');
 const uuid = uuidv4();
-import { v4 as uuidv4 } from 'uuid';
+ 
 
 
 const storage = new Storage({
