@@ -199,7 +199,7 @@ export class valid_payService {
                                 }
 
                              
-                                
+                                saleproducinfo.estadorecibido=1;
                                             
                             }
 
