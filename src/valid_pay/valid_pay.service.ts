@@ -49,7 +49,7 @@ export class valid_payService {
         
        
 
-     let saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc"]})
+     let saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
      console.log(saleproducinfo.saledetailsproduc[0])
      console.log(saleproducinfo.saledetailsproduc[0].id_producto)
      if(saleproducinfo.estadorecibido==1)
