@@ -205,15 +205,14 @@ export class valid_payService {
                                                                   ,id_user:userinfo.id    });
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                            await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                           console.log(data)
+                                            
                                            this.video_paidRepository.save(videopaid)
                                            })
                                       })
                                   
                                 }
 
-                              console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-                               console.log(saleproducinfo)
+                            
                                 saleproducinfo.estadorecibido=1;
                                             
                             }
@@ -226,7 +225,8 @@ export class valid_payService {
 });
 
     
-     
+       console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+                               console.log(saleproducinfo)
      this.saleproducRepository.save(saleproducinfo)
         
     //  console.log(fechaFormateada)
