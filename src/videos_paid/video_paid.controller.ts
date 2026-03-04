@@ -1,4 +1,4 @@
-import { Body, Controller, Get,   UseGuards } from '@nestjs/common';
+import { Body, Controller, Get,   Param,   UseGuards } from '@nestjs/common';
  
  
  
@@ -13,12 +13,15 @@ import { Video_paidService    } from './video_paid.service';
 export class Video_paidController {
 constructor(private  video_paidservices:Video_paidService){}
  
-@HasRoles(JwtRole.CLIENT,JwtRole.ADMIN,JwtRole.PROF
-  )
-  @UseGuards(JwtAuthGuard ,JwtRolesGuard)
-  @Get()
-  findall(){
-     return this.video_paidservices.findAll();
+
+
+
+
+ 
+  @Get(':id')
+  findall(@Param('id') id:number){
+    console.log(id)
+     return this.video_paidservices.findAll(id);
  
   }
  

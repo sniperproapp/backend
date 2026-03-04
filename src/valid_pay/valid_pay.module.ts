@@ -25,6 +25,10 @@ import { DescuentoCursos } from 'src/descuento/descuentoCursos.entity';
 import { Reviews } from 'src/reviews/reviews.entity';
 import { Cursostudent } from 'src/studentcurso/Cursostudent.entity';
 import { SectionCursos } from 'src/section/SectionCursos.entity';
+import { saleService } from 'src/sale/sale.service';
+import { Carrito } from 'src/carrito_de_compras/Carrito.entity';
+import { Saledetail } from 'src/saledetail/saledetail.entity';
+import { MailsService } from 'src/mails/mails.service';
  
  
  
@@ -32,8 +36,8 @@ import { SectionCursos } from 'src/section/SectionCursos.entity';
  
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario,Video_paid,Cursos,SectionCursos,CategoryCursos,DescuentoCursos,Cursostudent,Reviews])  ],
-  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService,CursosService],
+  imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario,Video_paid,Cursos,SectionCursos,CategoryCursos,DescuentoCursos,Cursostudent,Reviews,   Sale,   Carrito,   Saledetail])  ],
+  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService,CursosService,saleService,MailsService],
   controllers: [valid_payController],
    
 })

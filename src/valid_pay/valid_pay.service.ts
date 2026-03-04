@@ -15,6 +15,9 @@ import { Saleproducto } from 'src/sales_producto/saleproducto.entity';
 import { InventarioService } from 'src/inventario/services/Inventario.service';
 import { Video_paid } from 'src/videos_paid/video_paid.entity';
 import { CursosService } from 'src/cursos/Cursos.service';
+import { saleService } from 'src/sale/sale.service';
+import { Carrito } from 'src/carrito_de_compras/Carrito.entity';
+import { Saledetail } from 'src/saledetail/saledetail.entity';
  
  
   const configService = new ConfigService();
@@ -26,6 +29,9 @@ import { CursosService } from 'src/cursos/Cursos.service';
 @Injectable()
 export class valid_payService {
     constructor(
+        @InjectRepository(Saledetail) private SaledetailRepository: Repository<Saledetail>,
+        @InjectRepository(Carrito) private CarritoRepository: Repository<Carrito>,
+        @InjectRepository(Sale) private SaleRepository: Repository<Sale>,
         @InjectRepository(User) private usersRepository: Repository<User>,
         @InjectRepository(Saleproducto) private saleproducRepository: Repository<Saleproducto>,
         @InjectRepository(Referral) private referralRepository: Repository<Referral>,
@@ -33,7 +39,8 @@ export class valid_payService {
         private readonly referralService:referralService,
         private readonly inventarioService:InventarioService,
         private readonly payService:PagosService,
-        private readonly cursosservice:CursosService
+        private readonly cursosservice:CursosService,
+        private readonly saleservice:saleService,
         
     ){
 
@@ -182,6 +189,9 @@ export class valid_payService {
                                         id_clase:saleproducinfo.saledetailsproduc[0].id_clase
                                       ,id_user:userinfo.id
                                      });
+                                     let data = await this.saleservice.inscribir(saleproducinfo.saledetailsproduc[0].id_curso,userinfo.id)
+                                           console.log(data)
+
                                        this.video_paidRepository.save(videopaid)  
                                 }
 
@@ -192,6 +202,8 @@ export class valid_payService {
                                                                  const videopaid = this.video_paidRepository.create({
                                                                   id_clase:clase.id
                                                                   ,id_user:userinfo.id    });
+                                           let data = await this.saleservice.inscribir(saleproducinfo.saledetailsproduc[0].id_curso,userinfo.id)
+                                           console.log(data)
                                            this.video_paidRepository.save(videopaid)
                                            })
                                       })

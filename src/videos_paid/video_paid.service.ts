@@ -16,8 +16,8 @@ export class Video_paidService {
     ){}
    
 
-    findAll(){
-        return this.video_paidRepository.find();
+    findAll(id:number){
+        return this.video_paidRepository.find({where:{id_user:id}});
     }
  
 
