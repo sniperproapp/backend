@@ -192,7 +192,7 @@ export class valid_payService {
                                     let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                        await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
                                           // console.log(curso)
-                                            
+                                         saleproducinfo.estadorecibido=1;    
                                        this.video_paidRepository.save(videopaid)  
                                 }
 
@@ -205,7 +205,7 @@ export class valid_payService {
                                                                   ,id_user:userinfo.id    });
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                            await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                            
+                                             saleproducinfo.estadorecibido=1;
                                            this.video_paidRepository.save(videopaid)
                                            })
                                       })
@@ -213,7 +213,7 @@ export class valid_payService {
                                 }
 
                             
-                                saleproducinfo.estadorecibido=1;
+                               
                                             
                             }
 
