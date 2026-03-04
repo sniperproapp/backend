@@ -189,7 +189,8 @@ export class valid_payService {
                                         id_clase:saleproducinfo.saledetailsproduc[0].id_clase
                                       ,id_user:userinfo.id
                                      });
-                                     let data = await this.saleservice.inscribir(saleproducinfo.saledetailsproduc[0].id_curso,userinfo.id)
+                                    let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
+                                     let data = await this.saleservice.inscribir(curso.id,userinfo.id)
                                            console.log(data)
 
                                        this.video_paidRepository.save(videopaid)  
@@ -202,7 +203,8 @@ export class valid_payService {
                                                                  const videopaid = this.video_paidRepository.create({
                                                                   id_clase:clase.id
                                                                   ,id_user:userinfo.id    });
-                                           let data = await this.saleservice.inscribir(saleproducinfo.saledetailsproduc[0].id_curso,userinfo.id)
+                                           let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
+                                           let data = await this.saleservice.inscribir(curso.id,userinfo.id)
                                            console.log(data)
                                            this.video_paidRepository.save(videopaid)
                                            })

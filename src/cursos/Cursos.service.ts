@@ -138,6 +138,20 @@ async findAlltiendabaner( ){
     return this.cursoRepository.find({relations:['user','categorycurso','seciones.clases.files'],take: 3,where:{}})          
 }
 
+async findcursoclase(id_clase:number ){
+    
+    return await this.cursoRepository.findOne({
+  relations: ['user', 'categorycurso', 'seciones.clases.files'],
+  where: {
+    seciones: {
+      clases: {
+        id: id_clase
+      }
+    }
+  }
+});        
+}
+
 
 async findAlltiendacategory(id_category:number ){
     let cursosresp:Cursoresouce
