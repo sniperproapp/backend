@@ -71,7 +71,31 @@ export class saleService {
     
 
    
-     
+      async inscribirdesdenowpayments(idcurso:number,iduser:number){
+
+          let Sale = await this.saleRepository.create({
+            method_payment:'membresia',currency_total:'0',currency_payment:'usdt',total:0,
+
+            price_dolar:0,n_transaccion:'000',id_user:iduser });
+         let saleinfo= await this.saleRepository.save(Sale);
+            
+            let saldetalle:CreateCarritoDetailDto ={type_discount:0,discount:0,id_sale:saleinfo.id,campaign_discount:0,
+              code_cupon:'',code_discount:'',price_unit:0,subtotal:0,total:0,id_user:iduser,id_curso:idcurso
+            }
+             
+            saldetalle.id_sale = Sale.id;
+            let guardardetalle= await this.saledetailsRepository.create(saldetalle);
+            await this.saledetailsRepository.save(guardardetalle);
+         let guardarusercurso= await this.cursostudentsRepository.create({
+              id_user: iduser,
+              id_curso: idcurso
+         })
+
+           return this.cursostudentsRepository.save(guardarusercurso);
+ 
+  
+ 
+}
 
    
 
