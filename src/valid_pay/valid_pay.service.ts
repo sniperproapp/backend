@@ -190,9 +190,9 @@ export class valid_payService {
                                       ,id_user:userinfo.id
                                      });
                                     let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
-                                     let data = await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                           console.log(curso)
-
+                                       await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
+                                          // console.log(curso)
+                                            
                                        this.video_paidRepository.save(videopaid)  
                                 }
 
@@ -204,7 +204,7 @@ export class valid_payService {
                                                                   id_clase:clase.id
                                                                   ,id_user:userinfo.id    });
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
-                                           let data = await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
+                                           await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
                                            console.log(data)
                                            this.video_paidRepository.save(videopaid)
                                            })
@@ -212,7 +212,8 @@ export class valid_payService {
                                   
                                 }
 
-                             
+                              console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+                               console.log(saleproducinfo)
                                 saleproducinfo.estadorecibido=1;
                                             
                             }

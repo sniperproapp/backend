@@ -91,7 +91,7 @@ export class saleService {
               id_curso: idcurso
          })
 
-           return this.cursostudentsRepository.save(guardarusercurso);
+           this.cursostudentsRepository.save(guardarusercurso);
  
   
  
