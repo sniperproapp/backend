@@ -50,7 +50,8 @@ export class Carrito{
     @Column({nullable: true})
     id_clase:number;
       
-    
+     @Column({nullable: true})
+     id_curso:number;
       
     
     @Column({type:'datetime',default:()=>'CURRENT_TIMESTAMP'})
