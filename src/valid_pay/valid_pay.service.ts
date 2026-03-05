@@ -193,9 +193,9 @@ export class valid_payService {
                                         let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                         if(await this.saleservice.validateinscripcion(curso.id,userinfo.id)==0){
                                               await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                             await this.video_paidRepository.save(videopaid) 
+                                             
                                         }
-                                        
+                                       await this.video_paidRepository.save(videopaid)  
                                 }
 
                                    if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
@@ -209,9 +209,9 @@ export class valid_payService {
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                           if(await this.saleservice.validateinscripcion(curso.id,userinfo.id)==0){
                                               await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                             await this.video_paidRepository.save(videopaid) 
+                                             
                                         }
-                                         
+                                         await this.video_paidRepository.save(videopaid) 
                                          
                                       
                                             
