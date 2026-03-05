@@ -29,6 +29,7 @@ import { saleService } from 'src/sale/sale.service';
 import { Carrito } from 'src/carrito_de_compras/Carrito.entity';
 import { Saledetail } from 'src/saledetail/saledetail.entity';
 import { MailsService } from 'src/mails/mails.service';
+import { Video_paidService } from 'src/videos_paid/video_paid.service';
  
  
  
@@ -37,7 +38,7 @@ import { MailsService } from 'src/mails/mails.service';
 
 @Module({
   imports:[TypeOrmModule.forFeature([User,Saleproducto,Referral,Inventario,Video_paid,Cursos,SectionCursos,CategoryCursos,DescuentoCursos,Cursostudent,Reviews,   Sale,   Carrito,   Saledetail])  ],
-  providers: [valid_payService,JwtStrategy,referralService,InventarioService,PagosService,CursosService,saleService,MailsService],
+  providers: [valid_payService,Video_paidService,JwtStrategy,referralService,InventarioService,PagosService,CursosService,saleService,MailsService],
   controllers: [valid_payController],
    
 })

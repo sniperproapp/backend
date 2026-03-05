@@ -18,6 +18,7 @@ import { CursosService } from 'src/cursos/Cursos.service';
 import { saleService } from 'src/sale/sale.service';
 import { Carrito } from 'src/carrito_de_compras/Carrito.entity';
 import { Saledetail } from 'src/saledetail/saledetail.entity';
+import { Video_paidService } from 'src/videos_paid/video_paid.service';
  
  
   const configService = new ConfigService();
@@ -36,6 +37,7 @@ export class valid_payService {
         @InjectRepository(Saleproducto) private saleproducRepository: Repository<Saleproducto>,
         @InjectRepository(Referral) private referralRepository: Repository<Referral>,
         @InjectRepository(Video_paid) private video_paidRepository: Repository<Video_paid>,
+        private readonly video_paidService:Video_paidService,
         private readonly referralService:referralService,
         private readonly inventarioService:InventarioService,
         private readonly payService:PagosService,
@@ -200,18 +202,35 @@ export class valid_payService {
 
                                    if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
                                     saleproducinfo.estadorecibido=1;
-                                    let curso= await this.cursosservice.findcurso(saleproducinfo.saledetailsproduc[0].id_curso)
-                                      curso.seciones.forEach(async seccion => {
+
+                                    //obtener todas las clases pagadas 
+                                    let clasespagadas= await this.video_paidService.findAll(userinfo.id);
+                                     let  clases: number[] = [];
+                                            clasespagadas.forEach((clased:any) => {
+                                        
+                                           clases.push(clased.id_clase)
+                                            
+                                          });
+                                          //obtener todas las clases pagadas fin
+                                              let curso= await this.cursosservice.findcurso(saleproducinfo.saledetailsproduc[0].id_curso)
+                                                curso.seciones.forEach(async seccion => {
                                            seccion.clases.forEach(async clase => {//para guardar todas las clases compradas 
-                                                                 const videopaid = this.video_paidRepository.create({
+                                                    if(clases.indexOf(clase.id)== -1)   
+                                                      {
+
+                                                          const videopaid = this.video_paidRepository.create({
                                                                   id_clase:clase.id
                                                                   ,id_user:userinfo.id    });
+                                                                     await this.video_paidRepository.save(videopaid) 
+                                                      }        
+                                            
+                                            
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                           if(await this.saleservice.validateinscripcion(curso.id,userinfo.id)==0){
                                               await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
                                              
                                         }
-                                         await this.video_paidRepository.save(videopaid) 
+                                      
                                          
                                       
                                             
