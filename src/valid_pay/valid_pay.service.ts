@@ -185,15 +185,15 @@ export class valid_payService {
                                     
                                 if(saleproducinfo.saledetailsproduc[0].id_clase){//si solo compro una clase 
 
-                                      const videopaid = this.video_paidRepository.create({
+                                      const videopaid = await this.video_paidRepository.create({
                                         id_clase:saleproducinfo.saledetailsproduc[0].id_clase
                                       ,id_user:userinfo.id
                                      });
                                     let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                        await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
                                           // console.log(curso)
-                                         saleproducinfo.estadorecibido=1;    
-                                       this.video_paidRepository.save(videopaid)  
+                                         
+                                      await this.video_paidRepository.save(videopaid)  
                                 }
 
                                    if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
@@ -205,14 +205,14 @@ export class valid_payService {
                                                                   ,id_user:userinfo.id    });
                                            let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
                                            await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
-                                             saleproducinfo.estadorecibido=1;
+                                            
                                            this.video_paidRepository.save(videopaid)
                                            })
                                       })
                                   
                                 }
 
-                            
+                              saleproducinfo.estadorecibido=1;  
                                
                                             
                             }
@@ -227,7 +227,7 @@ export class valid_payService {
     
        console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                                console.log(saleproducinfo)
-     this.saleproducRepository.save(saleproducinfo)
+   await  this.saleproducRepository.save(saleproducinfo)
         
     //  console.log(fechaFormateada)
     //  console.log("payment_id")    
