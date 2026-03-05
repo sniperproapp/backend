@@ -189,8 +189,8 @@ export class valid_payService {
                                         id_clase:saleproducinfo.saledetailsproduc[0].id_clase
                                       ,id_user:userinfo.id
                                      });
-                                    let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
-                                       await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
+                                    //let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
+                                    //   await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
                                           // console.log(curso)
                                          
                                       await this.video_paidRepository.save(videopaid)  
