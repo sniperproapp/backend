@@ -56,9 +56,8 @@ export class valid_payService {
         
        
 
-     let saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
-     let saleproducinfo2= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
-                         
+     const saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
+                          
      console.log(saleproducinfo.saledetailsproduc[0])
      console.log(saleproducinfo.saledetailsproduc[0].id_producto)
      if(saleproducinfo.estadorecibido==1)
@@ -213,7 +212,7 @@ export class valid_payService {
                                       })
                                   
                                 }
-                                   saleproducinfo2.estadorecibido=1;  
+                                   saleproducinfo.estadorecibido=1;  
                                
                                             
                             }
@@ -227,8 +226,8 @@ export class valid_payService {
 
     
        console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-                               console.log(saleproducinfo2)
-   await  this.saleproducRepository.save(saleproducinfo2)
+                               console.log(saleproducinfo)
+   await  this.saleproducRepository.save(saleproducinfo)
         
     //  console.log(fechaFormateada)
     //  console.log("payment_id")    
