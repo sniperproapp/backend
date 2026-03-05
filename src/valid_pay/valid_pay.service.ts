@@ -185,7 +185,7 @@ export class valid_payService {
                                if(element.productos.estad==3){//activar la clase
                                     
                                 if(saleproducinfo.saledetailsproduc[0].id_clase){//si solo compro una clase 
-
+                                      saleproducinfo.estadorecibido=1;
                                       const videopaid = await this.video_paidRepository.create({
                                         id_clase:saleproducinfo.saledetailsproduc[0].id_clase
                                       ,id_user:userinfo.id
@@ -198,6 +198,7 @@ export class valid_payService {
                                 }
 
                                    if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
+                                    saleproducinfo.estadorecibido=1;
                                     let curso= await this.cursosservice.findcurso(saleproducinfo.saledetailsproduc[0].id_curso)
                                       curso.seciones.forEach(async seccion => {
                                            seccion.clases.forEach(async clase => {//para guardar todas las clases compradas 
@@ -224,7 +225,7 @@ export class valid_payService {
   
 });
 
-      saleproducinfo.estadorecibido=1;
+      
        console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                                console.log(saleproducinfo)
    await  this.saleproducRepository.save(saleproducinfo)
