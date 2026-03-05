@@ -212,7 +212,7 @@ export class valid_payService {
                                       })
                                   
                                 }
-                                   saleproducinfo.estadorecibido=1;  
+                                   
                                
                                             
                             }
@@ -224,7 +224,7 @@ export class valid_payService {
   
 });
 
-    
+      saleproducinfo.estadorecibido=1;
        console.log("data<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                                console.log(saleproducinfo)
    await  this.saleproducRepository.save(saleproducinfo)
