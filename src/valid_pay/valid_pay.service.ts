@@ -269,6 +269,229 @@ export class valid_payService {
         return data    
       }
 
+
+
+       async updatewompi( data: any  ){
+     console.log(data)
+   
+        
+       
+
+     const saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
+                          
+     console.log(saleproducinfo.saledetailsproduc[0])
+     console.log(saleproducinfo.saledetailsproduc[0].id_producto)
+     if(saleproducinfo.estadorecibido==1)
+     {console.log("ya este pago fue validado ")
+        return}
+     const usersProf= await  this.usersRepository.find({ where:{roles:{id:"PROF"}},relations:["roles"]})
+     // luis22742632@gmail.com  rangelj086@gmail.com  2maibarra@gmail.com  sergiojcristanchoa@hotmail.com   
+    console.log(saleproducinfo)
+     saleproducinfo.status=data.payment_status
+
+          saleproducinfo.saledetailsproduc.forEach(async element => {
+           
+           
+           
+            if(data.payment_status=="finished")
+          {
+                  const userinfo= await  this.usersRepository.findOne({where:{id:saleproducinfo.id_user }})
+             
+             
+                  if(element.id_producto==19)// mensualidad id
+                  {
+                                            const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 1);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+
+
+                                    saleproducinfo.estadorecibido=1;
+                           }
+                
+
+
+
+
+                
+                    
+                            //master elite       
+                            if(element.id_producto==16 ){//activar la app de señales y la web por dos meses 
+                                            const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 2);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+                                    this.calcular_comision(saleproducinfo.id_user,data.outcome_amount) 
+                                    saleproducinfo.estadorecibido=1;
+                            }
+           
+
+
+                 
+                                          //si el id es igual al de infiniti sniper
+                                  if(element.id_producto==14){//activar la app de señales por un año
+                                           const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 12);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+
+                                     
+                                     userinfo.estado=1
+                                     userinfo.estadomensualidad=1
+                                    //userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    // userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+                                    this.calcular_comision(saleproducinfo.id_user,data.outcome_amount) 
+                                    saleproducinfo.estadorecibido=1;
+                               } 
+                         
+                
+               
+               
+                            //si el id es igual al de FULL SNIPER
+                           if(element.id_producto==17){//activar la app de señales y la web por 3 meses 
+                                            const fecha = new Date();
+                                            const mesActual = fecha.getMonth();
+                                            fecha.setMonth(mesActual + 3);
+                                            const anio = fecha.getFullYear();
+                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const dia = fecha.getDate().toString().padStart(2, '0');
+                                            const fechaFormateada = `${anio}-${mes}-10`;
+                                    
+                                    userinfo.estado=1
+                                    userinfo.estadomensualidad=1
+                                    userinfo.estadoweb=1
+                                    userinfo.time_limit=new Date(fechaFormateada)
+                                    userinfo.time_limit_web=new Date(fechaFormateada)
+                                    this.usersRepository.save(userinfo)
+                                    this.calcular_comision(saleproducinfo.id_user,data.outcome_amount) 
+                                    saleproducinfo.estadorecibido=1;
+                            }
+                        
+               
+
+
+                              if(element.productos.tipo_articulo=="Fisico" ){
+                                
+                                 this.inventarioService.update(element.productos.inventario.id_inventario,element.n_cantidad)
+                              }
+
+
+                               if(element.productos.estad==3){//activar la clase
+                                    
+                                if(saleproducinfo.saledetailsproduc[0].id_clase){//si solo compro una clase 
+                                      saleproducinfo.estadorecibido=1;
+                                      const videopaid = await this.video_paidRepository.create({
+                                        id_clase:saleproducinfo.saledetailsproduc[0].id_clase
+                                      ,id_user:userinfo.id
+                                     });
+                                        let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
+                                        if(await this.saleservice.validateinscripcion(curso.id,userinfo.id)==0){
+                                              await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
+                                             
+                                        }
+                                       await this.video_paidRepository.save(videopaid)  
+                                }
+
+                                   if(saleproducinfo.saledetailsproduc[0].id_curso){//si compro el curso completo
+                                    saleproducinfo.estadorecibido=1;
+
+                                    //obtener todas las clases pagadas 
+                                    let clasespagadas= await this.video_paidService.findAll(userinfo.id);
+                                     let  clases: number[] = [];
+                                            clasespagadas.forEach((clased:any) => {
+                                        
+                                           clases.push(clased.id_clase)
+                                            
+                                          });
+                                          //obtener todas las clases pagadas fin
+                                              let curso= await this.cursosservice.findcurso(saleproducinfo.saledetailsproduc[0].id_curso)
+                                                curso.seciones.forEach(async seccion => {
+                                           seccion.clases.forEach(async clase => {//para guardar todas las clases compradas 
+                                                    if(clases.indexOf(clase.id)== -1)   
+                                                      {
+
+                                                          const videopaid = this.video_paidRepository.create({
+                                                                  id_clase:clase.id
+                                                                  ,id_user:userinfo.id    });
+                                                                     await this.video_paidRepository.save(videopaid) 
+                                                      }        
+                                            
+                                            
+                                           let curso= await this.cursosservice.findcursoclase(saleproducinfo.saledetailsproduc[0].id_clase);
+                                          if(await this.saleservice.validateinscripcion(curso.id,userinfo.id)==0){
+                                              await this.saleservice.inscribirdesdenowpayments(curso.id,userinfo.id)
+                                             
+                                        }
+                                      
+                                         
+                                      
+                                            
+                                            
+                                           })
+                                      })
+                                  
+                                }
+                                   
+                               
+                                            
+                            }
+
+                    }
+
+
+
+  
+});
+
+      
+       
+   await  this.saleproducRepository.save(saleproducinfo)
+        
+    //  console.log(fechaFormateada)
+    //  console.log("payment_id")    
+    //  console.log(data.payment_id)  
+    //  console.log("paymentstatus")  
+    //  console.log(data.payment_status)  
+    //  console.log("order_id")  
+    //  console.log(data.order_id)  
+     
+   
+     
+ 
+        return data    
+      }
+
+
+
+
+
      async Create(id:number){
        let user= await this.usersRepository.findOne({where:{id:id},select:{wallet:true,}})
        let amount= await this.referralService.getsumacomisionestotal(id);

@@ -132,6 +132,67 @@ export class saleproductoService {
  
      
       
+
+ async resetcatwompi(id:number){
+
+ let Cart = await this.carritosRepository.findOne({where:{id_user: id}});
+        await this.carritosRepository.delete( Cart.id);
+ throw new HttpException( "1" ,HttpStatus.OK);
+
+ }
+
+
+
+
+  async createwompi(sale:CreateSaleDto){
+      console.log(sale)
+
+         
+      
+        let userinfo = await this.usersRepository.findOneBy({id: sale.id_user})
+        sale.id_user=userinfo.id;
+        sale.currency_payment="COP"
+        sale.method_payment="wompi"
+        sale.n_transaccion= sale.n_transaccion
+        sale.status="NEW"
+        
+
+        let Sale = await this.saleRepository.create(sale);
+       let salesready= await this.saleRepository.save(Sale);
+
+       //for para agregar todos los productos 
+       
+       sale.productos.forEach(async (producto) => {
+                 
+            let detallepago= this.saledetailsproducRepository.create({
+              price_unit: sale.total, subtotal: sale.total,
+               total: sale.total, id_saleproducto: salesready.id, 
+               id_producto: producto.id_producto,n_cantidad:producto.n_cantidad,
+               id_clase:producto.id_clase
+            })
+       let detallesave = await this.saledetailsproducRepository.save(detallepago);
+     
+        
+        
+      
+                 })
+
+   
+        let orden={total:sale.total,id:sale.n_transaccion,name:userinfo.name,lastname:userinfo.lastname,method_payment:"wompi",link:"WOMPI",  } 
+      //   let Cart = await this.carritosRepository.findOne({where:{id_user: sale.id_user}});
+      //   await this.carritosRepository.delete( Cart.id);
+        this.mailservices.sendmaillinkdepago(orden,userinfo.email)
+
+        // IRIA EL ENVIO DE EMAIL
+        //await send_email(Sale._id);
+      //  let ordendetail = await this.saledetailsproducRepository.find({relations:['cursos'], where:{id_sale: Sale.id}});
+      //  let orden = await this.saleRepository.findOne({relations:['user'], where:{id: Sale.id}});
+       // let usuario = await this.usersRepository.findOne({ where:{id: iduser}});
+      // await this.mailservices.sendmail(orden,ordendetail,usuario.email);
+
+            throw new HttpException( "puedes pagar" ,HttpStatus.OK);
+   
+}
        
       
      

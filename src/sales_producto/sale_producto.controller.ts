@@ -42,6 +42,30 @@ create(
 
 
 
+
+@Post('wompi') 
+createwompi(   
+  @Headers() headers, 
+ @Body( )  sale :CreateSaleDto) {
+   console.log(headers)
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+  sale.id_user=idclient.id
+   return this.saleproductoServices.createwompi( sale);
+}
+
+
+
+@Post('resetcart') 
+resetcarwompi(   
+  @Headers() headers ,@Body( )  data :any) {
+     console.log(headers)
+  var idclient = this.jwtservice.decode(headers['authorization'].split(' ')[1]);
+ 
+   return this.saleproductoServices.resetcatwompi( idclient.id);
+}
+
+
+
  
 @HasRoles(JwtRole.ADMIN,JwtRole.PROF,JwtRole.CLIENT)
 @UseGuards(JwtAuthGuard ,JwtRolesGuard)

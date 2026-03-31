@@ -31,6 +31,8 @@ export class EstadoWebAuthGuard implements CanActivate {
       const user = await this.usersRepository.findOne({
         where: { id: payload.id },
       });
+      console.log(secret)
+      console.log(payload)
       console.log(user)
       if (user.estadoweb == 0) {
         throw new HttpException(" Paga la Mensualidad o compra un paquete para disfrutar del servicio de educacion",HttpStatus.OK);
