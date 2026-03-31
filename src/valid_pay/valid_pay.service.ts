@@ -277,7 +277,7 @@ export class valid_payService {
         
        
 
-     const saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.order_id},relations:["saledetailsproduc.productos"]})
+     const saleproducinfo= await  this.saleproducRepository.findOne({where:{n_transaccion:data.data.reference},relations:["saledetailsproduc.productos"]})
                           
      console.log(saleproducinfo.saledetailsproduc[0])
      console.log(saleproducinfo.saledetailsproduc[0].id_producto)
@@ -293,7 +293,7 @@ export class valid_payService {
            
            
            
-            if(data.payment_status=="finished")
+            if(data.data.status=="APPROVED")
           {
                   const userinfo= await  this.usersRepository.findOne({where:{id:saleproducinfo.id_user }})
              
