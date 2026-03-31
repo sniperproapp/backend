@@ -304,10 +304,17 @@ export class valid_payService {
                                             const fecha = new Date();
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 1);
+
                                             const anio = fecha.getFullYear();
+
                                             const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
                                             const dia = fecha.getDate().toString().padStart(2, '0');
                                             const fechaFormateada = `${anio}-${mes}-10`;
+
+                                                console.log(fechaFormateada)
+                                                    console.log(mesActual)
+                                                        console.log(mes)
+
                                     
                                     userinfo.estado=1
                                     userinfo.estadomensualidad=1
