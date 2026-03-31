@@ -85,7 +85,7 @@ export class valid_payService {
                                             const mesActual = fecha.getMonth();
                                             fecha.setMonth(mesActual + 1);
                                             const anio = fecha.getFullYear();
-                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            const mes = (fecha.getMonth() ).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
                                             const dia = fecha.getDate().toString().padStart(2, '0');
                                             const fechaFormateada = `${anio}-${mes}-10`;
                                     
@@ -307,8 +307,8 @@ export class valid_payService {
 
                                             const anio = fecha.getFullYear();
 
-                                            const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
-                                            const dia = fecha.getDate().toString().padStart(2, '0');
+                                            const mes = (fecha.getMonth()).toString().padStart(2, '0'); // +1 porque es base 0, y padStart para 2 dígitos
+                                            
                                             const fechaFormateada = `${anio}-${mes}-10`;
 
                                                 console.log(fechaFormateada)
